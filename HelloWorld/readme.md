@@ -1,0 +1,1 @@
+# Csak a szokásos "Helló világ!" példa program VS-ben. :)
