@@ -4,7 +4,7 @@ namespace StructMemebersAdding
     #region StructPoint
     struct Point
     {
-        public int x;
+        private int x;
         public int X
         {
             get { return x; }
@@ -49,10 +49,10 @@ namespace StructMemebersAdding
             l.B = new Point(12, 13);
             Console.WriteLine("l.a.x={0}, l.a.y={1}, l.b.x={2}, l.b.y={3}", l.A.X, l.A.Y, l.B.X, l.B.Y);
 
-            l.A = new Point(l.A.X+10,l.A.Y);
+            l.A = new Point(l.A.X + 10, l.A.Y);
             Console.WriteLine("l.a.x={0}, l.a.y={1}, l.b.x={2}, l.b.y={3}", l.A.X, l.A.Y, l.B.X, l.B.Y);
 
-            l.a.x = 30;
+            l.a.X = (l.a.X + 10);
             Console.WriteLine("l.a.x={0}, l.a.y={1}, l.b.x={2}, l.b.y={3}", l.A.X, l.A.Y, l.B.X, l.B.Y);
             Console.ReadKey();
         }
