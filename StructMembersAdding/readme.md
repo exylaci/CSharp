@@ -1,0 +1,1 @@
+# Kísérletezés struktúra adattag hozzárendeléssel.
