@@ -26,7 +26,7 @@ namespace StructMemebersAdding
     #region StructLine
     struct Line
     {
-        public Point a;
+        private Point a;
         public Point A
         {
             get { return a; }
@@ -52,8 +52,15 @@ namespace StructMemebersAdding
             l.A = new Point(l.A.X + 10, l.A.Y);
             Console.WriteLine("l.a.x={0}, l.a.y={1}, l.b.x={2}, l.b.y={3}", l.A.X, l.A.Y, l.B.X, l.B.Y);
 
-            l.a.X = (l.a.X + 10);
+            Point p = new Point(0, 2);
+            l.A = p;
+            p.X = p.X + 1;  //Mivel p értéke másolódik be l.a-ba, p.x-et hiába növelem meg,
+                            //az l.a-t már nem befolyásolja.
             Console.WriteLine("l.a.x={0}, l.a.y={1}, l.b.x={2}, l.b.y={3}", l.A.X, l.A.Y, l.B.X, l.B.Y);
+            l.A = p;        //p-t újra hozzá kell rendelni (bemásolni) p.a-ba.
+            //Így ugyan nem jött létre és szűnt meg újabb példány p-ből, de sokkal bonyolultabb a kód.
+            Console.WriteLine("l.a.x={0}, l.a.y={1}, l.b.x={2}, l.b.y={3}", l.A.X, l.A.Y, l.B.X, l.B.Y);
+
             Console.ReadKey();
         }
     }
