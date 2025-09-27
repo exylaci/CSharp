@@ -15,8 +15,8 @@ namespace DelegateSaveListabolEgySorMenteseFaljba
         List<Vizsga> vizsgak = new List<Vizsga>();
         public Form1()
         {
-            vizsgak.Add(new Vizsga("Feladat1", "1. feladat szövege", "D:\\emp\\elle.jpg"));
-            vizsgak.Add(new Vizsga("Feladat2", "2. feladat szövege", "D:\\emp\\u2.jpg"));
+            vizsgak.Add(new Vizsga("Feladat1", "1. feladat szövege", "C:\\Temp\\elle.jpg"));
+            vizsgak.Add(new Vizsga("Feladat2", "2. feladat szövege", "C:\\Temp\\u2.jpg"));
             InitializeComponent();
         }
 
@@ -73,5 +73,13 @@ namespace DelegateSaveListabolEgySorMenteseFaljba
             lbxVizsgak.Update();
         }
 
+        private void btnSave_Click(object sender, EventArgs e)
+        {
+            Vizsga vizsga = vizsgak[lbxVizsgak.SelectedIndex];
+            Exporter exportalas = null;
+            exportalas += Program.CreateHtmlMethod;
+            exportalas += Program.CopyPictureMethod;
+            exportalas(vizsga);
+        }
     }
 }
