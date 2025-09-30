@@ -9,7 +9,7 @@ namespace DelegateGyakorlasAutokolcsonzo
 {
     internal abstract class Jarmu
     {
-        const string RendszamPattern = @"^[A-Z]{3,4}\d{3}$";
+        public static string RendszamPattern = @"^[A-Z]{3,4}\d{3}$";
         string rendszam;
         int kmora;
         bool kolcsonozheto;
@@ -57,6 +57,12 @@ namespace DelegateGyakorlasAutokolcsonzo
         public override string ToString()
         {
             return rendszam + " - " + (kolcsonozheto ? "kölcsönözhető" : "nem kölcsönözhető");
+        }
+
+        public override bool Equals(object obj)
+        {
+            return obj is Jarmu jarmu &&
+                   rendszam == jarmu.rendszam;
         }
     }
 }

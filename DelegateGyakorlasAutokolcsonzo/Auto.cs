@@ -11,7 +11,9 @@ namespace DelegateGyakorlasAutokolcsonzo
         public enum MotorTipusok
         {
             Diesel,
-            Benzin
+            Benzin,
+            Hidrogen,
+            Elektromos
         }
 
         MotorTipusok motorTipusa;
@@ -29,7 +31,7 @@ namespace DelegateGyakorlasAutokolcsonzo
 
         public override string ToString()
         {
-            return "Autó:  " + base.ToString();
+            return "Autó:   " + base.ToString();
         }
 
     }
