@@ -1,6 +1,6 @@
 ﻿namespace DelegateGyakorlasAutokolcsonzo
 {
-    partial class UjJarmu
+    partial class UjJarmuForm
     {
         /// <summary>
         /// Required designer variable.
@@ -42,8 +42,8 @@
             this.label5 = new System.Windows.Forms.Label();
             this.numKobcenti = new System.Windows.Forms.NumericUpDown();
             this.label4 = new System.Windows.Forms.Label();
-            this.button1 = new System.Windows.Forms.Button();
-            this.button2 = new System.Windows.Forms.Button();
+            this.btnOK = new System.Windows.Forms.Button();
+            this.btnCancel = new System.Windows.Forms.Button();
             this.txbRendszam = new System.Windows.Forms.TextBox();
             ((System.ComponentModel.ISupportInitialize)(this.numKmOra)).BeginInit();
             this.grpTipus.SuspendLayout();
@@ -108,10 +108,12 @@
             this.rdbMotor.TabStop = true;
             this.rdbMotor.Text = "motor";
             this.rdbMotor.UseVisualStyleBackColor = true;
+            this.rdbMotor.CheckedChanged += new System.EventHandler(this.rdbAuto_CheckedChanged);
             // 
             // rdbAuto
             // 
             this.rdbAuto.AutoSize = true;
+            this.rdbAuto.Checked = true;
             this.rdbAuto.Location = new System.Drawing.Point(7, 20);
             this.rdbAuto.Name = "rdbAuto";
             this.rdbAuto.Size = new System.Drawing.Size(46, 17);
@@ -119,6 +121,7 @@
             this.rdbAuto.TabStop = true;
             this.rdbAuto.Text = "autó";
             this.rdbAuto.UseVisualStyleBackColor = true;
+            this.rdbAuto.CheckedChanged += new System.EventHandler(this.rdbAuto_CheckedChanged);
             // 
             // label3
             // 
@@ -152,6 +155,7 @@
             this.grbMotor.Controls.Add(this.label5);
             this.grbMotor.Controls.Add(this.numKobcenti);
             this.grbMotor.Controls.Add(this.label4);
+            this.grbMotor.Enabled = false;
             this.grbMotor.Location = new System.Drawing.Point(12, 208);
             this.grbMotor.Name = "grbMotor";
             this.grbMotor.Size = new System.Drawing.Size(216, 46);
@@ -183,23 +187,26 @@
             this.label4.TabIndex = 6;
             this.label4.Text = "motor mérete:";
             // 
-            // button1
+            // btnOK
             // 
-            this.button1.Location = new System.Drawing.Point(72, 265);
-            this.button1.Name = "button1";
-            this.button1.Size = new System.Drawing.Size(75, 23);
-            this.button1.TabIndex = 9;
-            this.button1.Text = "Hozzáad";
-            this.button1.UseVisualStyleBackColor = true;
+            this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
+            this.btnOK.Location = new System.Drawing.Point(72, 265);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(75, 23);
+            this.btnOK.TabIndex = 9;
+            this.btnOK.Text = "Hozzáad";
+            this.btnOK.UseVisualStyleBackColor = true;
+            this.btnOK.Click += new System.EventHandler(this.btnOK_Click);
             // 
-            // button2
+            // btnCancel
             // 
-            this.button2.Location = new System.Drawing.Point(153, 265);
-            this.button2.Name = "button2";
-            this.button2.Size = new System.Drawing.Size(75, 23);
-            this.button2.TabIndex = 10;
-            this.button2.Text = "Mégsem";
-            this.button2.UseVisualStyleBackColor = true;
+            this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
+            this.btnCancel.Location = new System.Drawing.Point(153, 265);
+            this.btnCancel.Name = "btnCancel";
+            this.btnCancel.Size = new System.Drawing.Size(75, 23);
+            this.btnCancel.TabIndex = 10;
+            this.btnCancel.Text = "Mégsem";
+            this.btnCancel.UseVisualStyleBackColor = true;
             // 
             // txbRendszam
             // 
@@ -208,14 +215,14 @@
             this.txbRendszam.Size = new System.Drawing.Size(121, 20);
             this.txbRendszam.TabIndex = 11;
             // 
-            // UjJarmu
+            // UjJarmuForm
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(6F, 13F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(238, 298);
             this.Controls.Add(this.txbRendszam);
-            this.Controls.Add(this.button2);
-            this.Controls.Add(this.button1);
+            this.Controls.Add(this.btnCancel);
+            this.Controls.Add(this.btnOK);
             this.Controls.Add(this.grbMotor);
             this.Controls.Add(this.grbAuto);
             this.Controls.Add(this.grpTipus);
@@ -223,7 +230,7 @@
             this.Controls.Add(this.numKmOra);
             this.Controls.Add(this.label2);
             this.Controls.Add(this.label1);
-            this.Name = "UjJarmu";
+            this.Name = "UjJarmuForm";
             this.Text = "Új jármű felvétele";
             ((System.ComponentModel.ISupportInitialize)(this.numKmOra)).EndInit();
             this.grpTipus.ResumeLayout(false);
@@ -254,8 +261,8 @@
         private System.Windows.Forms.Label label5;
         private System.Windows.Forms.NumericUpDown numKobcenti;
         private System.Windows.Forms.Label label4;
-        private System.Windows.Forms.Button button1;
-        private System.Windows.Forms.Button button2;
+        private System.Windows.Forms.Button btnOK;
+        private System.Windows.Forms.Button btnCancel;
         private System.Windows.Forms.TextBox txbRendszam;
     }
 }

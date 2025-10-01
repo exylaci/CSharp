@@ -10,11 +10,17 @@ using System.Windows.Forms;
 
 namespace DelegateGyakorlasAutokolcsonzo
 {
-    public partial class UjUgyfel : Form
+    public partial class UjUgyfelForm : Form
     {
-        public UjUgyfel()
+        internal string Nev { get ; private set; }
+        public UjUgyfelForm()
         {
             InitializeComponent();
+        }
+
+        private void btnHozzaad_Click(object sender, EventArgs e)
+        {
+            Nev=txbNev.Text.Trim();
         }
     }
 }
