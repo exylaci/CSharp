@@ -1,0 +1,99 @@
+# Ez a konfigurációs fájl a Docker Compose alapja. Arra szolgál, hogy több konténerből álló alkalmazásokat leírjon (definiáljon), elindítson (futtasson). Automatizálja és leegyszerűsíti a több konténerből álló környezetek futtatását. Például egy webalkalmazásét, ami tartalmaz: egy backend konténert (pl. Node.js, C# vagy Python), egy adatbázist (pl. PostgreSQL vagy MySQL), és egy reverse proxy-t (pl. Nginx).
+# Előnyei:
+#  +Az egyszerű környezetkezelés, mert nem kell külön docker run parancsokat írni minden konténerhez.
+#  +Konzisztens fejlesztői környezet: Minden fejlesztő ugyanazt a konfigurációt használva elkerülhetők a “nálam működik” típusú problémák.
+#  +Könnyű skálázás, mert az egyes szolgáltatásokból több példány is indítható:
+# Használata: Docker Desktop elindítása után egyetlen paranccsal indítható:
+#  docker compose up -d
+# A -d kapcsoló elnémít, így nem szórja tele a terminál ablakot az üzeneteivel. (daemon mód)
+# Leállítani vagy a Docker Desktop / Containers-ben a stop gombal és a kuka gombal törölni, vagy a treminál ablakban kiadott
+#  docker compose down -v
+# paranccsal lehet.
+# Fleet-ben például a Menu / View / Terminal -lal lehet terminál ablakot nyitni.
+
+services:                                                   # A felépítendő szervízek
+    mssql:
+        image: mcr.microsoft.com/mssql/server:2022-latest   # A microsoft készítette MS-SQL image-et használjuk
+        container_name: mssql                               # Saját elnevezésünk, ahogyan hivatkozunk a konténerre
+         #   platform: linux/amd64                          # Windows környezetben megtalálja a helyes platformot, de Mac-es környezetben ez kell, mert a m$ nem készít szilikonos image-et.
+        restart: unless-stopped                             # Lehalásnál induljon újra. Kivéve, a kézzel lett leállítva.
+        ports:                                              # Konténerben futó szolgáltatások csatlakozási pontja a "külvilághoz".
+            - "1433:1433"                                   # Az MSSQL default portja. Ha nincs egyéb akadálya, célszerű mindig az adott szolgáltatáshoz tartozó default portot használni.
+        environment:                                        # Környezeti változók beállítása.
+            ACCEPT_EULA: "Y"                                # M$ feltételeinek elfogadása.
+            MSSQL_SA_PASSWORD: "${SA_PASSWORD}"             # $ jelzi, hogy külső forrásban (.env file) tárolt, {} között megadott, környezeti változóra hivatkozás.
+            MSSQL_PID: "Developer"                          # Ez a kiadás fejlesztéshez jogtisztán ingyenesen használható.
+            MSSQL_AGENT_ENABLED: "True"                     # Tisztábbak a visszakapott üzenetek.
+        volumes:
+            - mssql-data:/var/opt/mssql                     # Tartós tároló az adatbázisoknak
+        healthcheck:
+            test: ["CMD-SHELL", "/opt/mssql-tools18/bin/sqlcmd -C -S localhost -U sa -P \"$${MSSQL_SA_PASSWORD}\" -Q \"SELECT 1\" || exit 1"]                                # Kiadunk egy lekérdező parancsot, azért hogy ellenőrizzük működnek-e az adatbázisaink.
+                                                            # -C : A szerver kezeli a tanusítványt
+                                                            # -S : host elérése (Ez most éppen lokálisan a saját gépemen fut)
+                                                            # -U : felhasználó név
+                                                            # -P : jelszó (Dupla $ kell, mert az első a SQL parncsnak szól, a második a Dockernek.)
+                                                            # -Q : A kiadott lekérdező parancs. (Query)
+                                                            # exit 1 : A válasz, ha hibára futott a SELECT 1 kérés.
+            interval: 5s                                    # vár újrakérdezés előtt
+            timeout: 3s                                     # várakozik a válasz megérkezésére mielőtt újra kérdezne
+            retries: 30                                     # -szor próbálkozik újra mielőtt feladná
+
+    db-seed:
+        image: mcr.microsoft.com/mssql-tools:latest         # Ez az image megfelelő adatbázis fejlesztéshez, mert helyettesíti a nemlétező volume-okat.
+        depends_on:                                         # Ennek a konténernek a függősége
+            mssql:                                          # az MSSQL
+                condition: service_healthy                  # aminek futnia is kell.
+        environment:
+            SA_PASSWORD: "${SA_PASSWORD}"
+        volumes:
+            - ./init:/seed:ro                               # Az SQL SEED fáljok helye. ReadOnly-ként map-eljük fel a helyi vinyón lévő init könyvtárat a konténerben a seed könyvtárba.
+        entrypoint: ["/bin/bash", "/seed/seed.sh"]          # Ebben a bash-ben fusson le a megadott seed.sh shell file.
+        restart: "no"                                       # Csak egyszer fusson le.
+
+    sqlpad:                                                 # User Interface. Az sqlpad egy nagyon egyszerű kis programocska a többihez képest. Vannak korlátai, de könnyű a használata.
+        image: sqlpad/sqlpad:6                              # Jelenlegi legutolsó stabil fő verzió.
+        ports:
+            - "3000:3000"                                   # 3000 a default port. Így érhető el a UI: http://localhost:3000
+        environment:
+            SQLPAD_ADMIN: ${SQLPAD_ADMIN_USER_NAME}
+            SQLPAD_ADMIN_PASSWORD: ${SQLPAD_ADMIN_USER_PASSWORD}    # Nem fontos az erős jelszó, mivel böngészőben fut, akkor sem lehetne elrontani ha feltörnék.
+            # Kapcsolat 1: master (master database tutira mindig van)
+                                                                    # A docker-es environment variable-ök neve a fix rész, (Ebben nincs változó karakter.) de mivel az sqlpad-ben több csatornát is fel lehet venni, ezeknek a nevét az environment variable-ök nevének dinamikus része tartalmazza. A dinamikus részt követi a megadni kívánt paraméter neve. A Docker a teljes nevet a __ (dupla aláhúzás) -oknál parse-olja el.
+            SQLPAD_CONNECTIONS__msql_master__name: "loacal SQL Server - master" # Az sqlpad ezt a nevet hozza fel a lenyíló listában.
+            SQLPAD_CONNECTIONS__msql_master__driver: "sqlserver"
+            SQLPAD_CONNECTIONS__msql_master__host: "mssql"          # konténer neve
+            SQLPAD_CONNECTIONS__msql_master__port: 1433             # Ez a default port
+            SQLPAD_CONNECTIONS__msql_master__database: "master"     # Ez az alapértelmezett adatbázis
+            SQLPAD_CONNECTIONS__msql_master__username: "sa"
+            SQLPAD_CONNECTIONS__msql_master__password: ${SA_PASSWORD}
+                                                                    # A leírás szerint a tust server certification-t true-ra kellene állítani, de ha lokálisan dolgozunk, semmiféleképpen ne vegyük fel, mert akkor az sqlpad használhatatlan lesz.
+            # Kapcsolat 2: CarRental
+            SQLPAD_CONNECTIONS__msql_carrental__name: "loacal SQL Server - CarRental"
+            SQLPAD_CONNECTIONS__msql_carrental__driver: "sqlserver"
+            SQLPAD_CONNECTIONS__msql_carrental__host: "mssql"
+            SQLPAD_CONNECTIONS__msql_carrental__port: 1433
+            SQLPAD_CONNECTIONS__msql_carrental__database: "CarRental"
+            SQLPAD_CONNECTIONS__msql_carrental__username: "sa"
+            SQLPAD_CONNECTIONS__msql_carrental__password: ${SA_PASSWORD}
+            # Kapcsolat 3: Konyvtarak
+            SQLPAD_CONNECTIONS__msql_konyvtarak__name: "loacal SQL Server - Konyvtarak"
+            SQLPAD_CONNECTIONS__msql_konyvtarak__driver: "sqlserver"
+            SQLPAD_CONNECTIONS__msql_konyvtarak__host: "mssql"
+            SQLPAD_CONNECTIONS__msql_konyvtarak__port: 1433
+            SQLPAD_CONNECTIONS__msql_konyvtarak__database: "Konyvtarak"
+            SQLPAD_CONNECTIONS__msql_konyvtarak__username: "sa"
+            SQLPAD_CONNECTIONS__msql_konyvtarak__password: ${SA_PASSWORD}
+            # Kapcsolat 3: DeptEmp
+            SQLPAD_CONNECTIONS__msql_dml__name: "loacal SQL Server - DeptEmp"
+            SQLPAD_CONNECTIONS__msql_dml__driver: "sqlserver"
+            SQLPAD_CONNECTIONS__msql_dml__host: "mssql"
+            SQLPAD_CONNECTIONS__msql_dml__port: 1433
+            SQLPAD_CONNECTIONS__msql_dml__database: "DML"
+            SQLPAD_CONNECTIONS__msql_dml__username: "sa"
+            SQLPAD_CONNECTIONS__msql_dml__password: ${SA_PASSWORD}
+        depends_on:
+            - mssql                                         # Az mssql-től függ. Ha az nem fut, nincs értelme ennek sem.
+
+volumes:
+    mssql-data:
+    sqlpad-data:
