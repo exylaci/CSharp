@@ -12,23 +12,24 @@ sleep 1                                         # Várjon egy kicsit, hogy a há
 
                                                 # Időnként átteszik az SQL kommandot másik könyvtárba. Ezért az SQL kommand útvonalát meg kell keresni.
 SQLCMD_BIN=""                                   # ebben lesz.
-for c in \                                      # c változó szépen sorban felveszi a  felsorolt értékeket.
+
+for c in \
     "/opt/mssql-tools18/bin/sqlcmd" \
     "/opt/mssql-tools/bin/sqlcmd" \
-    "sqlcmd"
+    "sqlcmd"                                    # c változó szépen sorban felveszi a felsorolt értékeket.
 do                                              # ciklus mag kezdete
-    if command -v "$c" >/dev/null 2>&1; then    # -v "$c" : c változóban megadott parancs elérhető-e
+    if command -v "$c" >/dev/null 2 >&1; then   # -v "$c" : c változóban megadott parancs elérhető-e
                                                 # >/dev/null : std out kimeneti szöveg lenyelése
-                                                # 2>&1 : standard error átirányítása a std out-ra, vagyis azt is kikukázza
+                                                # 2 >&1 : standard error átirányítása a std out-ra, vagyis azt is kikukázza
         SQLCMD_BIN="$(command -v "$c")"         # Ha nyerünk, akkor eltároljuk parancsal együtt az SQL parancs helyét.
         break
-    elif [ -x "$c"]; then                       # -x "$c" : Azt is le kell ellenőrizni, hogy ha a pathbanban nem jól szerepel, de mégis végrehajtható-e.
+    elif [ -x "$c" ]; then                      # -x "$c" : Azt is le kell ellenőrizni, hogy ha a pathbanban nem jól szerepel, de mégis végrehajtható-e.
         SQLCMD_BIN="$c"                         # Ha így nyerünk, akkor eltároljuk csak magát az SQL parancs helyét.
         break
     fi                                          # end if
 done                                            # end do
 
-if [ -z "${SQLCMD_BIN}"]; then                  # -z : Ha nem találta meg, akkor üres maradt a sztring.
+if [ -z "${SQLCMD_BIN}" ]; then                 # -z : Ha nem találta meg, akkor üres maradt a sztring.
     echo "ERROR: sqlcmd not found please check its path"
     exit 127
 fi
@@ -38,7 +39,7 @@ echo ">> Using sqlcmd at: ${SQLCMD_BIN}"        # Kiírja, hol találta meg.
 shopt -s nullglob                               # Ha a megadott listában csak a *.sql lesz, akkor empty legyen a lista
 files=(/seed/*.sql)                             # A seed könyvtárban levő féjlok nevét vegye fel a files nevű listába.
 
-if [ ${#files[@]} -gt 0]; then                  # ha files array elemszáma #files[@] nagyobb mint
+if [ ${#files[@]} -gt 0 ]; then                 # ha files array elemszáma #files[@] nagyobb mint
     echo ">> Found ${#files[@]} SQL files. Running seed..."
     for f in "${files[@]}"; do
         echo ">> Running $f"                    # f sorban felveszi a list értékeit
