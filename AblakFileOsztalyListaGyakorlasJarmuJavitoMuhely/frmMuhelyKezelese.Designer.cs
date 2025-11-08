@@ -29,23 +29,23 @@
         private void InitializeComponent()
         {
             this.groupBox1 = new System.Windows.Forms.GroupBox();
-            this.label1 = new System.Windows.Forms.Label();
-            this.label2 = new System.Windows.Forms.Label();
-            this.label3 = new System.Windows.Forms.Label();
-            this.label4 = new System.Windows.Forms.Label();
-            this.label5 = new System.Windows.Forms.Label();
-            this.label6 = new System.Windows.Forms.Label();
-            this.txtMuhelySzam = new System.Windows.Forms.Label();
-            this.numIranyitoSzam = new System.Windows.Forms.NumericUpDown();
-            this.tbHelyseg = new System.Windows.Forms.TextBox();
-            this.tbUtcaHazszam = new System.Windows.Forms.TextBox();
-            this.numJarmuvekMaxSzama = new System.Windows.Forms.NumericUpDown();
             this.cbVasarnap = new System.Windows.Forms.CheckBox();
+            this.numJarmuvekMaxSzama = new System.Windows.Forms.NumericUpDown();
+            this.tbUtcaHazszam = new System.Windows.Forms.TextBox();
+            this.tbHelyseg = new System.Windows.Forms.TextBox();
+            this.numIranyitoSzam = new System.Windows.Forms.NumericUpDown();
+            this.txtMuhelySzam = new System.Windows.Forms.Label();
+            this.label6 = new System.Windows.Forms.Label();
+            this.label5 = new System.Windows.Forms.Label();
+            this.label4 = new System.Windows.Forms.Label();
+            this.label3 = new System.Windows.Forms.Label();
+            this.label2 = new System.Windows.Forms.Label();
+            this.label1 = new System.Windows.Forms.Label();
             this.btnOk = new System.Windows.Forms.Button();
             this.btnCancel = new System.Windows.Forms.Button();
             this.groupBox1.SuspendLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numIranyitoSzam)).BeginInit();
             ((System.ComponentModel.ISupportInitialize)(this.numJarmuvekMaxSzama)).BeginInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numIranyitoSzam)).BeginInit();
             this.SuspendLayout();
             // 
             // groupBox1
@@ -69,97 +69,6 @@
             this.groupBox1.TabStop = false;
             this.groupBox1.Text = "Műhelyadatok";
             // 
-            // label1
-            // 
-            this.label1.AutoSize = true;
-            this.label1.Location = new System.Drawing.Point(6, 23);
-            this.label1.Name = "label1";
-            this.label1.Size = new System.Drawing.Size(96, 16);
-            this.label1.TabIndex = 0;
-            this.label1.Text = "Műhely száma:";
-            // 
-            // label2
-            // 
-            this.label2.AutoSize = true;
-            this.label2.Location = new System.Drawing.Point(6, 48);
-            this.label2.Name = "label2";
-            this.label2.Size = new System.Drawing.Size(85, 16);
-            this.label2.TabIndex = 1;
-            this.label2.Text = "Műhely címe:";
-            // 
-            // label3
-            // 
-            this.label3.AutoSize = true;
-            this.label3.Location = new System.Drawing.Point(108, 62);
-            this.label3.Name = "label3";
-            this.label3.Size = new System.Drawing.Size(85, 16);
-            this.label3.TabIndex = 2;
-            this.label3.Text = "irányítószám:";
-            // 
-            // label4
-            // 
-            this.label4.AutoSize = true;
-            this.label4.Location = new System.Drawing.Point(135, 90);
-            this.label4.Name = "label4";
-            this.label4.Size = new System.Drawing.Size(58, 16);
-            this.label4.TabIndex = 3;
-            this.label4.Text = "helység:";
-            // 
-            // label5
-            // 
-            this.label5.AutoSize = true;
-            this.label5.Location = new System.Drawing.Point(99, 118);
-            this.label5.Name = "label5";
-            this.label5.Size = new System.Drawing.Size(94, 16);
-            this.label5.TabIndex = 4;
-            this.label5.Text = "utca, házszám:";
-            // 
-            // label6
-            // 
-            this.label6.AutoSize = true;
-            this.label6.Location = new System.Drawing.Point(6, 145);
-            this.label6.Name = "label6";
-            this.label6.Size = new System.Drawing.Size(128, 16);
-            this.label6.TabIndex = 5;
-            this.label6.Text = "Maximális járművek:";
-            // 
-            // txtMuhelySzam
-            // 
-            this.txtMuhelySzam.AutoSize = true;
-            this.txtMuhelySzam.Location = new System.Drawing.Point(108, 23);
-            this.txtMuhelySzam.Name = "txtMuhelySzam";
-            this.txtMuhelySzam.Size = new System.Drawing.Size(89, 16);
-            this.txtMuhelySzam.TabIndex = 6;
-            this.txtMuhelySzam.Text = "muhely_szam";
-            // 
-            // numIranyitoSzam
-            // 
-            this.numIranyitoSzam.Location = new System.Drawing.Point(199, 60);
-            this.numIranyitoSzam.Name = "numIranyitoSzam";
-            this.numIranyitoSzam.Size = new System.Drawing.Size(85, 22);
-            this.numIranyitoSzam.TabIndex = 7;
-            // 
-            // tbHelyseg
-            // 
-            this.tbHelyseg.Location = new System.Drawing.Point(200, 87);
-            this.tbHelyseg.Name = "tbHelyseg";
-            this.tbHelyseg.Size = new System.Drawing.Size(229, 22);
-            this.tbHelyseg.TabIndex = 8;
-            // 
-            // tbUtcaHazszam
-            // 
-            this.tbUtcaHazszam.Location = new System.Drawing.Point(199, 115);
-            this.tbUtcaHazszam.Name = "tbUtcaHazszam";
-            this.tbUtcaHazszam.Size = new System.Drawing.Size(229, 22);
-            this.tbUtcaHazszam.TabIndex = 9;
-            // 
-            // numJarmuvekMaxSzama
-            // 
-            this.numJarmuvekMaxSzama.Location = new System.Drawing.Point(140, 143);
-            this.numJarmuvekMaxSzama.Name = "numJarmuvekMaxSzama";
-            this.numJarmuvekMaxSzama.Size = new System.Drawing.Size(85, 22);
-            this.numJarmuvekMaxSzama.TabIndex = 10;
-            // 
             // cbVasarnap
             // 
             this.cbVasarnap.AutoSize = true;
@@ -170,6 +79,112 @@
             this.cbVasarnap.Text = "Vasárnap is nyitva";
             this.cbVasarnap.UseVisualStyleBackColor = true;
             // 
+            // numJarmuvekMaxSzama
+            // 
+            this.numJarmuvekMaxSzama.Location = new System.Drawing.Point(140, 143);
+            this.numJarmuvekMaxSzama.Name = "numJarmuvekMaxSzama";
+            this.numJarmuvekMaxSzama.Size = new System.Drawing.Size(85, 22);
+            this.numJarmuvekMaxSzama.TabIndex = 10;
+            // 
+            // tbUtcaHazszam
+            // 
+            this.tbUtcaHazszam.Location = new System.Drawing.Point(199, 115);
+            this.tbUtcaHazszam.Name = "tbUtcaHazszam";
+            this.tbUtcaHazszam.Size = new System.Drawing.Size(229, 22);
+            this.tbUtcaHazszam.TabIndex = 9;
+            // 
+            // tbHelyseg
+            // 
+            this.tbHelyseg.Location = new System.Drawing.Point(200, 87);
+            this.tbHelyseg.Name = "tbHelyseg";
+            this.tbHelyseg.Size = new System.Drawing.Size(229, 22);
+            this.tbHelyseg.TabIndex = 8;
+            // 
+            // numIranyitoSzam
+            // 
+            this.numIranyitoSzam.Location = new System.Drawing.Point(199, 60);
+            this.numIranyitoSzam.Maximum = new decimal(new int[] {
+            9999,
+            0,
+            0,
+            0});
+            this.numIranyitoSzam.Minimum = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            this.numIranyitoSzam.Name = "numIranyitoSzam";
+            this.numIranyitoSzam.Size = new System.Drawing.Size(85, 22);
+            this.numIranyitoSzam.TabIndex = 7;
+            this.numIranyitoSzam.Value = new decimal(new int[] {
+            1000,
+            0,
+            0,
+            0});
+            // 
+            // txtMuhelySzam
+            // 
+            this.txtMuhelySzam.AutoSize = true;
+            this.txtMuhelySzam.Location = new System.Drawing.Point(108, 23);
+            this.txtMuhelySzam.Name = "txtMuhelySzam";
+            this.txtMuhelySzam.Size = new System.Drawing.Size(89, 16);
+            this.txtMuhelySzam.TabIndex = 6;
+            this.txtMuhelySzam.Text = "muhely_szam";
+            // 
+            // label6
+            // 
+            this.label6.AutoSize = true;
+            this.label6.Location = new System.Drawing.Point(6, 145);
+            this.label6.Name = "label6";
+            this.label6.Size = new System.Drawing.Size(128, 16);
+            this.label6.TabIndex = 5;
+            this.label6.Text = "Maximális járművek:";
+            // 
+            // label5
+            // 
+            this.label5.AutoSize = true;
+            this.label5.Location = new System.Drawing.Point(99, 118);
+            this.label5.Name = "label5";
+            this.label5.Size = new System.Drawing.Size(94, 16);
+            this.label5.TabIndex = 4;
+            this.label5.Text = "utca, házszám:";
+            // 
+            // label4
+            // 
+            this.label4.AutoSize = true;
+            this.label4.Location = new System.Drawing.Point(135, 90);
+            this.label4.Name = "label4";
+            this.label4.Size = new System.Drawing.Size(58, 16);
+            this.label4.TabIndex = 3;
+            this.label4.Text = "helység:";
+            // 
+            // label3
+            // 
+            this.label3.AutoSize = true;
+            this.label3.Location = new System.Drawing.Point(108, 62);
+            this.label3.Name = "label3";
+            this.label3.Size = new System.Drawing.Size(85, 16);
+            this.label3.TabIndex = 2;
+            this.label3.Text = "irányítószám:";
+            // 
+            // label2
+            // 
+            this.label2.AutoSize = true;
+            this.label2.Location = new System.Drawing.Point(6, 48);
+            this.label2.Name = "label2";
+            this.label2.Size = new System.Drawing.Size(85, 16);
+            this.label2.TabIndex = 1;
+            this.label2.Text = "Műhely címe:";
+            // 
+            // label1
+            // 
+            this.label1.AutoSize = true;
+            this.label1.Location = new System.Drawing.Point(6, 23);
+            this.label1.Name = "label1";
+            this.label1.Size = new System.Drawing.Size(96, 16);
+            this.label1.TabIndex = 0;
+            this.label1.Text = "Műhely száma:";
+            // 
             // btnOk
             // 
             this.btnOk.DialogResult = System.Windows.Forms.DialogResult.OK;
@@ -179,6 +194,7 @@
             this.btnOk.TabIndex = 1;
             this.btnOk.Text = "OK";
             this.btnOk.UseVisualStyleBackColor = true;
+            this.btnOk.Click += new System.EventHandler(this.btnOk_Click);
             // 
             // btnCancel
             // 
@@ -202,8 +218,8 @@
             this.Text = "Műhely kezelése";
             this.groupBox1.ResumeLayout(false);
             this.groupBox1.PerformLayout();
-            ((System.ComponentModel.ISupportInitialize)(this.numIranyitoSzam)).EndInit();
             ((System.ComponentModel.ISupportInitialize)(this.numJarmuvekMaxSzama)).EndInit();
+            ((System.ComponentModel.ISupportInitialize)(this.numIranyitoSzam)).EndInit();
             this.ResumeLayout(false);
 
         }

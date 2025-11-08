@@ -82,11 +82,15 @@ namespace AblakFileOsztalyListaGyakorlasJarmuJavitoMuhely
         {
             if (muhelySzam == String.Empty)
             {
-                return muhelySzam = string.Format("{0:00000} ", 1);
+                return muhelySzam = Muhely.UjMuhelySzamMeghatarozas();
             }
             return muhelySzam = string.Format("{0:00000}", int.Parse(muhelySzam) + 1);
         }
 
+        public static string UjMuhelySzamMeghatarozas()
+        {
+            return string.Format("{0:00000}", 1);
+        }
         public string AzonositoSzamMeghatarozas(bool szemelyAuto)
         {
             string azonositoSzamKi = string.Empty;
@@ -145,7 +149,7 @@ namespace AblakFileOsztalyListaGyakorlasJarmuJavitoMuhely
 
         public string ToCSV()
         {
-            return "M;" + muhelySzam + ";" + muhelyCim + ";" + jarmuMaxSzam + ";" + vasarnap;
-        }
+            return "M;" + muhelySzam + ";" + muhelyCim.ToCSV() + ";" + jarmuMaxSzam + ";" + vasarnap;
+        } 
     }
 }

@@ -24,7 +24,7 @@ namespace AblakFileOsztalyListaGyakorlasJarmuJavitoMuhely
 
         private void Form1_Load(object sender, EventArgs e)
         {
-            if (MessageBox.Show("Szeretne kezdőállományt importálni?", "Importálás...", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+            if (MessageBox.Show("Szeretne kezdőállományt importálni?", "Importálás...", MessageBoxButtons.YesNo, MessageBoxIcon.Question) == DialogResult.Yes)
             {
                 openFileDialog1.InitialDirectory = Environment.CurrentDirectory;
                 if (openFileDialog1.ShowDialog() == DialogResult.OK)
@@ -243,6 +243,126 @@ namespace AblakFileOsztalyListaGyakorlasJarmuJavitoMuhely
         private void contextMenuStrip1_Opening(object sender, CancelEventArgs e)
         {
 
+        }
+
+        private void btnMuhelyUj_Click(object sender, EventArgs e)
+        {
+            string muhelyszam = string.Empty;
+            if (lsbMuhelyek.Items.Count != 0)
+            {
+                lsbMuhelyek.SelectedIndex = lsbMuhelyek.Items.Count - 1;
+                muhelyszam = (lsbMuhelyek.SelectedItem as Muhely).MuhelySzamMeghatarozas((lsbMuhelyek.SelectedItem as Muhely).MuhelySzam);
+            }
+            else
+            {
+                muhelyszam = Muhely.UjMuhelySzamMeghatarozas();
+            }
+            frmMuhelyKezelese dialogus = new frmMuhelyKezelese(muhelyszam);
+            if (dialogus.ShowDialog() == DialogResult.OK)
+            {
+                lsbMuhelyek.Items.Add(dialogus.KezelendoMuhely);
+                lsbMuhelyek.SelectedIndex = lsbMuhelyek.Items.Count - 1;
+                LogKezeles.LogIrasa(Funkcio.Letrehozas, dialogus.KezelendoMuhely);
+            }
+            ButtonsEnabled();
+        }
+
+        private void btnMuhelyModosit_Click(object sender, EventArgs e)
+        {
+            if (lsbMuhelyek.SelectedIndex != -1)
+            {
+                frmMuhelyKezelese dialogus = new frmMuhelyKezelese((Muhely)lsbMuhelyek.SelectedItem);
+                if (dialogus.ShowDialog() == DialogResult.OK)
+                {
+                    int index = lsbMuhelyek.SelectedIndex;
+                    lsbMuhelyek.Items.RemoveAt(index);
+                    lsbMuhelyek.Items.Insert(index, dialogus.KezelendoMuhely);
+                    lsbMuhelyek.SelectedIndex = index;
+                    LogKezeles.LogIrasa(Funkcio.Modositas, (Muhely)lsbMuhelyek.SelectedItem);
+                }
+            }
+        }
+
+        private void btnMuhelyMegjelenit_Click(object sender, EventArgs e)
+        {
+            if (lsbMuhelyek.SelectedIndex != -1)
+            {
+                frmMuhelyKezelese dialogus = new frmMuhelyKezelese((Muhely)lsbMuhelyek.SelectedItem);
+                dialogus.ShowDialog();
+                LogKezeles.LogIrasa(Funkcio.Megjelenites, (Muhely)lsbMuhelyek.SelectedItem);
+            }
+        }
+
+        private void btnMuhelyTorol_Click(object sender, EventArgs e)
+        {
+            if (lsbMuhelyek.SelectedIndex != -1 && MessageBox.Show("Biztosan törölni szeretné a műhelyt?", "Műhely törlése...", MessageBoxButtons.OKCancel, MessageBoxIcon.Question) == DialogResult.OK)
+            {
+                LogKezeles.LogIrasa(Funkcio.Torles, (Muhely)lsbMuhelyek.SelectedItem);
+                lsbMuhelyek.Items.RemoveAt(lsbMuhelyek.SelectedIndex);
+                if (lsbMuhelyek.SelectedIndex != 0)
+                {
+                    lsbMuhelyek.SelectedIndex = 0;
+                }
+                LSBJarmuvekRefresh();
+                ButtonsEnabled();
+            }
+        }
+
+        private void btnJarmuUj_Click(object sender, EventArgs e)
+        {
+            if (lsbMuhelyek.SelectedIndex != -1 && (lsbMuhelyek.SelectedItem as Muhely).JarmuMaxSzam - (lsbMuhelyek.SelectedItem as Muhely).TaroltJarmuvekSzama > 0)
+            {
+                frmJarmuKezeles dialogus = new frmJarmuKezeles((Muhely)lsbMuhelyek.SelectedItem);
+                if (dialogus.ShowDialog() == DialogResult.OK)
+                {
+                    LSBMuhelyRefresh();
+                    LSBJarmuvekRefresh();
+                    LogKezeles.LogIrasa(Funkcio.Letrehozas, (Muhely)lsbMuhelyek.SelectedItem, (lsbMuhelyek.SelectedItem as Muhely).Jarmuvek.Last());
+                }
+            }
+            else if (lsbMuhelyek.SelectedIndex != -1)
+            {
+                MessageBox.Show("A műhely elérte az egyszerre felvehető járművek maximális számát!", "Figyelem!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+            else
+            {
+                MessageBox.Show("Nincs kiválasztva műhely, válasszon ki egyet!", "Figyelem!", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+            }
+        }
+
+        private void btnJarmuModosit_Click(object sender, EventArgs e)
+        {
+            if (lsbMuhelyek.SelectedIndex != -1)
+            {
+                foreach (Control item in Controls)
+                {
+                    if (item is ListBox && item != lsbMuhelyek && (item as ListBox).SelectedIndex != -1)
+                    {
+                        frmJarmuKezeles dialogus = new frmJarmuKezeles((Muhely)lsbMuhelyek.SelectedItem, (item as ListBox).SelectedItem as Jarmu, lsbMuhelyek.SelectedIndex);
+                        if (dialogus.ShowDialog() == DialogResult.OK)
+                        {
+                            LSBMuhelyRefresh();
+                            LSBJarmuvekRefresh();
+                            LogKezeles.LogIrasa(Funkcio.Modositas, (Muhely)lsbMuhelyek.SelectedItem, (item as ListBox).SelectedItem as Jarmu);
+                        }
+                    }
+                }
+
+            }
+        }
+
+        private void lsbSzemelyAutok_MouseClick(object sender, MouseEventArgs e)
+        {
+            if (sender is ListBox)
+            {
+                foreach (Control item in Controls)
+                {
+                    if (item is ListBox && item != lsbMuhelyek && item != sender as ListBox)
+                    {
+                        (item as ListBox).SelectedIndex = -1;
+                    }
+                }
+            }
         }
     }
 }

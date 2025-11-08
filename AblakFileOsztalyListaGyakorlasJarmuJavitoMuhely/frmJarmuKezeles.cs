@@ -41,7 +41,6 @@ namespace AblakFileOsztalyListaGyakorlasJarmuJavitoMuhely
             ActiveControl = cmbValasztas;
         }
 
-
         internal frmJarmuKezeles(Muhely muhely, Jarmu jarmu, int index, bool megtekintes = false)
         {
             InitializeComponent();
@@ -95,8 +94,6 @@ namespace AblakFileOsztalyListaGyakorlasJarmuJavitoMuhely
             }
         }
 
-
-
         private void GroupBoxKomponensek()
         {
             s_kialakitas_lb = new Label()
@@ -119,7 +116,7 @@ namespace AblakFileOsztalyListaGyakorlasJarmuJavitoMuhely
             muszakivizsga_cb = new CheckBox()
             {
                 Parent = grbSpecialis,
-                Top = 20,
+                Top = s_kialakitas_cb.Bottom+5,
                 Left = chbHasznalt.Left,
                 Width = chbHasznalt.Width,
                 Text = "Műszaki vizsga?"
@@ -136,7 +133,7 @@ namespace AblakFileOsztalyListaGyakorlasJarmuJavitoMuhely
             t_kialakitas_cb = new ComboBox()
             {
                 Parent = grbSpecialis,
-                Top = numJavitasAra.Bottom + 5,
+                Top = 20,
                 Left = numJavitasAra.Left,
                 Width = numJavitasAra.Width,
                 DataSource = Enum.GetValues(typeof(TeherautoKialakitas)),
@@ -188,7 +185,6 @@ namespace AblakFileOsztalyListaGyakorlasJarmuJavitoMuhely
                     }
                     btnOK.Enabled = true;
                     break;
-
             }
         }
 
@@ -199,25 +195,31 @@ namespace AblakFileOsztalyListaGyakorlasJarmuJavitoMuhely
                 switch ((Valasztas)cmbValasztas.SelectedIndex)
                 {
                     case Valasztas.Szeméylautó:
-                        Jarmu kezelendoJarmu = new SzemelyAuto((SzemelyAutoKialakitas)s_kialakitas_cb.SelectedIndex, muszakivizsga_cb.Checked, txbAzonositoszam.Text, txbRendszam.Text.Trim(), (short)numGyartasiEv.Value, (JarmuMarka)cmbJarmuMarka.SelectedIndex, (SzarmazasiHely)cmbSzarmazasiHely.SelectedIndex, chbHasznalt.Checked, (int)numJavitasAra.Value);
-                        if (index == -1)
-                        {
-                            muhely.UjJarmu(kezelendoJarmu);
-                        }
-                        else
-                        {
-                            muhely.JarmuModositas(index, kezelendoJarmu);
-                        }
+                        Jarmu kezelendoSzemelyauto = new SzemelyAuto((SzemelyAutoKialakitas)s_kialakitas_cb.SelectedIndex, muszakivizsga_cb.Checked, txbAzonositoszam.Text, txbRendszam.Text.Trim(), (short)numGyartasiEv.Value, (JarmuMarka)cmbJarmuMarka.SelectedIndex, (SzarmazasiHely)cmbSzarmazasiHely.SelectedIndex, chbHasznalt.Checked, (int)numJavitasAra.Value);
+                        JarmuvetKezel(kezelendoSzemelyauto);
                         break;
                     case Valasztas.Teherautó:
                         Jarmu kezelendoTeherauto = new Teherauto((TeherautoKialakitas)t_kialakitas_cb.SelectedIndex, utanfutos_cb.Checked, txbAzonositoszam.Text, txbRendszam.Text.Trim(), (short)numGyartasiEv.Value, (JarmuMarka)cmbJarmuMarka.SelectedIndex, (SzarmazasiHely)cmbSzarmazasiHely.SelectedIndex, chbHasznalt.Checked, (int)numJavitasAra.Value);
+                        JarmuvetKezel(kezelendoTeherauto);
                         break;
                 }
             }
             else
             {
-                MessageBox.Show("A mező helyes kitöltése kötelező!!", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                MessageBox.Show("A mező helyes kitöltése kötelező!", "Hiba", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 DialogResult = DialogResult.None;
+            }
+        }
+
+        private void JarmuvetKezel(Jarmu kezelendoJarmu)
+        {
+            if (index == -1)
+            {
+                muhely.UjJarmu(kezelendoJarmu);
+            }
+            else
+            {
+                muhely.JarmuModositas(index, kezelendoJarmu);
             }
         }
     }

@@ -9,6 +9,8 @@ namespace AblakFileOsztalyListaGyakorlasJarmuJavitoMuhely
     internal class MuhelyCim
     {
         private short iranyitoSzam;
+        private string helyseg;
+        private string cim;
 
         public short IranyitoSzam
         {
@@ -16,15 +18,11 @@ namespace AblakFileOsztalyListaGyakorlasJarmuJavitoMuhely
             set { iranyitoSzam = (value >= 1000 && value <= 9999) ? value : throw new ArgumentException("Az iranyitoszam 1000 es 9999 kozotti erteknek kell lennie"); }
         }
 
-        private string helyseg;
-
         public string Helyseg
         {
             get { return helyseg; }
             set { helyseg = (value != string.Empty) ? value : throw new ArgumentException("A helyseg nem lehet ures!"); }
         }
-
-        private string cim;
 
         public string Cim
         {
@@ -32,10 +30,9 @@ namespace AblakFileOsztalyListaGyakorlasJarmuJavitoMuhely
             set { cim = (value != string.Empty) ? value : throw new ArgumentException("A cim nem lehet ures!"); ; }
         }
 
-
         public MuhelyCim(short iranyitoszam, string helyseg, string cim)
         {
-            IranyitoSzam = iranyitoSzam;
+            IranyitoSzam = iranyitoszam;
             Helyseg = helyseg;
             Cim = cim;
         }
@@ -52,6 +49,10 @@ namespace AblakFileOsztalyListaGyakorlasJarmuJavitoMuhely
         public override string ToString()
         {
             return "(" + iranyitoSzam + ", " + helyseg + ", " + cim + ")";
+        }
+        public string ToCSV()
+        {
+            return iranyitoSzam + ";" + helyseg + ";" + cim;
         }
     }
 }

@@ -46,7 +46,7 @@
             this.btnJarmuMegjelenit = new System.Windows.Forms.Button();
             this.btnJarmuModosit = new System.Windows.Forms.Button();
             this.btnJarmuUj = new System.Windows.Forms.Button();
-            this.button13 = new System.Windows.Forms.Button();
+            this.btnOK = new System.Windows.Forms.Button();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.btnMuhelyekMegjelenitese = new System.Windows.Forms.Button();
@@ -101,6 +101,7 @@
             this.lsbSzemelyAutok.Name = "lsbSzemelyAutok";
             this.lsbSzemelyAutok.Size = new System.Drawing.Size(458, 132);
             this.lsbSzemelyAutok.TabIndex = 4;
+            this.lsbSzemelyAutok.MouseClick += new System.Windows.Forms.MouseEventHandler(this.lsbSzemelyAutok_MouseClick);
             // 
             // label2
             // 
@@ -150,6 +151,7 @@
             this.btnMuhelyTorol.TabIndex = 3;
             this.btnMuhelyTorol.Text = "Törlés";
             this.btnMuhelyTorol.UseVisualStyleBackColor = true;
+            this.btnMuhelyTorol.Click += new System.EventHandler(this.btnMuhelyTorol_Click);
             // 
             // btnMuhelyMegjelenit
             // 
@@ -159,6 +161,7 @@
             this.btnMuhelyMegjelenit.TabIndex = 2;
             this.btnMuhelyMegjelenit.Text = "Megjelenítés";
             this.btnMuhelyMegjelenit.UseVisualStyleBackColor = true;
+            this.btnMuhelyMegjelenit.Click += new System.EventHandler(this.btnMuhelyMegjelenit_Click);
             // 
             // btnMuhelyModosit
             // 
@@ -168,6 +171,7 @@
             this.btnMuhelyModosit.TabIndex = 1;
             this.btnMuhelyModosit.Text = "Módosítás";
             this.btnMuhelyModosit.UseVisualStyleBackColor = true;
+            this.btnMuhelyModosit.Click += new System.EventHandler(this.btnMuhelyModosit_Click);
             // 
             // btnMuhelyUj
             // 
@@ -177,6 +181,7 @@
             this.btnMuhelyUj.TabIndex = 0;
             this.btnMuhelyUj.Text = "Új felvétel";
             this.btnMuhelyUj.UseVisualStyleBackColor = true;
+            this.btnMuhelyUj.Click += new System.EventHandler(this.btnMuhelyUj_Click);
             // 
             // groupBox2
             // 
@@ -217,6 +222,7 @@
             this.btnJarmuModosit.TabIndex = 1;
             this.btnJarmuModosit.Text = "Módosítás";
             this.btnJarmuModosit.UseVisualStyleBackColor = true;
+            this.btnJarmuModosit.Click += new System.EventHandler(this.btnJarmuModosit_Click);
             // 
             // btnJarmuUj
             // 
@@ -226,15 +232,16 @@
             this.btnJarmuUj.TabIndex = 0;
             this.btnJarmuUj.Text = "Új felvétel";
             this.btnJarmuUj.UseVisualStyleBackColor = true;
+            this.btnJarmuUj.Click += new System.EventHandler(this.btnJarmuUj_Click);
             // 
-            // button13
+            // btnOK
             // 
-            this.button13.Location = new System.Drawing.Point(485, 507);
-            this.button13.Name = "button13";
-            this.button13.Size = new System.Drawing.Size(114, 23);
-            this.button13.TabIndex = 4;
-            this.button13.Text = "Kilépés";
-            this.button13.UseVisualStyleBackColor = true;
+            this.btnOK.Location = new System.Drawing.Point(485, 507);
+            this.btnOK.Name = "btnOK";
+            this.btnOK.Size = new System.Drawing.Size(114, 23);
+            this.btnOK.TabIndex = 4;
+            this.btnOK.Text = "Kilépés";
+            this.btnOK.UseVisualStyleBackColor = true;
             // 
             // openFileDialog1
             // 
@@ -293,7 +300,7 @@
             this.Controls.Add(this.btnRendezesek);
             this.Controls.Add(this.btnJarmuvekMegjelenitese);
             this.Controls.Add(this.btnMuhelyekMegjelenitese);
-            this.Controls.Add(this.button13);
+            this.Controls.Add(this.btnOK);
             this.Controls.Add(this.groupBox2);
             this.Controls.Add(this.groupBox1);
             this.Controls.Add(this.lsbTeherAutok);
@@ -337,7 +344,7 @@
         private System.Windows.Forms.Button btnJarmuMegjelenit;
         private System.Windows.Forms.Button btnJarmuModosit;
         private System.Windows.Forms.Button btnJarmuUj;
-        private System.Windows.Forms.Button button13;
+        private System.Windows.Forms.Button btnOK;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.Button btnMuhelyekMegjelenitese;
