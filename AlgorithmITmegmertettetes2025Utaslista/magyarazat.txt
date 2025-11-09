@@ -1,0 +1,88 @@
+1. feladat megoldása:  
+Mit is kérdez a feladat? Hogy az év melyik napján kezdődik egy olyan (nap) sorozat, hogy 13 napon át minden napra esik születésnap, és ebben a sorozatban a második napra 4 születésnap esik. Azért 13, mert egy két hetes úthoz 13 este tartozik, amikor a kapitány szerint ünnepelik a születésnapokat. A bemeneti file barátságos, és akkor is jó eredményt ad ha valaki 14 nappal számolt. A dolgunk tehát annyi, hogy az év mindegyik napjához megszámoljuk hány születésnap tartozik, majd keressük az előbb említett sorozatot ezen belül.
+
+Egy lehetséges megoldás C++-ban:
+    constexpr int days_in_month[12] = { 31, 28, 31, 30, 31, 30, 31, 31, 30, 31, 30, 31 };
+    std::map<std::string, int> birthday_counts;
+    for (int m = 1; m <= 12; ++m)
+    {
+        for (int d = 1; d <= days_in_month[m - 1]; ++d)
+        {
+            birthday_counts[std::format("{:02}.{:02}.", m, d)] = 0;
+        }
+    }
+    for (auto& passenger : passengers)
+    {
+        birthday_counts[std::format("{:02}.{:02}.", passenger.birth_date.month, passenger.birth_date.day)]++;
+    }
+    auto counts = birthday_counts | std::views::values;
+    auto dates = birthday_counts | std::views::keys | std::ranges::to<std::vector>();
+    for (auto&& [idx, count] : counts | std::views::enumerate | std::views::drop(1) | std::views::take(365-13))
+    {
+        if (count == 4)
+        {
+            if (std::ranges::all_of(counts | std::views::drop(idx - 1) | std::views::take(13), [](int c) { return c > 0; }))
+            {
+                std::print("lehetseges hajo indulas: {}\n", dates[idx - 1]);
+            }
+        }
+    }
+
+Megjegyzés: az adatok úgy voltak generálva, hogy mindegy legyen hogy szökőév-e vagy nem amire nézzük, illetve lehessen nyugodtan akár fixen 30 napos hónapokkal számolni is.
+
+
+
+
+2. feladat megoldása:  
+Mivel csak ~500 utas van, nincs szükség semmilyen bonyolításra, egy sima O(n2) algoritmus is működik: mindegyik utasra megszámoljuk hány utas van a 2 éves határokon belül (az sem gond, hogy saját magát is beleszámoljuk, ez mindenkinél egyformán 1-el növeli az eredményt)
+
+Lehetséges C++ megoldás:
+    auto luckiest = std::ranges::max_element(passengers, {}, [](auto& passenger)
+        {
+            auto lower_limit = std::make_tuple(passenger.birth_date.year - 2, passenger.birth_date.month, passenger.birth_date.day);
+            auto upper_limit = std::make_tuple(passenger.birth_date.year + 2, passenger.birth_date.month, passenger.birth_date.day);
+            return std::ranges::count_if(passengers | std::views::transform([](auto& p) { return std::make_tuple(p.birth_date.year, p.birth_date.month, p.birth_date.day); }),
+                [&](auto date)
+                {
+                    return date >= lower_limit && date <= upper_limit;
+                });
+        });
+    std::print("A legszerencsesebb utas: {}\n", luckiest->name);
+
+
+
+
+
+3. feladat megoldása:  
+Mi a jelentősége a feladatban a 3 lánynak, és annak, hogy egy nagymamával beszéltünk, és nem nagypapával? Az utaslistában csak az édesanya neve szerepel, így csak az anyai ágon tudunk eggyel öregebb generációra keresni, apai ágon nem.
+
+Ha minden utashoz eltároljuk a gyerekeit, akkor annyi a kérdés hogy ki az akinek a gyerekeinek a gyerekei száma pontosan 10.
+
+Van egy bökkenő: vannak olyan nevek, amik több utashoz is tartoznak. Pl. SMITH Harper kettő is szerepel az utasok között. Illetve az is előfordulhat, hogy valakinek az édesanyja nincs a hajón, de megegyezik a neve egy utas nevével a hajón. A megoldásban felül fogjuk becsülni a lehetséges unokák számát úgy, hogy amikor valakinek az anyukáját keressük az utaslistában, akkor mindegyik megegyező nevű utashoz bejelöljük, mint gyerek. Kiírunk mindenkit akinek ezekkel a feltételekkel legalább 10 unokája van a hajón, és reménykedünk, hogy csak egy ilyen nagymamát találunk...
+
+Lehetséges C++ megoldás:
+    for (auto&& [idx, passenger] : passengers | std::views::enumerate)
+    {
+        for (auto& other : passengers)
+        {
+            if (other.name == passenger.mother_name)
+            {
+                other.children.push_back(idx);
+            }
+        }
+    }
+    for (auto& passenger : passengers)
+    {
+        int grandchildren_count = 0;
+        for(auto child_index: passenger.children)
+        {
+            auto& child = passengers[child_index];
+            grandchildren_count += child.children.size();
+        }
+        if(grandchildren_count >= 10)
+        {
+            std::print("{}: {} unoka\n", passenger.name, grandchildren_count);
+        }
+    }
+
+Megjegyzés: a feladathoz adott utaslista "barátságos" volt, és ha valaki nem gondolt az ismétlődő nevekre, akkor is jó eredményt kellett hogy kapjon.
