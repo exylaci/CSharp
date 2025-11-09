@@ -1,0 +1,6 @@
+1. Hány darab kocka pozíció piros színű?  
+	965  
+2. Hány 1 x 1 x 1 -es egységnyi térfogatú az építmény belsejében hagyott üreg?  
+	74  
+3. Hány éves a kapitány?  
+	63  
