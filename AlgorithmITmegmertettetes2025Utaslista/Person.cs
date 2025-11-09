@@ -9,15 +9,11 @@ namespace AlgorithmITmegmertettetes2025Utaslista
 {
     public class Person
     {
-        public string VezetekNev { get; set; }
+        public string Nev { get; set; }
         public string KeresztNev { get; set; }
         public DateTime Szuletett { get; set; }
-        public string AnyjaVezetekNeve { get; set; }
-        public string AnyjaKeresztNeve { get; set; }
+        public string AnyjaNeve { get; set; }
         public List<Person> children = new List<Person>();
-
-        public string Neve() { return VezetekNev + " " + KeresztNev; }
-        public string AnyjaNeve() { return AnyjaVezetekNeve + " " + AnyjaKeresztNeve; }
 
         public Person(string personString)
         {
@@ -27,37 +23,17 @@ namespace AlgorithmITmegmertettetes2025Utaslista
                 throw new InvalidDataException($"Hibás formátum: {personString}");
             }
 
-            var nameParts = parts[0].Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
-            if (nameParts.Length == 2)
-            {
-                VezetekNev = nameParts[0];
-                KeresztNev = nameParts[1];
-            }
-            else
-            {
-                VezetekNev = nameParts[0];
-                KeresztNev = string.Empty;
-            }
+            Nev = parts[0];
 
             string[] formatumok = { "yyyy.M.d.", "yyyy.MM.dd." };
             Szuletett = DateTime.ParseExact(parts[1].Trim(), formatumok, CultureInfo.InvariantCulture, DateTimeStyles.None);
 
-            nameParts = parts[2].Split(' ', 2, StringSplitOptions.RemoveEmptyEntries);
-            if (nameParts.Length == 2)
-            {
-                AnyjaVezetekNeve = nameParts[0];
-                AnyjaKeresztNeve = nameParts[1];
-            }
-            else
-            {
-                AnyjaVezetekNeve = nameParts[0];
-                AnyjaKeresztNeve = string.Empty;
-            }
+            AnyjaNeve = parts[2];
         }
 
         public override string ToString()
         {
-            return Neve() + "," + Szuletett.Year + "." + Szuletett.Month + "." + Szuletett.Day + ".," + AnyjaNeve()
+            return Nev + "," + Szuletett.Year + "." + Szuletett.Month + "." + Szuletett.Day + ".," + AnyjaNeve
                 + ", children:" + children.Count();
         }
     }

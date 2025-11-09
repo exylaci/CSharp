@@ -7,7 +7,7 @@
         public static void Main(string[] args)
         {
             AdatokBetoltese("..\\..\\..\\utaslista.txt");
-            MaEsHolnapSzuletettekKerese();
+            SzuletetesnaposokKerese();
             GyerekekKigyujtese();
             KinekVan10Unokaja();
             KiKortars();
@@ -38,51 +38,73 @@
                 Console.WriteLine($"Hiba a fájl beolvasása közben: {ex.Message}");
             }
         }
-        private static void MaEsHolnapSzuletettekKerese()
+        private static void SzuletetesnaposokKerese()
         {
             DateTime ma = new DateTime(2025, 1, 1);
             DateTime holnap = new DateTime(2025, 1, 1);
-            int macount = 0;
-            int holnapcount = 0;
+            DateTime napok = new DateTime(2025, 1, 1);
+            int[] counter = new int[13];
+            bool found = false;
             for (int i = 0; i < 365; i++)
             {
-                holnap = ma.AddDays(1);
-                foreach (var person in people)
+                for (int d = 0; d < 13; d++)
                 {
-                    if (person.Szuletett.Month == ma.Month && person.Szuletett.Day == ma.Day)
+                    counter[d] = 0;
+                }
+                found = true;
+                holnap = ma.AddDays(1);
+                napok = ma;
+
+                for (int d = 0; found && d < 13; ++d)
+                {
+                    foreach (var person in people)
                     {
-                        macount++;
-                        if (macount > 1)
+                        if (person.Szuletett.Month == napok.Month && person.Szuletett.Day == napok.Day)
                         {
-                            break;
+                            ++counter[d];
+                            if (d == 1 && counter[d] > 4)
+                            {
+                                found = false;
+                                break;
+                            }
                         }
                     }
-                    if (person.Szuletett.Month == holnap.Month && person.Szuletett.Day == holnap.Day)
+                    napok = napok.AddDays(1);
+                }
+                if (found)
+                {
+                    for (int d = 0; found && d < 13; ++d)
                     {
-                        holnapcount++;
-                        if (holnapcount > 4)
+                        if (d == 1)
                         {
-                            break;
+                            if (counter[d] != 4)
+                            {
+                                found = false;
+                            }
+                        }
+                        else
+                        {
+                            if (counter[d] < 1)
+                            {
+                                found = false;
+                            }
                         }
                     }
                 }
-                if ((macount == 1) && (holnapcount == 4))
+                if (found)
                 {
-                    Console.WriteLine($"Pontosan 1 ma született és 4 holnap született dátuma: {ma.Month}.{ma.Day}");
+                    Console.WriteLine($"Mindennap legalább 1 és holnap pontosan 4 született dátuma: {ma.Month}.{ma.Day}");
                 }
                 ma = ma.AddDays(1);
-                macount = 0;
-                holnapcount = 0;
             }
         }
-
         private static void GyerekekKigyujtese()
         {
             foreach (var person in people)
             {
                 foreach (var potentialChild in people)
                 {
-                    if (string.Equals(potentialChild.AnyjaNeve(), person.Neve()) && DateTime.Compare(potentialChild.Szuletett, person.Szuletett) > 0)
+                    if (string.Equals(potentialChild.AnyjaNeve, person.Nev) && DateTime.Compare(potentialChild.Szuletett, person.Szuletett) > 0)
                     {
                         person.children.Add(potentialChild);
                         //Console.WriteLine(person + " gyereke: " + potentialChild);
@@ -102,7 +124,7 @@
                 }
                 if (unokaszam == 10)
                 {
-                    Console.WriteLine($"{person.Neve()}-nek van {unokaszam} unokája.");
+                    Console.WriteLine($"{person.Nev}-nek van {unokaszam} unokája.");
                 }
                 unokaszam = 0;
             }
@@ -129,7 +151,7 @@
                 }
                 kortarszam = 0;
             }
-            Console.WriteLine($"{legtobb.Neve()}-nek van a legtöbb kortársa: {maxkortarszam} fő.");
+            Console.WriteLine($"{legtobb.Nev}-nek van a legtöbb kortársa: {maxkortarszam} fő.");
         }
     }
 }
