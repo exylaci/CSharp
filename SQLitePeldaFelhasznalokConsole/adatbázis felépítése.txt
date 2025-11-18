@@ -1,0 +1,9 @@
+CREATE TABLE IF NOT EXISTS Felhasznalok (
+    Id                INTEGER PRIMARY KEY
+                              AUTOINCREMENT,
+    FelhasznaloNev    TEXT    NOT NULL,
+    Jelszo            TEXT    NOT NULL,
+    RegisztracioIdeje TEXT    NOT NULL,
+    Aktiv             INTEGER NOT NULL
+                              CHECK (Aktiv IN (0, 1) ) 
+);
