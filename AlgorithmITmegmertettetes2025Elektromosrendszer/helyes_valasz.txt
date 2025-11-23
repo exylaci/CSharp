@@ -1,0 +1,8 @@
+1. Hány darab kapcsolószekrény található a hálózatban?
+	1894
+2. Hány darab végpont található a hálózatban?
+	1144
+3. Melyik kábel lehet a hibás?
+	4259647
+4. Melyik kivehető kábel rendelkezik a legkisebb leltáriszámmal?
+	1154633

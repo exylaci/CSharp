@@ -1,0 +1,133 @@
+1. Magyarázat:
+
+Bár ezt a feladatot meg lehetne egyszerűbben is oldani (csak egy set-be dobálni a sorok második és harmadik mezőjét), a többi feladatban szükségünk lesz a hálózatra valamilyen könnyen kezelhető formában, így olvassuk azt be "rendesen".
+
+Egy lehetséges megoldás C++-ban:
+#include <ranges>
+#include <print>
+#include <fstream>
+#include <vector>
+#include <algorithm>
+#include <unordered_map>
+#include <unordered_set>
+#include <deque>
+
+struct Node
+{
+    std::vector<std::pair<int, int>> edges; // node id, edge id
+    bool visited;
+};
+
+std::unordered_map<int, Node> nodes;
+
+int main()
+{
+    std::ifstream in("grid.txt");
+    if (!in)
+        return 1;
+    int n;
+    in >> n;
+    std::unordered_set<int> edge_ids;
+    for(int i= 0; i < n; ++i)
+    {
+        int cable_id, u, v;
+        in >> cable_id >> u >> v;
+        nodes[u].edges.emplace_back(v, cable_id);
+        nodes[v].edges.emplace_back(u, cable_id);
+        edge_ids.insert(cable_id);
+    }
+
+Ezek után a kapcsolószekrények száma az a nodes map mérete:
+
+    std::print("Kapcsoloszekrenyek szama: {}\n", nodes.size());
+
+
+2. Magyarázat:
+
+A végpontok azok a csúcsok a gráfunkban amikhez egyetlen él tartozik.
+
+    std::print("Vegpontok szama: {}\n", std::ranges::count_if(nodes | std::views::values, [](const auto& node) { return node.edges.size() == 1; }));
+
+
+3. Magyarázat:
+
+A gráf elég kicsi: egyszerűen végigmegyünk egyesével a kábeleken, megnézve, hogy ha az a kábel nem működne, akkor pontosan ez a 4 végpont az ami nem elérhető a generátortól. A gráf bejárására BFS és DFS egyaránt működne, de a 4. feladat megoldásához BFS a célszerű, így érdemes itt is ezt választani, hogy csak minimális módosításra legyen szükség annak a megoldásához.
+A beolvasó rész az előző két feladathoz képest változatlan.
+
+Egy lehetséges megoldás C++-ban:
+std::vector<int> reported_rooms = { 9526285, 1064470, 5702189, 4341735  };
+
+constexpr int generator_id = 1206792;
+
+void bfs(int disabled_edge_id)
+{
+    for (auto& node : nodes | std::views::values)
+        node.visited = false;
+    std::deque<int> nodes_to_process;
+    nodes_to_process.push_back(generator_id);
+    while (!nodes_to_process.empty())
+    {
+        int current_node_id = nodes_to_process.front();
+        nodes_to_process.pop_front();
+        auto& current_node = nodes[current_node_id];
+        for (const auto& edge : current_node.edges)
+        {
+            if (edge.second == disabled_edge_id)
+                continue; 
+            if(nodes[edge.first].visited)
+                continue; 
+            nodes[edge.first].visited = true;
+            nodes_to_process.push_back(edge.first);
+        }
+    }
+}
+
+    for (auto& edge_id : edge_ids)
+    {
+        bfs(edge_id);
+        if (std::ranges::any_of(reported_rooms, [&](int room_id) { return nodes[room_id].visited; }))
+            continue;
+        if(std::ranges::count_if(nodes | std::views::values, [](const Node& node) { return !node.visited && node.edges.size() == 1; }) != reported_rooms.size())
+            continue;
+        std::print("Hibas kabel: {}\n", edge_id);
+    }
+
+
+4. Magyarázat:
+
+Ha a gráfunkban minden egyes csúcsra bejelöljük a távolságát a generátortól (a legrövidebb utat nézve), akkor kiszedhető élből két fajta lehet:
+♦ Két ugyanolyan távolságra lévő csúcsot köt össze. Ez esetben ez az él egyik legrövidebb úton se volt rajta.
+♦ Egy N+1 távolságra lévő csúcsból kettő vagy több él indul ki N távolságra lévő csúcsok-hoz. Ekkor ezen élek közül egy kivételével a többi kiszedhető: "alternatív legrövidebb utakhoz" tartoztak.
+
+A 3. feladat BFS gráf bejáró kódját csak picit kell módosítanunk:
+
+void bfs2()
+{
+    for (auto& node : nodes | std::views::values)
+        node.visited = false;
+    std::unordered_set<int> used_edges;
+    std::vector<int> removable_edges;
+    std::deque<int> nodes_to_process;
+    nodes_to_process.push_back(generator_id);
+    while (!nodes_to_process.empty())
+    {
+        int current_node_id = nodes_to_process.front();
+        nodes_to_process.pop_front();
+        auto& current_node = nodes[current_node_id];
+        for (const auto& edge : current_node.edges)
+        {
+            if (nodes[edge.first].visited)
+            {
+                if(used_edges.insert(edge.second).second)
+                {
+                    removable_edges.push_back(edge.second);
+                }
+                continue;
+            }
+            used_edges.insert(edge.second);
+            nodes[edge.first].visited = true;
+            nodes_to_process.push_back(edge.first);
+        }
+    }
+    std::print("Kiszedendo kabel: {}\n", *std::ranges::min_element(removable_edges));
+}
