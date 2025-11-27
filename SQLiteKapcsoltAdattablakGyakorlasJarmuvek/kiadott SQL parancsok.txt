@@ -1,0 +1,22 @@
+
+CREATE TABLE IF NOT EXISTS Jarmu (
+    Rendszam TEXT    PRIMARY KEY,
+    Marka    TEXT    NOT NULL,
+    Tipus    TEXT    NOT NULL,
+    Szin     TEXT    NOT NULL,
+    FutottKm INTEGER NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Auto (
+    Rendszam  TEXT PRIMARY KEY,
+    AutoTipus TEXT NOT NULL,
+    FOREIGN KEY (Rendszam) 
+	REFERENCES Jarmu (Rendszam) ON DELETE CASCADE
+);
+
+CREATE TABLE IF NOT EXISTS Motor (
+    Rendszam         TEXT PRIMARY KEY,
+    HengerUrtartalom REAL NOT NULL,
+    FOREIGN KEY (Rendszam) 
+	REFERENCES Jarmu (Rendszam) ON DELETE CASCADE
+);
