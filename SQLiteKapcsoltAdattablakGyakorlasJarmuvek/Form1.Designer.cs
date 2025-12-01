@@ -36,6 +36,7 @@
             this.btnExport = new System.Windows.Forms.Button();
             this.saveFileDialog1 = new System.Windows.Forms.SaveFileDialog();
             this.openFileDialog1 = new System.Windows.Forms.OpenFileDialog();
+            this.lstView = new System.Windows.Forms.ListView();
             this.SuspendLayout();
             // 
             // lsbJarmuvek
@@ -101,11 +102,21 @@
             // 
             this.openFileDialog1.FileName = "openFileDialog1";
             // 
+            // lstView
+            // 
+            this.lstView.HideSelection = false;
+            this.lstView.Location = new System.Drawing.Point(636, 13);
+            this.lstView.Name = "lstView";
+            this.lstView.Size = new System.Drawing.Size(689, 535);
+            this.lstView.TabIndex = 6;
+            this.lstView.UseCompatibleStateImageBehavior = false;
+            // 
             // Form1
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(639, 557);
+            this.ClientSize = new System.Drawing.Size(1337, 557);
+            this.Controls.Add(this.lstView);
             this.Controls.Add(this.btnExport);
             this.Controls.Add(this.btnImport);
             this.Controls.Add(this.btnTorol);
@@ -130,6 +141,7 @@
         private System.Windows.Forms.Button btnExport;
         private System.Windows.Forms.SaveFileDialog saveFileDialog1;
         private System.Windows.Forms.OpenFileDialog openFileDialog1;
+        private System.Windows.Forms.ListView lstView;
     }
 }
 

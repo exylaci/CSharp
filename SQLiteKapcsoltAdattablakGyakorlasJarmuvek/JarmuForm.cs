@@ -21,10 +21,10 @@ namespace SQLiteKapcsoltAdattablakGyakorlasJarmuvek
 
         internal JarmuForm(Jarmu jarmu) : this()
         {
-            txbRendszam.Enabled = false;
-            txbMarka.Enabled = false;
-            txbTipus.Enabled = false;
-            txbMarka.Focus();
+            txbRendszam.ReadOnly = true;
+            txbMarka.ReadOnly = true;
+            txbTipus.ReadOnly = true;
+            txbSzin.Focus();
             Jarmu = jarmu;
             txbRendszam.Text = jarmu.Rendszam;
             txbMarka.Text = jarmu.Marka;
@@ -79,21 +79,21 @@ namespace SQLiteKapcsoltAdattablakGyakorlasJarmuvek
                     }
                     else if (rdbAuto.Checked)
                     {
-                        Jarmu = new Auto(txbRendszam.Text, txbMarka.Text, txbTipus.Text, txbSzin.Text, (int)numKm.Value, (AutoTipus)Enum.Parse(typeof(AutoTipus), cmbAutoTipus.Text));
+                        Jarmu = new Auto(txbRendszam.Text, txbMarka.Text, txbTipus.Text, txbSzin.Text, (int)numKm.Value, (AutoTipus)cmbAutoTipus.SelectedIndex);
                         ABKezelo.UjJarmu(Jarmu);
                     }
-
                 }
                 else
                 {
+                    Jarmu.Szin = txbSzin.Text;
+                    Jarmu.FutottKm = (int)numKm.Value;
                     if (Jarmu is Auto)
                     {
-                        Jarmu.Szin = txbSzin.Text;
-                        Jarmu.FutottKm = (int)numKm.Value;
+                        (Jarmu as Auto).AutoTipus = (AutoTipus)cmbAutoTipus.SelectedIndex;
                     }
                     else
                     {
-                        Jarmu = new Motor(Jarmu.Rendszam, Jarmu.Marka, Jarmu.Tipus, txbSzin.Text, (int)numKm.Value, (float)numCm3.Value);
+                        (Jarmu as Motor).HengerUrtartalom = (float)numCm3.Value;
                     }
                     ABKezelo.Modositas(Jarmu);
                 }

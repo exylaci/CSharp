@@ -147,9 +147,7 @@ namespace SQLiteKapcsoltAdattablakGyakorlasJarmuvek
                 command.Transaction = transaction;
 
                 //Jarmuvek tábla módosítása
-                command.CommandText = "UPDATE Jarmu SET Marka = @marka, Tipus = @tipus, Szin = @szin, FutottKm = @futottKm WHERE Rendszam = @rendszam;";
-                command.Parameters.AddWithValue("@marka", jarmu.Marka);
-                command.Parameters.AddWithValue("@tipus", jarmu.Tipus);
+                command.CommandText = "UPDATE Jarmu SET Szin = @szin, FutottKm = @futottKm WHERE Rendszam = @rendszam;";
                 command.Parameters.AddWithValue("@szin", jarmu.Szin);
                 command.Parameters.AddWithValue("@futottKm", jarmu.FutottKm);
                 command.Parameters.AddWithValue("@rendszam", jarmu.Rendszam);
@@ -192,22 +190,12 @@ namespace SQLiteKapcsoltAdattablakGyakorlasJarmuvek
                 command.Transaction = transaction;
 
                 //auto vagy motor táblából törlés   
-                if (jarmu is Auto auto)
-                {
-                    command.CommandText = "DELETE FROM Auto WHERE rendszam = @rendszam;";
-                    command.Parameters.AddWithValue("@rendszam", auto.Rendszam);
-                }
-                else if (jarmu is Motor motor)
-                {
-                    command.CommandText = "DELETE FROM Motor WHERE rendszam = @rendszam;";
-                    command.Parameters.AddWithValue("@rendszam", motor.Rendszam);
-                }
+                command.CommandText = $"DELETE FROM {(jarmu is Auto ? "Auto" : "Motor")} WHERE rendszam = @rendszam;";
+                command.Parameters.AddWithValue("@rendszam", jarmu.Rendszam);
                 command.ExecuteNonQuery();
 
                 //Jarmuvek táblából törlés
-                command.Parameters.Clear();
                 command.CommandText = "DELETE FROM Jarmu WHERE rendszam = @rendszam;";
-                command.Parameters.AddWithValue("@rendszam", jarmu.Rendszam);
                 command.ExecuteNonQuery();
 
                 transaction.Commit();

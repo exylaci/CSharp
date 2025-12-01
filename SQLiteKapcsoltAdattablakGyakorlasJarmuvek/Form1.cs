@@ -45,6 +45,25 @@ namespace SQLiteKapcsoltAdattablakGyakorlasJarmuvek
         {
             lsbJarmuvek.DataSource = null;
             lsbJarmuvek.DataSource = jarmuvek;
+            lstView.View = View.Details;
+            lstView.Items.Clear();
+            if (lstView.Columns.Count == 0)
+            {
+                foreach (PropertyInfo item in typeof(Jarmu).GetProperties())
+                {
+                    lstView.Columns.Add(item.Name);
+                }
+            }
+            foreach (Jarmu jarmu in jarmuvek)
+            {
+                string[] sor = new string[typeof(Jarmu).GetProperties().Length];
+                int i = 0;
+                foreach (PropertyInfo property in typeof(Jarmu).GetProperties())
+                {
+                    sor[i++] = property.GetValue(jarmu).ToString();
+                }
+                lstView.Items.Add(new ListViewItem(sor));
+            }
         }
 
         private void Form1_FormClosing(object sender, FormClosingEventArgs e)

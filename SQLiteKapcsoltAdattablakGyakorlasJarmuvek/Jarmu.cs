@@ -130,9 +130,9 @@ namespace SQLiteKapcsoltAdattablakGyakorlasJarmuvek
                 }
                 fajl.Close();
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                throw;
+                throw new ABKivetel("A járművek exportálása nem sikerült!", ex);
             }
         }
 
