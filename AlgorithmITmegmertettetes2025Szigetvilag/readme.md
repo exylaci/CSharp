@@ -34,6 +34,7 @@ A szigetvilág felosztása a törzsek között a mi térképünket használva:
 ♦ Fenti kettőből is következik: tartozhatnak egy törzshöz olyan szigetek, amik között több mint 10 vizen kéne áthaladni, ha közben vannak szigetek, amiken lehet pihenni.  
 Példák:  
 Az alábbi 2 sziget ugyanahhoz a törzshöz tartozik, mert a köztük lévő legrövidebb élszomszédos négyzetekre lépő út 8 hosszú. Az egyik lehetséges legrövidebb irt a két sziget között:  
+  
 ~~~~~~~~~~~~~~  
 ~~1~~~~~~~~~~~  
 ~~2XXXX~~~~~~~  
@@ -43,6 +44,6 @@ Az alábbi 2 sziget ugyanahhoz a törzshöz tartozik, mert a köztük lévő leg
   
 Az alábbi térkép 2 törzs között lett volna felosztva. Így:  
 
-![Territoriumok_felosztasa_pelda](pelda.png)
+![territoriumok_felosztasa_pelda](pelda.png)
   
 3. Hány törzs között van felosztva a szigetvilág?  
