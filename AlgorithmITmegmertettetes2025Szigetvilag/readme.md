@@ -42,5 +42,7 @@ Az alábbi 2 sziget ugyanahhoz a törzshöz tartozik, mert a köztük lévő leg
 ~~~~~~~~~~~2~~  
   
 Az alábbi térkép 2 törzs között lett volna felosztva. Így:  
-![Territóriumok felosztása példa](TerritoritoriumFelosztasPelda.png)  
+
+![Territoriumok_felosztasa_pelda](pelda.png)
+  
 3. Hány törzs között van felosztva a szigetvilág?  
