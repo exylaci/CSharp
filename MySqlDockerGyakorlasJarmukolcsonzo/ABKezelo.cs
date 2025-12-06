@@ -42,7 +42,7 @@ namespace MySqlDockerGyakorlasJarmukolcsonzo
             }
         }
 
-        public static void UjJarmuFelvetele(Jarmu jarmu)
+        public static void UjJarmuFelvetele(Jarmu jarmu, int kolcsonzoId)
         {
             try
             {
@@ -51,26 +51,28 @@ namespace MySqlDockerGyakorlasJarmukolcsonzo
                 if (jarmu is Szemelyauto)
                 {
                     command.CommandText = @"
-                        INSERT INTO Szemelyauto (Rendszam, Marka, Jarmutipus, Foglalt, Szemelyautotipus, MaxSzemely) 
-                        VALUES (@rendszam, @marka, @jarmutipus, @foglalt, @szemelyautotipus, @maxszemely);";
+                        INSERT INTO Szemelyauto (Rendszam, Marka, Jarmutipus, Foglalt, KolcsonzoId, Szemelyautotipus, MaxSzemely) 
+                        VALUES (@rendszam, @marka, @jarmutipus, @foglalt, @kolcsonzoid, @szemelyautotipus, @maxszemely);";
 
                     command.Parameters.AddWithValue("@rendszam", jarmu.Rendszam);
                     command.Parameters.AddWithValue("@marka", jarmu.Marka);
                     command.Parameters.AddWithValue("@jarmutipus", jarmu.Jarmutipus.ToString());
                     command.Parameters.AddWithValue("@foglalt", jarmu.Foglalt);
+                    command.Parameters.AddWithValue("@kolcsonzoid", kolcsonzoId);
                     command.Parameters.AddWithValue("@szemelyautotipus", (jarmu as Szemelyauto).Szemelyautotipus.ToString());
                     command.Parameters.AddWithValue("@maxszemely", (jarmu as Szemelyauto).MaxSzemely);
                 }
                 else
                 {
                     command.CommandText = @"
-                        INSERT INTO Kisteherauto (Rendszam, Marka, Jarmutipus, Foglalt, MaxTeher) 
-                        VALUES (@rendszam, @marka, @jarmutipus, @foglalt, @maxteher);";
+                        INSERT INTO Kisteherauto (Rendszam, Marka, Jarmutipus, Foglalt, KolcsonzoId, MaxTeher) 
+                        VALUES (@rendszam, @marka, @jarmutipus, @foglalt, @kolcsonzoid, @maxteher);";
 
                     command.Parameters.AddWithValue("@rendszam", jarmu.Rendszam);
                     command.Parameters.AddWithValue("@marka", jarmu.Marka);
                     command.Parameters.AddWithValue("@jarmutipus", jarmu.Jarmutipus.ToString());
                     command.Parameters.AddWithValue("@foglalt", jarmu.Foglalt);
+                    command.Parameters.AddWithValue("@kolcsonzoid", kolcsonzoId);
                     command.Parameters.AddWithValue("@maxteher", ((Kisteherauto)jarmu).MaxTeher);
                 }
 
@@ -93,13 +95,15 @@ namespace MySqlDockerGyakorlasJarmukolcsonzo
                 {
                     command.CommandText = @"
                         UPDATE Szemelyauto
-                        SET Marka = @marka,
+                        SET Rendszam = @rendszam,
+                            Marka = @marka,
                             Jarmutipus = @jarmutipus,
                             Foglalt = @foglalt,
                             Szemelyautotipus = @szemelyautotipus,
                             MaxSzemely = @maxszemely
-                        WHERE Rendszam = @rendszam;";
+                        WHERE Id = @id;";
 
+                    command.Parameters.AddWithValue("@id", jarmu.Id);
                     command.Parameters.AddWithValue("@rendszam", jarmu.Rendszam);
                     command.Parameters.AddWithValue("@marka", jarmu.Marka);
                     command.Parameters.AddWithValue("@jarmutipus", jarmu.Jarmutipus.ToString());
@@ -107,16 +111,18 @@ namespace MySqlDockerGyakorlasJarmukolcsonzo
                     command.Parameters.AddWithValue("@szemelyautotipus", szemelyauto.Szemelyautotipus.ToString());
                     command.Parameters.AddWithValue("@maxszemely", szemelyauto.MaxSzemely);
                 }
-                else 
+                else
                 {
                     command.CommandText = @"
                         UPDATE Kisteherauto
-                        SET Marka = @marka,
+                        SET Rendszam = @rendszam,
+                            Marka = @marka,
                             Jarmutipus = @jarmutipus,
                             Foglalt = @foglalt,
                             MaxTeher = @maxteher
-                        WHERE Rendszam = @rendszam;";
+                        WHERE Id = @id;";
 
+                    command.Parameters.AddWithValue("@id", jarmu.Id);
                     command.Parameters.AddWithValue("@rendszam", jarmu.Rendszam);
                     command.Parameters.AddWithValue("@marka", jarmu.Marka);
                     command.Parameters.AddWithValue("@jarmutipus", jarmu.Jarmutipus.ToString());
@@ -139,13 +145,13 @@ namespace MySqlDockerGyakorlasJarmukolcsonzo
 
                 if (jarmu is Szemelyauto)
                 {
-                    command.CommandText = "DELETE FROM Szemelyauto WHERE Rendszam = @rendszam;";
-                    command.Parameters.AddWithValue("@rendszam", jarmu.Rendszam);
+                    command.CommandText = "DELETE FROM Szemelyauto WHERE Id = @id;";
+                    command.Parameters.AddWithValue("@id", jarmu.Id);
                 }
                 else
                 {
-                    command.CommandText = "DELETE FROM Kisteherauto WHERE Rendszam = @rendszam;";
-                    command.Parameters.AddWithValue("@rendszam", jarmu.Rendszam);
+                    command.CommandText = "DELETE FROM Kisteherauto WHERE Id = @id;";
+                    command.Parameters.AddWithValue("@id", jarmu.Id);
                 }
 
                 command.ExecuteNonQuery();

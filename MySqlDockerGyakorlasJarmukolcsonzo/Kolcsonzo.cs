@@ -23,7 +23,7 @@ namespace MySqlDockerGyakorlasJarmukolcsonzo
                 {
                     id = value;
                 }
-                else { }
+                else
                 {
                     throw new ArgumentException("Az ID nem változtatható meg!");
                 }
@@ -65,7 +65,7 @@ namespace MySqlDockerGyakorlasJarmukolcsonzo
             get => tulajdonos;
             set
             {
-                if (tulajdonos.Length > 0)
+                if (value.Length > 0)
                 {
                     tulajdonos = value;
                 }
@@ -90,7 +90,7 @@ namespace MySqlDockerGyakorlasJarmukolcsonzo
 
         public override string ToString()
         {
-            return Nev;
+            return $"{Nev} - {Cim}";
         }
     }
 }

@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace MySqlDockerGyakorlasJarmukolcsonzo
 {
-    public enum JarmuTipus { Kishaszongépjármű, Személyautó }
+    public enum JarmuTipus { Kisteherauto, Szemelyauto }
     internal class Jarmu
     {
         int id;
@@ -20,7 +20,7 @@ namespace MySqlDockerGyakorlasJarmukolcsonzo
             get => id;
             set
             {
-                if (value == 0)
+                if (id == 0)
                 {
                     id = value;
                 }
@@ -77,7 +77,7 @@ namespace MySqlDockerGyakorlasJarmukolcsonzo
 
         public override string ToString()
         {
-            return Rendszam;
+            return $"{Rendszam}  {Marka}";
         }
     }
 }

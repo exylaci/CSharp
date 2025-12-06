@@ -1,4 +1,4 @@
-USE `Autokolcsonzo`;
+USE `JarmuKolcsonzo`;
 
 SET FOREIGN_KEY_CHECKS = 0;
 DROP TABLE IF EXISTS `Szemelyauto`;
@@ -11,7 +11,7 @@ CREATE TABLE IF NOT EXISTS `Kolcsonzo` (
   `Nev` VARCHAR(60) NOT NULL,
   `Cim` VARCHAR(60) NOT NULL,
   `Tulajdonos` VARCHAR(60) NOT NULL,
-  CONSTRAINT `Id_PK` PRIMARY KEY (`Id`)
+  CONSTRAINT `Kolcsonzo_Id_PK` PRIMARY KEY (`Id`)
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS `Szemelyauto` (
@@ -19,14 +19,14 @@ CREATE TABLE IF NOT EXISTS `Szemelyauto` (
   `Rendszam` VARCHAR(7) NOT NULL,
   `Marka` VARCHAR(20) NOT NULL,
   `Jarmutipus` VARCHAR(20) NOT NULL,
-  `Foglalt` BOOLEAN, NOT NULL,
+  `Foglalt` BOOLEAN NOT NULL,
   `Szemelyautotipus` VARCHAR(5) NOT NULL,
-  `MaxSzemely` INT NOT NULL,
+  `MaxSzemely` TINYINT NOT NULL,
   `KolcsonzoId` INT NOT NULL,
-  CONSTRAINT `Id_PK` PRIMARY KEY (`Id`)
-  CONSTRAINT `Kolcsonzo_Id_FK`
-    FOREIGN KEY (`KolcsonzoId`) REFERENCES `Kolcsonzo`(`Id`)
-      ON UPDATE CASCADE ON DELETE RESTRICT
+  CONSTRAINT `Szemelyauto_Id_PK` PRIMARY KEY (`Id`),
+  CONSTRAINT `Szemelyauto_Kolcsonzo_FK` FOREIGN KEY (`KolcsonzoId`) REFERENCES `Kolcsonzo`(`Id`)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
 ) ENGINE=InnoDB;
 
 CREATE TABLE IF NOT EXISTS `Kisteherauto` (
@@ -34,11 +34,11 @@ CREATE TABLE IF NOT EXISTS `Kisteherauto` (
   `Rendszam` VARCHAR(7) NOT NULL,
   `Marka` VARCHAR(20) NOT NULL,
   `Jarmutipus` VARCHAR(20) NOT NULL,
-  `Foglalt` BOOLEAN, NOT NULL,
+  `Foglalt` BOOLEAN NOT NULL,
   `MaxTeher` INT NOT NULL,
   `KolcsonzoId` INT NOT NULL,
-  CONSTRAINT `Id_PK` PRIMARY KEY (`Id`)
-  CONSTRAINT `Kolcsonzo_Id_FK`
-    FOREIGN KEY (`KolcsonzoId`) REFERENCES `Kolcsonzo`(`Id`)
-      ON UPDATE CASCADE ON DELETE RESTRICT
+  CONSTRAINT `Kisteherauto_Id_PK` PRIMARY KEY (`Id`),
+  CONSTRAINT `Kisteherauto_Kolcsonzo_FK` FOREIGN KEY (`KolcsonzoId`) REFERENCES `Kolcsonzo`(`Id`)
+    ON UPDATE CASCADE
+    ON DELETE RESTRICT
 ) ENGINE=InnoDB;
