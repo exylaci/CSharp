@@ -1,0 +1,110 @@
+-- Unit teszteléshez DROP-ok:
+IF OBJECT_ID('Motorok', 'U') IS NOT NULL DROP TABLE Motorok;
+IF OBJECT_ID('Autok', 'U') IS NOT NULL DROP TABLE Autok;
+IF OBJECT_ID('Jarmuvek', 'U') IS NOT NULL DROP TABLE Jarmuvek;
+IF OBJECT_ID('Kolcsonzok', 'U') IS NOT NULL DROP TABLE Kolcsonzok;
+
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Kolcsonzok' AND schema_id = SCHEMA_ID('dbo'))
+BEGIN
+    CREATE TABLE Kolcsonzok(
+        Nev              NVARCHAR(30)    NOT NULL,
+        Cim              NVARCHAR(60)    NOT NULL,
+	MaxJarmu         TINYINT         NOT NULL,
+        CONSTRAINT       PK_Kolcsonzok
+            PRIMARY KEY  (Nev, Cim)
+    );
+END;
+
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Jarmuvek' AND schema_id = SCHEMA_ID('dbo'))
+BEGIN
+    CREATE TABLE Jarmuvek(
+        Rendszam         NVARCHAR(7)     NOT NULL,
+        Marka            NVARCHAR(20)    NOT NULL,
+        Foglalt          BIT             NOT NULL,
+        KolcsonzoNev     NVARCHAR(30)    NOT NULL,
+        KolcsonzoCim     NVARCHAR(60)    NOT NULL,
+        CONSTRAINT       PK_Jarmuvek
+            PRIMARY KEY  (Rendszam),
+        CONSTRAINT       FK_Jarmuvek_Kolcsonzok
+            FOREIGN KEY  (KolcsonzoNev, KolcsonzoCim)
+            REFERENCES   dbo.Kolcsonzok(Nev, Cim)
+            ON UPDATE CASCADE
+            ON DELETE NO ACTION
+    );
+END;
+
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Autok' AND schema_id = SCHEMA_ID('dbo'))
+BEGIN
+    CREATE TABLE Autok(
+        Rendszam         NVARCHAR(7)     NOT NULL,
+	Kialakitas	 NVARCHAR(20)    NOT NULL,
+        CONSTRAINT       PK_Autok
+            PRIMARY KEY  (Rendszam),
+        CONSTRAINT       FK_Autok_Jarmuvek
+            FOREIGN KEY  (Rendszam)
+            REFERENCES   dbo.Jarmuvek(Rendszam)
+            ON UPDATE CASCADE
+            ON DELETE NO ACTION
+    );
+END;
+
+IF NOT EXISTS (SELECT * FROM sys.tables WHERE name = 'Motorok' AND schema_id = SCHEMA_ID('dbo'))
+BEGIN
+    CREATE TABLE Motorok(
+        Rendszam         NVARCHAR(7)     NOT NULL,
+        Kobcenti         SMALLINT        NOT NULL,
+        CONSTRAINT       PK_Motorok
+            PRIMARY KEY  (Rendszam),
+        CONSTRAINT       FK_Motorok_Jarmuvek
+            FOREIGN KEY  (Rendszam)
+            REFERENCES   dbo.Jarmuvek(Rendszam)
+            ON UPDATE CASCADE
+            ON DELETE NO ACTION
+    );
+END;
+
+-- Teszt kölcsönzők (5 db)
+INSERT INTO Kolcsonzok (Nev, Cim, MaxJarmu) VALUES
+('Első','Budapest, Fő utca 1',5),
+('Második','Debrecen, Kossuth tér 12',3),
+('Harmadik','Szeged, Petőfi sétány 8',4),
+('Első','Miskolc, Hunyadi út 22',6),
+('Nincs','Autója',1),
+('Negyedik','Pécs, Rákóczi út 5',2);
+
+-- Teszt járművek (10 db)
+INSERT INTO Jarmuvek (Rendszam, Marka, Foglalt, KolcsonzoNev, KolcsonzoCim) VALUES
+('ABC1234','Toyota',0,'Első','Budapest, Fő utca 1'),
+('DEF5678','Honda',1,'Első','Budapest, Fő utca 1'),
+('GHI9012','Ford',0,'Második','Debrecen, Kossuth tér 12'),
+('JKL3456','BMW',0,'Második','Debrecen, Kossuth tér 12'),
+('MNO7890','Audi',1,'Harmadik','Szeged, Petőfi sétány 8'),
+('PQR2345','Mercedes',0,'Harmadik','Szeged, Petőfi sétány 8'),
+('STU6789','Suzuki',1,'Első','Miskolc, Hunyadi út 22'),
+('VWX0123','Volkswagen',0,'Első','Miskolc, Hunyadi út 22'),
+('YZA4567','Kia',0,'Negyedik','Pécs, Rákóczi út 5'),
+('BCD8901','Nissan',1,'Negyedik','Pécs, Rákóczi út 5');
+
+-- Teszt autók (6 db)
+INSERT INTO Autok (Rendszam, Kialakitas) VALUES
+('ABC1234','szedan'),
+('DEF5678','pickup'),
+('GHI9012','suv'),
+('JKL3456','kombi'),
+('MNO7890','szedan'),
+('PQR2345','kisbusz');
+
+-- Teszt motorok (4 db)
+INSERT INTO Motorok (Rendszam, Kobcenti) VALUES
+('STU6789',50),
+('VWX0123',2000),
+('YZA4567',125),
+('BCD8901',500);
+
+-- Teljes betöltéshez SELECT:
+SELECT Nev, Cim, MaxJarmu, j.Rendszam, Marka, Foglalt, KolcsonzoNev, KolcsonzoCim, a.Rendszam, Kialakitas, m.Rendszam, Kobcenti
+                    FROM Kolcsonzok AS k
+                    LEFT JOIN Jarmuvek as j ON k.Nev = j.KolcsonzoNev AND k.Cim = j.KolcsonzoCim
+                    LEFT JOIN Autok AS a ON j.Rendszam = a. Rendszam
+                    LEFT JOIN Motorok AS m ON j.Rendszam = m.Rendszam
+                    ORDER BY Nev, Cim;
