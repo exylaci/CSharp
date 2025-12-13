@@ -62,6 +62,7 @@
             // 
             // btnUjKolcsonzo
             // 
+            this.btnUjKolcsonzo.Font = new System.Drawing.Font("Microsoft Sans Serif", 7.8F);
             this.btnUjKolcsonzo.Location = new System.Drawing.Point(6, 21);
             this.btnUjKolcsonzo.Name = "btnUjKolcsonzo";
             this.btnUjKolcsonzo.Size = new System.Drawing.Size(214, 29);

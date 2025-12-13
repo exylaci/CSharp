@@ -31,6 +31,12 @@ namespace ServiceBasedLocalDBGyakorlasJarmukolcsonző
             cmbNev.DataSource = kolcsonzok.Select(k => k.Nev).Distinct().ToList();
             cmbCim.DataSource = kolcsonzok.Select(k => k.Cim).Distinct().ToList();
 
+            if (kolcsonzo != null)
+            {
+                cmbNev.SelectedItem = kolcsonzo.Nev;
+                cmbCim.SelectedItem = kolcsonzo.Cim;
+            }
+
             if (jarmu == null)
             {
                 cmbKategoria.SelectedItem = Kategoria.Autó;
@@ -41,15 +47,13 @@ namespace ServiceBasedLocalDBGyakorlasJarmukolcsonző
             }
             else
             {
-                cmbNev.Text = kolcsonzo.Nev;
-                //cmbCim.Text = kolcsonzo.Cim;
                 txbRendszam.Text = jarmu.Rendszam;
                 cmbKategoria.SelectedItem = (jarmu is Auto) ? Kategoria.Autó : Kategoria.Motor;
                 txbMarka.Text = jarmu.Marka;
                 if (jarmu is Auto)
                 {
                     lblKialakitasKobcenti.Text = "Kialakítás:";
-                    cmbKialakitas.Text = ((Auto)jarmu).Kialakitas.ToString();
+                    cmbKialakitas.SelectedItem = ((Auto)jarmu).Kialakitas.ToString();
                     numKobcenti.Visible = false;
 
                 }

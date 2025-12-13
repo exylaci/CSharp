@@ -134,10 +134,10 @@
   </ItemGroup>
   <ItemGroup>
     <Content Include="JarmukolcsonzoDB.mdf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="JarmukolcsonzoDB_log.ldf">
-      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
       <DependentUpon>JarmukolcsonzoDB.mdf</DependentUpon>
     </Content>
   </ItemGroup>

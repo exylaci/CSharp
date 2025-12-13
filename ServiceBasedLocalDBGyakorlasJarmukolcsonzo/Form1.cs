@@ -165,12 +165,19 @@ namespace ServiceBasedLocalDBGyakorlasJarmukolcsonző
         }
         private void BtnUjJarmu_Click(object sender, EventArgs e)
         {
-            if(lsvTeljes.Items.Count == 0)
+            if (lsvTeljes.Items.Count == 0)
             {
                 MessageBox.Show("Elöszőr egy kölcsönzőt kell hozzáadni!", "Új jármű hozzáadása", MessageBoxButtons.OK, MessageBoxIcon.Warning);
                 return;
             }
-            JarmuForm jarmuForm = new JarmuForm(null, null, kolcsonzok);
+
+            Kolcsonzo kolcsonzo = null;
+            if (lsvTeljes.SelectedItems.Count != 0)
+            {
+                kolcsonzo = kolcsonzok.First(k => k.Nev == lsvTeljes.SelectedItems[0].SubItems[0].Text && k.Cim == lsvTeljes.SelectedItems[0].SubItems[1].Text);
+            }
+
+            JarmuForm jarmuForm = new JarmuForm(null, kolcsonzo, kolcsonzok);
             if (jarmuForm.ShowDialog() == DialogResult.OK)
             {
                 foreach (Kolcsonzo k in kolcsonzok)

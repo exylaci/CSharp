@@ -144,27 +144,29 @@ namespace ServiceBasedLocalDBGyakorlasJarmukolcsonző
             {
                 command.Parameters.Clear();
                 command.Transaction = connection.BeginTransaction();
+                command.Parameters.AddWithValue("@nev", kolcsonzo.Nev);
+                command.Parameters.AddWithValue("@cim", kolcsonzo.Cim);
+
                 //jarmuvek torlese
-                foreach (string tabla in new string[] { "Motorok", "Autok", "Jarmuvek" })
+                foreach (string tabla in new string[] { "Motorok", "Autok" })
                 {
-                    foreach (Jarmu jarmu in kolcsonzo.Jarmuvek)
-                    {
-                        command.CommandText = $@"
-                            DELETE FROM {tabla}
-                            WHERE Rendszam = @rendszam; ";
-                        command.Parameters.AddWithValue("@tabla", tabla);
-                        command.Parameters.AddWithValue("@rendszam", jarmu.Rendszam);
-                        command.ExecuteNonQuery();
-                        command.Parameters.Clear();
-                    }
+                    command.CommandText = $@"
+                        DELETE FROM {tabla} WHERE Rendszam IN 
+                            (SELECT Rendszam FROM Jarmuvek WHERE KolcsonzoNev = @nev AND KolcsonzoCim = @cim);";
+                    command.ExecuteNonQuery();
+
                 }
+                command.CommandText = $@"
+                    DELETE FROM Jarmuvek
+                    WHERE KolcsonzoNev = @nev AND KolcsonzoCim = @cim;";
+                command.ExecuteNonQuery();
+
                 //kolcsonzo torlese
                 command.CommandText = @"
                     DELETE FROM Kolcsonzok
                     WHERE Nev = @nev AND Cim = @cim;";
-                command.Parameters.AddWithValue("@nev", kolcsonzo.Nev);
-                command.Parameters.AddWithValue("@cim", kolcsonzo.Cim);
                 command.ExecuteNonQuery();
+
                 command.Transaction.Commit();
             }
             catch (Exception e)
@@ -179,34 +181,35 @@ namespace ServiceBasedLocalDBGyakorlasJarmukolcsonző
             {
                 command.Parameters.Clear();
                 command.Transaction = connection.BeginTransaction();
-                command.CommandText = @"
+                {
+                    command.CommandText = @"
                     INSERT INTO Jarmuvek (Rendszam, Marka, Foglalt, KolcsonzoNev, KolcsonzoCim)
                     VALUES (@rendszam, @marka, @foglalt, @kolcsonzonev, @kolcsonzocim);";
-                command.Parameters.AddWithValue("@rendszam", jarmu.Rendszam);
-                command.Parameters.AddWithValue("@marka", jarmu.Marka);
-                command.Parameters.AddWithValue("@foglalt", jarmu.Foglalt);
-                command.Parameters.AddWithValue("@kolcsonzonev", kolcsonzo.Nev);
-                command.Parameters.AddWithValue("@kolcsonzocim", kolcsonzo.Cim);
-                command.ExecuteNonQuery();
+                    command.Parameters.AddWithValue("@rendszam", jarmu.Rendszam);
+                    command.Parameters.AddWithValue("@marka", jarmu.Marka);
+                    command.Parameters.AddWithValue("@foglalt", jarmu.Foglalt);
+                    command.Parameters.AddWithValue("@kolcsonzonev", kolcsonzo.Nev);
+                    command.Parameters.AddWithValue("@kolcsonzocim", kolcsonzo.Cim);
+                    command.ExecuteNonQuery();
 
-
-                command.Parameters.Clear();
-                command.Parameters.AddWithValue("@rendszam", jarmu.Rendszam);
-                if (jarmu is Auto)
-                {
-                    command.CommandText = @"
+                    command.Parameters.Clear();
+                    command.Parameters.AddWithValue("@rendszam", jarmu.Rendszam);
+                    if (jarmu is Auto)
+                    {
+                        command.CommandText = @"
                         INSERT INTO Autok (Rendszam, Kialakitas)
                         VALUES (@rendszam, @kialakitas);";
-                    command.Parameters.AddWithValue("@kialakitas", ((Auto)jarmu).Kialakitas.ToString());
-                }
-                else
-                {
-                    command.CommandText = @"
+                        command.Parameters.AddWithValue("@kialakitas", ((Auto)jarmu).Kialakitas.ToString());
+                    }
+                    else
+                    {
+                        command.CommandText = @"
                     INSERT INTO Autok (Rendszam, Kialakitas)
                     VALUES (@rendszam, @kialakitas);";
-                    command.Parameters.AddWithValue("@kobcenti", ((Motor)jarmu).Kobcenti);
+                        command.Parameters.AddWithValue("@kobcenti", ((Motor)jarmu).Kobcenti);
+                    }
+                    command.ExecuteNonQuery();
                 }
-                command.ExecuteNonQuery();
                 command.Transaction.Commit();
             }
             catch (Exception e)
@@ -239,16 +242,14 @@ namespace ServiceBasedLocalDBGyakorlasJarmukolcsonző
             {
                 command.Parameters.Clear();
                 command.Transaction = connection.BeginTransaction();
+                {
+                    command.CommandText = $"DELETE FROM {(jarmu is Auto ? "Autok" : "Motorok")}  WHERE Rendszam = @rendszam; ";
+                    command.Parameters.AddWithValue("@rendszam", jarmu.Rendszam);
+                    command.ExecuteNonQuery();
 
-                command.CommandText = $"DELETE FROM {(jarmu is Auto ? "Autok" : "Motorok")}  WHERE Rendszam = @rendszam; ";
-                command.Parameters.AddWithValue("@rendszam", jarmu.Rendszam);
-                command.ExecuteNonQuery();
-
-                command.Parameters.Clear();
-                command.CommandText = $"DELETE FROM Jarmuvek  WHERE Rendszam = @rendszam; ";
-                command.Parameters.AddWithValue("@rendszam", jarmu.Rendszam);
-                command.ExecuteNonQuery();
-
+                    command.CommandText = $"DELETE FROM Jarmuvek  WHERE Rendszam = @rendszam; ";
+                    command.ExecuteNonQuery();
+                }
                 command.Transaction.Commit();
             }
             catch (Exception ex)
