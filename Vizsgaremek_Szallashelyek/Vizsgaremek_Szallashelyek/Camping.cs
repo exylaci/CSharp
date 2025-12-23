@@ -11,11 +11,11 @@ namespace Vizsgaremek_Szallashelyek
         public bool AtWaterfront { get; private set; }
 
 
-        public Camping(string id, string name, AccommodationType type, Address address, bool atWaterfront) : base(id, name, type, address)
+        public Camping(string id, string name, AccommodationProfile profile, Address address, bool atWaterfront) : base(id, name, profile, address)
         {
             AtWaterfront = atWaterfront;
         }
-        public Camping(string name, AccommodationType type, Address address, bool atWaterfront) : base(name, type, address)
+        public Camping(string name, AccommodationProfile profile, Address address, bool atWaterfront) : base(name, profile, address)
         {
             AtWaterfront = atWaterfront;
         }

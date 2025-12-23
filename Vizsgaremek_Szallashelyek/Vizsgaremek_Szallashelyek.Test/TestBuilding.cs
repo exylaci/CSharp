@@ -7,11 +7,11 @@ namespace Vizsgaremek_Szallashelyek.Tests
         public TestBuilding(
             string id,
             string name,
-            AccommodationType type,
+            AccommodationProfile profile,
             Address address,
             float basePrice,
             byte stars)
-            : base(id, name, type, address, basePrice, stars)
+            : base(id, name, profile, address, basePrice, stars)
         {
         }
     }

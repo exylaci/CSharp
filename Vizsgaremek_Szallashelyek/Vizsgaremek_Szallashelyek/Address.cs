@@ -8,20 +8,20 @@ namespace Vizsgaremek_Szallashelyek
 {
     internal class Address
     {
-        private short postalCode;
+        private short zipCode;
         private string city;
         private string street;
         private string houseNumber;
 
 
-        public short PostalCode
+        public short ZipCode
         {
-            get => postalCode;
+            get => zipCode;
             set
             {
                 if (value >= 1000 && value <= 9999)
                 {
-                    postalCode = value;
+                    zipCode = value;
                 }
                 else
                 {
@@ -63,9 +63,9 @@ namespace Vizsgaremek_Szallashelyek
 
 
 
-        public Address(short postalCode, string city, string street, string houseNumber)
+        public Address(short zipCode, string city, string street, string houseNumber)
         {
-            PostalCode = postalCode;
+            ZipCode = zipCode;
             City = city;
             Street = street;
             HouseNumber = houseNumber;
@@ -80,7 +80,7 @@ namespace Vizsgaremek_Szallashelyek
         public override bool Equals(object obj)
         {
             return obj is Address address &&
-                   PostalCode == address.PostalCode &&
+                   ZipCode == address.ZipCode &&
                    string.Equals(City, address.city) &&
                     string.Equals(Street, address.street) &&
                     string.Equals(HouseNumber, address.houseNumber);
@@ -89,7 +89,7 @@ namespace Vizsgaremek_Szallashelyek
         public override int GetHashCode()
         {
             int hashCode = -1786871447;
-            hashCode = hashCode * -1521134295 + postalCode.GetHashCode();
+            hashCode = hashCode * -1521134295 + zipCode.GetHashCode();
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(city);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(street);
             hashCode = hashCode * -1521134295 + EqualityComparer<string>.Default.GetHashCode(houseNumber);

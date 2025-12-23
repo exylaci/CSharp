@@ -9,14 +9,14 @@ namespace Vizsgaremek_Szallashelyek.Tests
         [Fact]
         public void Constructor_ValidData_CreatesAddressSuccessfully()
         {
-            short postalCode = 1234;
+            short zipCode = 1234;
             string city = "Budapest";
             string street = "Fő utca";
             string houseNumber = "10/A";
 
-            Address address = new Address(postalCode, city, street, houseNumber);
+            Address address = new Address(zipCode, city, street, houseNumber);
 
-            Assert.Equal(postalCode, address.PostalCode);
+            Assert.Equal(zipCode, address.ZipCode);
             Assert.Equal(city, address.City);
             Assert.Equal(street, address.Street);
             Assert.Equal(houseNumber, address.HouseNumber);
@@ -25,10 +25,10 @@ namespace Vizsgaremek_Szallashelyek.Tests
         [Theory]
         [InlineData(999)]
         [InlineData(10000)]
-        public void PostalCode_InvalidValue_ThrowsArgumentException(short invalidPostalCode)
+        public void ZipCode_InvalidValue_ThrowsArgumentException(short invalidZipCde)
         {
             Assert.Throws<ArgumentException>(() =>
-                new Address(invalidPostalCode, "Budapest", "Fő utca", "10/A")
+                new Address(invalidZipCde, "Budapest", "Fő utca", "10/A")
             );
         }
 

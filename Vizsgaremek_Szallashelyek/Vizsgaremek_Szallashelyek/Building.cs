@@ -43,12 +43,12 @@ namespace Vizsgaremek_Szallashelyek
         }
 
 
-        public Building(string id, string name, AccommodationType type, Address address, float basePrice, byte stars) : base(id, name, type, address)
+        public Building(string id, string name, AccommodationProfile type, Address address, float basePrice, byte stars) : base(id, name, type, address)
         {
             BasePrice = basePrice;
             Stars = stars;
         }
-        public Building(string name, AccommodationType type, Address address, float basePrice, byte stars) : base(name, type, address)
+        public Building(string name, AccommodationProfile type, Address address, float basePrice, byte stars) : base(name, type, address)
         {
             BasePrice = basePrice;
             Stars = stars;

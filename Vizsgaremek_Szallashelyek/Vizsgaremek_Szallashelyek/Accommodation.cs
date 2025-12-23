@@ -6,11 +6,11 @@ using System.Threading.Tasks;
 
 namespace Vizsgaremek_Szallashelyek
 {
-    public enum AccommodationType
+    public enum AccommodationProfile
     {
         Bussines,
         Sport,
-        Mecicaltment,
+        Mecical,
         Other
     }
 
@@ -18,7 +18,7 @@ namespace Vizsgaremek_Szallashelyek
     {
         private string id;
         private string name;
-        private AccommodationType type;
+        private AccommodationProfile profile;
         private Address address;
 
 
@@ -38,25 +38,25 @@ namespace Vizsgaremek_Szallashelyek
             }
         }
         public string Name { get; set; }
-        public AccommodationType Type { get; set; }
+        public AccommodationProfile Profile { get; set; }
         public Address Address { get; private set; }
 
 
-        public Accommodation(string id, string name, AccommodationType type, Address address) : this(name, type, address)
+        public Accommodation(string id, string name, AccommodationProfile profile, Address address) : this(name, profile, address)
         {
             Id = id;
         }
-        public Accommodation(string name, AccommodationType type, Address address)
+        public Accommodation(string name, AccommodationProfile profile, Address address)
         {
             Name = name;
-            Type = type;
+            Profile = profile;
             Address = address;
         }
 
 
         public override string ToString()
         {
-            return $"{Type} - {Name}";
+            return $"{Profile} - {Name}";
         }
 
         public abstract double GetPrice();

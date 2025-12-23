@@ -11,11 +11,11 @@ namespace Vizsgaremek_Szallashelyek
         public bool HasWellness { get; private set; }
 
 
-        public Hotel(string id, string name, AccommodationType type, Address address, float basePrice, byte stars, bool hasWellness) : base(id, name, type, address, basePrice, stars)
+        public Hotel(string id, string name, AccommodationProfile profile, Address address, float basePrice, byte stars, bool hasWellness) : base(id, name, profile, address, basePrice, stars)
         {
             HasWellness = hasWellness;
         }
-        public Hotel(string name, AccommodationType type, Address address, float basePrice, byte stars, bool hasWellness) : base(name, type, address, basePrice, stars)
+        public Hotel(string name, AccommodationProfile profile, Address address, float basePrice, byte stars, bool hasWellness) : base(name, profile, address, basePrice, stars)
         {
             HasWellness = hasWellness;
         }

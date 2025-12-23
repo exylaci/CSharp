@@ -14,7 +14,7 @@ namespace Vizsgaremek_Szallashelyek.Tests
             Building building = new TestBuilding(
                 "ABCDEFGH",
                 "Hilton",
-                AccommodationType.Bussines,
+                AccommodationProfile.Bussines,
                 sampleAddress,
                 10000,
                 4);
@@ -31,7 +31,7 @@ namespace Vizsgaremek_Szallashelyek.Tests
                 new TestBuilding(
                     "ABCDEFGH",
                     "Hotel Test",
-                    AccommodationType.Bussines,
+                    AccommodationProfile.Bussines,
                     sampleAddress,
                     -100,
                     3));
@@ -46,7 +46,7 @@ namespace Vizsgaremek_Szallashelyek.Tests
                 new TestBuilding(
                     "ABCDEFGH",
                     "Hotel Test",
-                    AccommodationType.Bussines,
+                    AccommodationProfile.Bussines,
                     sampleAddress,
                     10000,
                     stars));
@@ -58,7 +58,7 @@ namespace Vizsgaremek_Szallashelyek.Tests
             Building building = new TestBuilding(
                 "ABCDEFGH",
                 "Hotel Test",
-                AccommodationType.Bussines,
+                AccommodationProfile.Bussines,
                 sampleAddress,
                 10000,
                 3);

@@ -4,11 +4,11 @@ namespace Vizsgaremek_Szallashelyek.Test
 {
     class TestAccommodation : Accommodation
     {
-        public TestAccommodation(string id, string name, AccommodationType type, Address address)
-            : base(id, name, type, address) { }
+        public TestAccommodation(string id, string name, AccommodationProfile profile, Address address)
+            : base(id, name, profile, address) { }
 
-        public TestAccommodation(string name, AccommodationType type, Address address)
-            : base(name, type, address) { }
+        public TestAccommodation(string name, AccommodationProfile profile, Address address)
+            : base(name, profile, address) { }
 
         public override double GetPrice()
         {

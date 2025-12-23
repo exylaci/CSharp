@@ -15,7 +15,7 @@ namespace Vizsgaremek_Szallashelyek.Tests
             Hotel hotel = new Hotel(
                 "ABCDEFGH",
                 "Wellness Hotel",
-                AccommodationType.Bussines,
+                AccommodationProfile.Bussines,
                 sampleAddress,
                 20000,
                 4,
@@ -30,7 +30,7 @@ namespace Vizsgaremek_Szallashelyek.Tests
             Hotel hotel = new Hotel(
                 "ABCDEFGH",
                 "NEM welness hotel",
-                AccommodationType.Bussines,
+                AccommodationProfile.Bussines,
                 sampleAddress,
                 15000,
                 3,
@@ -45,7 +45,7 @@ namespace Vizsgaremek_Szallashelyek.Tests
             Hotel hotel = new Hotel(
                 "ABCDEFGH",
                 "Hilton",
-                AccommodationType.Bussines,
+                AccommodationProfile.Bussines,
                 sampleAddress,
                 10000,
                 5,
@@ -62,7 +62,7 @@ namespace Vizsgaremek_Szallashelyek.Tests
             Hotel hotel = new Hotel(
                 "ABCDEFGH",
                 "Hilton",
-                AccommodationType.Bussines,
+                AccommodationProfile.Bussines,
                 sampleAddress,
                 12000,
                 3,
@@ -79,7 +79,7 @@ namespace Vizsgaremek_Szallashelyek.Tests
             Hotel hotel = new Hotel(
                 "ABCDEFGH",
                 "Hilton",
-                AccommodationType.Bussines,
+                AccommodationProfile.Bussines,
                 sampleAddress,
                 10000,
                 1,
@@ -97,7 +97,7 @@ namespace Vizsgaremek_Szallashelyek.Tests
             Hotel hotel = new Hotel(
                 "ABCDEFGH",
                 "Hilton",
-                AccommodationType.Bussines,
+                AccommodationProfile.Bussines,
                 sampleAddress,
                 10000,
                 1,

@@ -11,12 +11,12 @@ namespace Vizsgaremek_Szallashelyek.Test
         [Fact]
         public void Constructor_WithValidData_CreatesGuesthouse()
         {
-            Guesthouse guesthouse = new Guesthouse("12345678", "Oázis", AccommodationType.Other, sampleAddress, 10000f, 3, true);
+            Guesthouse guesthouse = new Guesthouse("12345678", "Oázis", AccommodationProfile.Other, sampleAddress, 10000f, 3, true);
 
             Assert.Equal("12345678", guesthouse.Id);
             Assert.Equal("Oázis", guesthouse.Name);
-            Assert.Equal(AccommodationType.Other, guesthouse.Type);
-            Assert.Equal(sampleAddress.PostalCode, guesthouse.Address.PostalCode);
+            Assert.Equal(AccommodationProfile.Other, guesthouse.Profile);
+            Assert.Equal(sampleAddress.ZipCode, guesthouse.Address.ZipCode);
             Assert.Equal(sampleAddress.City, guesthouse.Address.City);
             Assert.Equal(sampleAddress.Street, guesthouse.Address.Street);
             Assert.Equal(sampleAddress.HouseNumber, guesthouse.Address.HouseNumber);
@@ -28,7 +28,7 @@ namespace Vizsgaremek_Szallashelyek.Test
         [Fact]
         public void GetPrice_ReturnsCorrectValue()
         {
-            Guesthouse guesthouse = new Guesthouse("12345678", "Oázis", AccommodationType.Other, sampleAddress, 10000f, 3, true);
+            Guesthouse guesthouse = new Guesthouse("12345678", "Oázis", AccommodationProfile.Other, sampleAddress, 10000f, 3, true);
 
             double expectedPrice = 10000 * (1 + 1d / 10 * 3); // Building GetPrice logika
             Assert.Equal(expectedPrice, guesthouse.GetPrice());
@@ -37,7 +37,7 @@ namespace Vizsgaremek_Szallashelyek.Test
         [Fact]
         public void ToString_ReturnsExpectedFormat()
         {
-            Guesthouse guesthouse = new Guesthouse("12345678", "Oázis", AccommodationType.Other, sampleAddress, 10000f, 3, true);
+            Guesthouse guesthouse = new Guesthouse("12345678", "Oázis", AccommodationProfile.Other, sampleAddress, 10000f, 3, true);
 
             string result = guesthouse.ToString();
             Assert.StartsWith("Panzió", result);
@@ -47,7 +47,7 @@ namespace Vizsgaremek_Szallashelyek.Test
         [Fact]
         public void Renovate_ChangesStars()
         {
-            Guesthouse guesthouse = new Guesthouse("12345678", "Oázis", AccommodationType.Other, sampleAddress, 10000f, 3, true);
+            Guesthouse guesthouse = new Guesthouse("12345678", "Oázis", AccommodationProfile.Other, sampleAddress, 10000f, 3, true);
 
             guesthouse.Renovate(5);
 
