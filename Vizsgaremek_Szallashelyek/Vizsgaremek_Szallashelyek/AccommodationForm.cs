@@ -19,8 +19,9 @@ namespace Vizsgaremek_Szallashelyek
 
     public partial class AccommodationForm : Form
     {
-        Accommodation accommodation;
-        byte stars = 1;
+        internal Accommodation accommodation;
+        private byte stars = 1;
+        private List<Accommodation> accommodations;
 
 
         public AccommodationForm()
@@ -43,9 +44,10 @@ namespace Vizsgaremek_Szallashelyek
             }
         }
 
-        internal AccommodationForm(Accommodation accommodation) : this()
+        internal AccommodationForm(Accommodation accommodation, List<Accommodation> accommodations) : this()
         {
             this.accommodation = accommodation;
+            this.accommodations = accommodations;
             if (accommodation == null)
             {
                 btnRenovation.Visible = false;
@@ -58,6 +60,7 @@ namespace Vizsgaremek_Szallashelyek
                     stars = ((Building)accommodation).Stars;
                 }
                 UpdateStarsPaint(stars);
+                txbID.Enabled = false;
                 txbID.Text = accommodation.Id;
                 txbName.Text = accommodation.Name;
                 numZipCode.Value = accommodation.Address.ZipCode;
@@ -88,6 +91,8 @@ namespace Vizsgaremek_Szallashelyek
                 cmbType.Enabled = false;
                 grbStars.Enabled = false;
             }
+
+            this.accommodations = accommodations;
         }
 
 
@@ -220,6 +225,21 @@ namespace Vizsgaremek_Szallashelyek
             }
         }
 
-
+        private void txbID_TextChanged(object sender, EventArgs e)
+        {
+            if (!txbID.Enabled)
+            {
+                return;
+            }
+            if (accommodations.Any(a => a.Id == txbID.Text))
+            {
+                txbID.ForeColor = Color.Red;
+                txbID.Focus();
+            }
+            else
+            {
+                txbID.ForeColor = SystemColors.ControlText;
+            }
+        }
     }
 }

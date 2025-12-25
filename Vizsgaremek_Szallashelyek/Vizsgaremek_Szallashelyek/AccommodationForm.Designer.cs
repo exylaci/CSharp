@@ -336,9 +336,9 @@
             // 
             this.txbID.Location = new System.Drawing.Point(169, 12);
             this.txbID.Name = "txbID";
-            this.txbID.ReadOnly = true;
             this.txbID.Size = new System.Drawing.Size(179, 22);
             this.txbID.TabIndex = 26;
+            this.txbID.TextChanged += new System.EventHandler(this.txbID_TextChanged);
             // 
             // grbStars
             // 
