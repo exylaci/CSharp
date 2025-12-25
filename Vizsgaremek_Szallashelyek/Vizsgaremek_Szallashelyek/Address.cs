@@ -8,12 +8,14 @@ namespace Vizsgaremek_Szallashelyek
 {
     internal class Address
     {
+        private int id;
         private short zipCode;
         private string city;
         private string street;
         private string houseNumber;
 
 
+        public int Id { get; internal set; }
         public short ZipCode
         {
             get => zipCode;
@@ -62,6 +64,11 @@ namespace Vizsgaremek_Szallashelyek
         public string HouseNumber { get; set; }
 
 
+
+        public Address(int id, short zipCode, string city, string street, string houseNumber) : this(zipCode, city, street, houseNumber)
+        {
+            Id = id;
+        }
 
         public Address(short zipCode, string city, string street, string houseNumber)
         {

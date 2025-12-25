@@ -176,13 +176,13 @@ namespace Vizsgaremek_Szallashelyek
                     switch (cmbType.SelectedIndex)
                     {
                         case 0:
-                            accommodation = new Hotel(txbName.Text, (AccommodationProfile)cmbProfile.SelectedIndex, new Address((short)numZipCode.Value, txbCity.Text, txbStreet.Text, txbHouseNumber.Text), (float)numBasePrice.Value, stars, chbSpeciality.Checked);
+                            accommodation = new Hotel(txbID.Text, txbName.Text, (AccommodationProfile)cmbProfile.SelectedIndex, new Address((short)numZipCode.Value, txbCity.Text, txbStreet.Text, txbHouseNumber.Text), (float)numBasePrice.Value, stars, chbSpeciality.Checked);
                             break;
                         case 1:
-                            accommodation = new Guesthouse(txbName.Text, (AccommodationProfile)cmbProfile.SelectedIndex, new Address((short)numZipCode.Value, txbCity.Text, txbStreet.Text, txbHouseNumber.Text), (float)numBasePrice.Value, stars, chbSpeciality.Checked);
+                            accommodation = new Guesthouse(txbID.Text, txbName.Text, (AccommodationProfile)cmbProfile.SelectedIndex, new Address((short)numZipCode.Value, txbCity.Text, txbStreet.Text, txbHouseNumber.Text), (float)numBasePrice.Value, stars, chbSpeciality.Checked);
                             break;
                         case 2:
-                            accommodation = new Camping(txbName.Text, (AccommodationProfile)cmbProfile.SelectedIndex, new Address((short)numZipCode.Value, txbCity.Text, txbStreet.Text, txbHouseNumber.Text), chbSpeciality.Checked);
+                            accommodation = new Camping(txbID.Text, txbName.Text, (AccommodationProfile)cmbProfile.SelectedIndex, new Address((short)numZipCode.Value, txbCity.Text, txbStreet.Text, txbHouseNumber.Text), chbSpeciality.Checked);
                             break;
                     }
                     Repositories.InsertAccommodation(accommodation);
@@ -207,18 +207,16 @@ namespace Vizsgaremek_Szallashelyek
                     Repositories.UpdateAccommodation(accommodation);
                 }
             }
-            // TODO:
-            //catch (DBExceptions ex)
-            //{
-            //    MessageBox.Show(ex.Message, "Hiba!", MessageBoxButtons.OK, MessageBoxIcon.Error);
-            //    DialogResult = DialogResult.None;
-            //}
+            catch (DBExceptions ex)
+            {
+                MessageBox.Show(ex.Message, "Hiba!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                DialogResult = DialogResult.None;
+            }
             catch (Exception ex)
             {
                 MessageBox.Show(ex.Message, "Hiba!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 DialogResult = DialogResult.None;
-                // TODO:
-                //Log.Append(ex);
+                Log.Append(ex);
             }
         }
 
