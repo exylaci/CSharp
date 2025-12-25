@@ -322,11 +322,11 @@ namespace Vizsgaremek_Szallashelyek
             }
         }
 
-        static internal List<Accommodation> LoadAllAccommodations()
+        static internal AccommodationList LoadAllAccommodations()
         {
             try
             {
-                List<Accommodation> accommodations = new List<Accommodation>();
+                AccommodationList accommodations = new AccommodationList();
 
                 //read every Camping
                 command.Parameters.Clear();
@@ -344,11 +344,11 @@ namespace Vizsgaremek_Szallashelyek
                     {
                         accommodations.Add(new Camping(
                             reader.GetString("Id"),
-                            reader.GetString("Nev"),
+                            reader.GetString("Name"),
                             (AccommodationProfile)Enum.Parse(typeof(AccommodationProfile), reader.GetString("Profile")),
                             new Address(
-                                int.Parse(reader.GetString("Id")),
-                                short.Parse(reader.GetString("ZipCode")),
+                                reader.GetInt32("AddressId"),
+                                reader.GetInt16("ZipCode"),
                                 reader.GetString("City"),
                                 reader.GetString("Street"),
                                 reader.GetString("Housenumber")
@@ -377,11 +377,11 @@ namespace Vizsgaremek_Szallashelyek
                     {
                         accommodations.Add(new Guesthouse(
                             reader.GetString("Id"),
-                            reader.GetString("Nev"),
+                            reader.GetString("Name"),
                             (AccommodationProfile)Enum.Parse(typeof(AccommodationProfile), reader.GetString("Profile")),
                             new Address(
-                                int.Parse(reader.GetString("Id")),
-                                short.Parse(reader.GetString("ZipCode")),
+                                reader.GetInt32("AddressId"),
+                                reader.GetInt16("ZipCode"),
                                 reader.GetString("City"),
                                 reader.GetString("Street"),
                                 reader.GetString("Housenumber")
@@ -412,11 +412,11 @@ namespace Vizsgaremek_Szallashelyek
                     {
                         accommodations.Add(new Hotel(
                             reader.GetString("Id"),
-                            reader.GetString("Nev"),
+                            reader.GetString("Name"),
                             (AccommodationProfile)Enum.Parse(typeof(AccommodationProfile), reader.GetString("Profile")),
                             new Address(
-                                int.Parse(reader.GetString("Id")),
-                                short.Parse(reader.GetString("ZipCode")),
+                                reader.GetInt32("AddressId"),
+                                reader.GetInt16("ZipCode"),
                                 reader.GetString("City"),
                                 reader.GetString("Street"),
                                 reader.GetString("Housenumber")

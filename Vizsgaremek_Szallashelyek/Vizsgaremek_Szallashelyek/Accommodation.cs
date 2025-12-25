@@ -54,9 +54,20 @@ namespace Vizsgaremek_Szallashelyek
         }
 
 
+        public override bool Equals(object obj)
+        {
+            return obj is Accommodation accommodation &&
+                   id == accommodation.id;
+        }
+
+        public override int GetHashCode()
+        {
+            return 1877310944 + EqualityComparer<string>.Default.GetHashCode(id);
+        }
+
         public override string ToString()
         {
-            return $"{Profile} - {Name}";
+            return $"{Name} - {Address.City}";
         }
 
         public abstract double GetPrice();

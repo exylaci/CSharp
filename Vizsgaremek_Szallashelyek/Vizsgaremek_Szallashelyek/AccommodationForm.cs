@@ -91,8 +91,6 @@ namespace Vizsgaremek_Szallashelyek
                 cmbType.Enabled = false;
                 grbStars.Enabled = false;
             }
-
-            this.accommodations = accommodations;
         }
 
 
