@@ -235,6 +235,7 @@
             this.chbSpeciality.TabIndex = 17;
             this.chbSpeciality.Text = "van-e?";
             this.chbSpeciality.UseVisualStyleBackColor = true;
+            this.chbSpeciality.CheckedChanged += new System.EventHandler(this.chbSpeciality_CheckedChanged);
             // 
             // lblBasePrice
             // 

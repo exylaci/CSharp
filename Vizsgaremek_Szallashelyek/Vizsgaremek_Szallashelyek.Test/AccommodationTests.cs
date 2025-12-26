@@ -32,7 +32,7 @@ namespace Vizsgaremek_Szallashelyek.Test
         public void ToString_ReturnsExpectedFormat()
         {
             Accommodation accomodation = new TestAccommodation("ABCDEFGH", "Hilton", AccommodationProfile.Sport, sampleAddress);
-            string expected = $"Sport - Hilton";
+            string expected = $"Hilton - Budapest";
             Assert.Equal(expected, accomodation.ToString());
         }
 

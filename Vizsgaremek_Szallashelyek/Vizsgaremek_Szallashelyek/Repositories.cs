@@ -62,7 +62,6 @@ namespace Vizsgaremek_Szallashelyek
                     command.Parameters.AddWithValue("@city", accommodation.Address.City);
                     command.Parameters.AddWithValue("@street", accommodation.Address.City);
                     command.Parameters.AddWithValue("@housenumber", accommodation.Address.HouseNumber);
-                    command.ExecuteNonQuery();
                     accommodation.Address.Id = Convert.ToInt32(command.ExecuteScalar());
 
                     //store the accomodation
@@ -103,7 +102,7 @@ namespace Vizsgaremek_Szallashelyek
                             //store to Guesthouse
                             command.Parameters.Clear();
                             command.CommandText = @"
-                                INSERT INTO `Guesthouse` (`GuesthouseId`, `HasBreakfast)
+                                INSERT INTO `Guesthouse` (`GuesthouseId`, `HasBreakfast`)
                                     VALUES (@guesthouseid, @hasbreakfast);";
                             command.Parameters.AddWithValue("@guesthouseid", accommodation.Id);
                             command.Parameters.AddWithValue("@hasbreakfast", ((Guesthouse)accommodation).HasBreakfast);
@@ -158,7 +157,7 @@ namespace Vizsgaremek_Szallashelyek
                     command.Parameters.AddWithValue("@id", accommodation.Address.Id);
                     command.Parameters.AddWithValue("@zipcode", accommodation.Address.ZipCode);
                     command.Parameters.AddWithValue("@city", accommodation.Address.City);
-                    command.Parameters.AddWithValue("@street", accommodation.Address.City);
+                    command.Parameters.AddWithValue("@street", accommodation.Address.Street);
                     command.Parameters.AddWithValue("@housenumber", accommodation.Address.HouseNumber);
                     command.ExecuteNonQuery();
 
@@ -205,7 +204,7 @@ namespace Vizsgaremek_Szallashelyek
                             command.Parameters.Clear();
                             command.CommandText = @"
                                 UPDATE `Guesthouse`
-                                    SET  `HasBreakfast = @hasbreakfast
+                                    SET  `HasBreakfast` = @hasbreakfast
                                     WHERE `GuesthouseId` = @guesthouseid;";
                             command.Parameters.AddWithValue("@guesthouseid", accommodation.Id);
                             command.Parameters.AddWithValue("@hasbreakfast", ((Guesthouse)accommodation).HasBreakfast);
@@ -298,6 +297,7 @@ namespace Vizsgaremek_Szallashelyek
                     command.ExecuteNonQuery();
 
                     //delete from Address
+                    command.Parameters.Clear();
                     command.CommandText = @"
                         DELETE FROM `Address` 
                             WHERE `Id` = @id;";

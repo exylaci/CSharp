@@ -55,6 +55,7 @@
             this.btnNew.TabIndex = 1;
             this.btnNew.Text = "Új szálláshely hozzáadása";
             this.btnNew.UseVisualStyleBackColor = true;
+            this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
             // 
             // mtnModify
             // 
@@ -65,6 +66,7 @@
             this.mtnModify.TabIndex = 2;
             this.mtnModify.Text = "Szálláshely módosítása";
             this.mtnModify.UseVisualStyleBackColor = true;
+            this.mtnModify.Click += new System.EventHandler(this.mtnModify_Click);
             // 
             // btnDelete
             // 
@@ -75,6 +77,7 @@
             this.btnDelete.TabIndex = 3;
             this.btnDelete.Text = "Szálláshely törlése";
             this.btnDelete.UseVisualStyleBackColor = true;
+            this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
             // MainForm
             // 
@@ -87,6 +90,7 @@
             this.Controls.Add(this.lsb);
             this.Name = "MainForm";
             this.Text = "Szálláshelyek";
+            this.FormClosing += new System.Windows.Forms.FormClosingEventHandler(this.MainForm_FormClosing);
             this.Load += new System.EventHandler(this.MainForm_Load);
             this.ResumeLayout(false);
 

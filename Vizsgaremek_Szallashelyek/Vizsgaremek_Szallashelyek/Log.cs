@@ -4,6 +4,7 @@ using System.IO;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Windows.Forms;
 
 namespace Vizsgaremek_Szallashelyek
 {
@@ -11,12 +12,29 @@ namespace Vizsgaremek_Szallashelyek
     {
         public static void Append(string message)
         {
-            File.AppendAllText("log.txt", $"[{DateTime.Now}] - {message}" + Environment.NewLine);
+            try
+            {
+                File.AppendAllText("log.txt", $"[{DateTime.Now}] - {message}" + Environment.NewLine);
+
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("Nem lehet a log fájlba írni!", "Logolási hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
 
         public static void Append(Exception ex)
         {
-            File.AppendAllText("log.txt", $"[{DateTime.Now}] - {ex.Message}{Environment.NewLine}{ex.StackTrace}{Environment.NewLine}");
+            try
+            {
+                File.AppendAllText("log.txt", $"[{DateTime.Now}] - {ex.Message}{Environment.NewLine}{ex.StackTrace}{Environment.NewLine}");
+            }
+            catch (Exception)
+            {
+
+                MessageBox.Show("Nem lehet a log fájlba írni!", "Logolási hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+            }
         }
     }
 }

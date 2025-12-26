@@ -17,7 +17,7 @@ namespace Vizsgaremek_Szallashelyek
             if (this.Any(a => a.Id == accommodation.Id))
                 throw new InvalidOperationException("Már létezik ilyen ID!");
             base.Add(accommodation);
-            AccommodationListChanged?.Invoke(accommodation, "Új szálláshely felvéve");
+            AccommodationListChanged?.Invoke(accommodation, "felvéve");
         }
 
         public bool RemoveById(String id)
@@ -26,7 +26,7 @@ namespace Vizsgaremek_Szallashelyek
             bool successful = base.Remove(accommodation);
             if (successful)
             {
-                AccommodationListChanged?.Invoke(accommodation, "Szálláshely törölve");
+                AccommodationListChanged?.Invoke(accommodation, "törölve");
             }
             return successful;
         }

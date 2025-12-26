@@ -21,7 +21,7 @@ namespace Vizsgaremek_Szallashelyek
     {
         internal Accommodation accommodation;
         private byte stars = 1;
-        private List<Accommodation> accommodations;
+        private AccommodationList accommodations;
 
 
         public AccommodationForm()
@@ -44,7 +44,7 @@ namespace Vizsgaremek_Szallashelyek
             }
         }
 
-        internal AccommodationForm(Accommodation accommodation, List<Accommodation> accommodations) : this()
+        internal AccommodationForm(Accommodation accommodation, AccommodationList accommodations) : this()
         {
             this.accommodation = accommodation;
             this.accommodations = accommodations;
@@ -202,10 +202,18 @@ namespace Vizsgaremek_Szallashelyek
                     {
                         guesthouse.HasBreakfast = chbSpeciality.Checked;
                         guesthouse.BasePrice = (double)numBasePrice.Value;
+                        if (grbStars.Enabled)
+                        {
+                            ((Building)accommodation).Renovate(stars);
+                        }
                     }
                     else if (accommodation is Hotel hotel)
                     {
                         hotel.BasePrice = (double)numBasePrice.Value;
+                        if (grbStars.Enabled)
+                        {
+                            hotel.Renovate(stars, chbSpeciality.Checked);
+                        }
                     }
                     Repositories.UpdateAccommodation(accommodation);
                 }
@@ -229,7 +237,7 @@ namespace Vizsgaremek_Szallashelyek
             {
                 return;
             }
-            if (accommodations.Any(a => a.Id == txbID.Text))
+            if (accommodations.Any(a => a?.Id == txbID.Text))
             {
                 txbID.ForeColor = Color.Red;
                 txbID.Focus();
@@ -238,6 +246,11 @@ namespace Vizsgaremek_Szallashelyek
             {
                 txbID.ForeColor = SystemColors.ControlText;
             }
+        }
+
+        private void chbSpeciality_CheckedChanged(object sender, EventArgs e)
+        {
+            CalculateFinalPrice();
         }
     }
 }
