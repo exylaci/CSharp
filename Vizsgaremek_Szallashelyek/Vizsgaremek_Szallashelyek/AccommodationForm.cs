@@ -20,7 +20,7 @@ namespace Vizsgaremek_Szallashelyek
     public partial class AccommodationForm : Form
     {
         internal Accommodation accommodation;
-        private byte stars = 1;
+        private byte stars;
         private AccommodationList accommodations;
 
 
@@ -44,23 +44,21 @@ namespace Vizsgaremek_Szallashelyek
             }
         }
 
-        internal AccommodationForm(Accommodation accommodation, AccommodationList accommodations) : this()
+        internal AccommodationForm(Accommodation accommodation, AccommodationList accommodations, bool onlyRead = false) : this()
         {
             this.accommodation = accommodation;
             this.accommodations = accommodations;
             if (accommodation == null)
             {
+                this.Text = "Új szálláshely felvitele";
                 btnRenovation.Visible = false;
                 btnRenovation.Enabled = false;
+                txbID.Focus();
             }
             else
             {
-                if (accommodation is Hotel || accommodation is Guesthouse)
-                {
-                    stars = ((Building)accommodation).Stars;
-                }
-                UpdateStarsPaint(stars);
-                txbID.Enabled = false;
+                this.Text = "Szálláshely módosítása";
+                txbID.ReadOnly = true;
                 txbID.Text = accommodation.Id;
                 txbName.Text = accommodation.Name;
                 numZipCode.Value = accommodation.Address.ZipCode;
@@ -74,22 +72,44 @@ namespace Vizsgaremek_Szallashelyek
                     chbSpeciality.Checked = hotel.HasWellness;
                     chbSpeciality.Enabled = false;
                     numBasePrice.Value = (decimal)hotel.BasePrice;
-
+                    stars = ((Building)accommodation).Stars;
                 }
                 else if (accommodation is Guesthouse guesthouse)
                 {
                     cmbType.SelectedIndex = 1;
                     chbSpeciality.Checked = guesthouse.HasBreakfast;
                     numBasePrice.Value = (decimal)guesthouse.BasePrice;
+                    stars = ((Building)accommodation).Stars;
                 }
                 else if (accommodation is Camping)
                 {
                     cmbType.SelectedIndex = 2;
                     chbSpeciality.Checked = ((Camping)accommodation).AtWaterfront;
                     chbSpeciality.Enabled = false;
+                    btnRenovation.Visible = false;
                 }
+                UpdateStarsPaint(stars);
+                CalculateFinalPrice();
                 cmbType.Enabled = false;
                 grbStars.Enabled = false;
+                if (onlyRead)
+                {
+                    this.Text = "Szálláshely adatai";
+                    txbID.Enabled = false;
+                    txbName.Enabled = false;
+                    numZipCode.Enabled = false;
+                    txbCity.Enabled = false;
+                    txbStreet.Enabled = false;
+                    txbHouseNumber.Enabled = false;
+                    cmbProfile.Enabled = false;
+                    chbSpeciality.Enabled = false;
+                    numBasePrice.Enabled = false;
+                    txbFinalPrice.Enabled = false;
+                    btnRenovation.Visible = false;
+                    btnOK.Visible = false;
+                    btnCancel.Text = "Vissza";
+                    btnCancel.Focus();
+                }
             }
         }
 
@@ -119,20 +139,27 @@ namespace Vizsgaremek_Szallashelyek
 
         private void CalculateFinalPrice()
         {
-            switch (cmbType.SelectedIndex)
+            if (stars > 0)
             {
-                case 0:
-                    txbFinalPrice.Text = new Hotel(null, AccommodationProfile.Other, new Address(1000, "a", "a", null), (int)numBasePrice.Value, stars, chbSpeciality.Checked).GetPrice().ToString();
-                    break;
-                case 1:
-                    txbFinalPrice.Text = new Guesthouse(null, AccommodationProfile.Other, new Address(1000, "a", "a", null), (int)numBasePrice.Value, stars, chbSpeciality.Checked).GetPrice().ToString();
-                    break;
-                case 2:
-                    txbFinalPrice.Text = new Camping(null, AccommodationProfile.Other, new Address(1000, "a", "a", null), chbSpeciality.Checked).GetPrice().ToString();
-                    break;
-                default:
-                    txbFinalPrice.Text = string.Empty;
-                    break;
+                switch (cmbType.SelectedIndex)
+                {
+                    case 0:
+                        txbFinalPrice.Text = new Hotel(null, AccommodationProfile.Other, new Address(1000, "a", "a", null), (int)numBasePrice.Value, stars, chbSpeciality.Checked).GetPrice().ToString();
+                        break;
+                    case 1:
+                        txbFinalPrice.Text = new Guesthouse(null, AccommodationProfile.Other, new Address(1000, "a", "a", null), (int)numBasePrice.Value, stars, chbSpeciality.Checked).GetPrice().ToString();
+                        break;
+                    case 2:
+                        txbFinalPrice.Text = new Camping(null, AccommodationProfile.Other, new Address(1000, "a", "a", null), chbSpeciality.Checked).GetPrice().ToString();
+                        break;
+                    default:
+                        txbFinalPrice.Text = string.Empty;
+                        break;
+                }
+            }
+            else
+            {
+                txbFinalPrice.Text = numBasePrice.Value.ToString();
             }
         }
 
@@ -251,6 +278,11 @@ namespace Vizsgaremek_Szallashelyek
         private void chbSpeciality_CheckedChanged(object sender, EventArgs e)
         {
             CalculateFinalPrice();
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            Close();
         }
     }
 }

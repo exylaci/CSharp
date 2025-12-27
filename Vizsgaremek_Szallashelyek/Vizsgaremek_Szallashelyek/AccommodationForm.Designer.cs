@@ -72,6 +72,8 @@
             // 
             // txbName
             // 
+            this.txbName.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txbName.Location = new System.Drawing.Point(169, 39);
             this.txbName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txbName.Name = "txbName";
@@ -80,6 +82,8 @@
             // 
             // grbAddress
             // 
+            this.grbAddress.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.grbAddress.Controls.Add(this.txbHouseNumber);
             this.grbAddress.Controls.Add(this.label6);
             this.grbAddress.Controls.Add(this.txbStreet);
@@ -99,6 +103,8 @@
             // 
             // txbHouseNumber
             // 
+            this.txbHouseNumber.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txbHouseNumber.Location = new System.Drawing.Point(157, 94);
             this.txbHouseNumber.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txbHouseNumber.Name = "txbHouseNumber";
@@ -117,6 +123,8 @@
             // 
             // txbStreet
             // 
+            this.txbStreet.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txbStreet.Location = new System.Drawing.Point(157, 68);
             this.txbStreet.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txbStreet.Name = "txbStreet";
@@ -135,6 +143,8 @@
             // 
             // txbCity
             // 
+            this.txbCity.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txbCity.Location = new System.Drawing.Point(157, 43);
             this.txbCity.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txbCity.Name = "txbCity";
@@ -153,6 +163,8 @@
             // 
             // numZipCode
             // 
+            this.numZipCode.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.numZipCode.Location = new System.Drawing.Point(157, 17);
             this.numZipCode.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.numZipCode.Maximum = new decimal(new int[] {
@@ -166,7 +178,7 @@
             0,
             0});
             this.numZipCode.Name = "numZipCode";
-            this.numZipCode.Size = new System.Drawing.Size(107, 22);
+            this.numZipCode.Size = new System.Drawing.Size(70, 22);
             this.numZipCode.TabIndex = 6;
             this.numZipCode.Value = new decimal(new int[] {
             1000,
@@ -196,6 +208,8 @@
             // 
             // cmbProfile
             // 
+            this.cmbProfile.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbProfile.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbProfile.FormattingEnabled = true;
             this.cmbProfile.Location = new System.Drawing.Point(169, 192);
@@ -206,6 +220,8 @@
             // 
             // cmbType
             // 
+            this.cmbType.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.cmbType.DropDownStyle = System.Windows.Forms.ComboBoxStyle.DropDownList;
             this.cmbType.FormattingEnabled = true;
             this.cmbType.Location = new System.Drawing.Point(169, 219);
@@ -249,6 +265,8 @@
             // 
             // numBasePrice
             // 
+            this.numBasePrice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.numBasePrice.Location = new System.Drawing.Point(169, 272);
             this.numBasePrice.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.numBasePrice.Maximum = new decimal(new int[] {
@@ -283,6 +301,8 @@
             // 
             // txbFinalPrice
             // 
+            this.txbFinalPrice.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txbFinalPrice.Location = new System.Drawing.Point(169, 385);
             this.txbFinalPrice.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
             this.txbFinalPrice.Name = "txbFinalPrice";
@@ -302,6 +322,7 @@
             // 
             // btnOK
             // 
+            this.btnOK.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnOK.DialogResult = System.Windows.Forms.DialogResult.OK;
             this.btnOK.Location = new System.Drawing.Point(123, 425);
             this.btnOK.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -314,6 +335,7 @@
             // 
             // btnCancel
             // 
+            this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
             this.btnCancel.Location = new System.Drawing.Point(241, 425);
             this.btnCancel.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
@@ -322,6 +344,7 @@
             this.btnCancel.TabIndex = 24;
             this.btnCancel.Text = "Mégsem";
             this.btnCancel.UseVisualStyleBackColor = true;
+            this.btnCancel.Click += new System.EventHandler(this.btnCancel_Click);
             // 
             // label0
             // 
@@ -335,6 +358,8 @@
             // 
             // txbID
             // 
+            this.txbID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.txbID.Location = new System.Drawing.Point(169, 12);
             this.txbID.Name = "txbID";
             this.txbID.Size = new System.Drawing.Size(179, 22);
@@ -343,6 +368,8 @@
             // 
             // grbStars
             // 
+            this.grbStars.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
+            | System.Windows.Forms.AnchorStyles.Right)));
             this.grbStars.Location = new System.Drawing.Point(15, 298);
             this.grbStars.Name = "grbStars";
             this.grbStars.Size = new System.Drawing.Size(333, 83);

@@ -57,7 +57,7 @@ namespace Vizsgaremek_Szallashelyek
             }
         }
 
-        private void mtnModify_Click(object sender, EventArgs e)
+        private void btnModify_Click(object sender, EventArgs e)
         {
             if (lsb.SelectedIndex >= 0)
             {
@@ -112,6 +112,14 @@ namespace Vizsgaremek_Szallashelyek
             if (MessageBox.Show("Biztosan ki akar lépni?", "Kilépés", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
             {
                 e.Cancel = true;
+            }
+        }
+
+        private void lsb_DoubleClick(object sender, EventArgs e)
+        {
+            if (lsb.SelectedIndex >= 0 && accommodations[lsb.SelectedIndex] is Building)
+            {
+                new AccommodationForm(accommodations[lsb.SelectedIndex], accommodations, true).Show();
             }
         }
     }

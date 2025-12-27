@@ -30,7 +30,7 @@
         {
             this.lsb = new System.Windows.Forms.ListBox();
             this.btnNew = new System.Windows.Forms.Button();
-            this.mtnModify = new System.Windows.Forms.Button();
+            this.btnModify = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -45,6 +45,7 @@
             this.lsb.Name = "lsb";
             this.lsb.Size = new System.Drawing.Size(341, 292);
             this.lsb.TabIndex = 0;
+            this.lsb.DoubleClick += new System.EventHandler(this.lsb_DoubleClick);
             // 
             // btnNew
             // 
@@ -57,16 +58,16 @@
             this.btnNew.UseVisualStyleBackColor = true;
             this.btnNew.Click += new System.EventHandler(this.btnNew_Click);
             // 
-            // mtnModify
+            // btnModify
             // 
-            this.mtnModify.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
-            this.mtnModify.Location = new System.Drawing.Point(360, 55);
-            this.mtnModify.Name = "mtnModify";
-            this.mtnModify.Size = new System.Drawing.Size(196, 36);
-            this.mtnModify.TabIndex = 2;
-            this.mtnModify.Text = "Szálláshely módosítása";
-            this.mtnModify.UseVisualStyleBackColor = true;
-            this.mtnModify.Click += new System.EventHandler(this.mtnModify_Click);
+            this.btnModify.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Right)));
+            this.btnModify.Location = new System.Drawing.Point(360, 55);
+            this.btnModify.Name = "btnModify";
+            this.btnModify.Size = new System.Drawing.Size(196, 36);
+            this.btnModify.TabIndex = 2;
+            this.btnModify.Text = "Szálláshely módosítása";
+            this.btnModify.UseVisualStyleBackColor = true;
+            this.btnModify.Click += new System.EventHandler(this.btnModify_Click);
             // 
             // btnDelete
             // 
@@ -85,7 +86,7 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(568, 319);
             this.Controls.Add(this.btnDelete);
-            this.Controls.Add(this.mtnModify);
+            this.Controls.Add(this.btnModify);
             this.Controls.Add(this.btnNew);
             this.Controls.Add(this.lsb);
             this.Name = "MainForm";
@@ -100,7 +101,7 @@
 
         private System.Windows.Forms.ListBox lsb;
         private System.Windows.Forms.Button btnNew;
-        private System.Windows.Forms.Button mtnModify;
+        private System.Windows.Forms.Button btnModify;
         private System.Windows.Forms.Button btnDelete;
     }
 }
