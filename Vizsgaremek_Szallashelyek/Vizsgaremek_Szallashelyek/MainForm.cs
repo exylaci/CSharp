@@ -122,5 +122,10 @@ namespace Vizsgaremek_Szallashelyek
                 new AccommodationForm(accommodations[lsb.SelectedIndex], accommodations, true).Show();
             }
         }
+
+        private void btnSorted_Click(object sender, EventArgs e)
+        {
+            new SortedForm(accommodations).Show();
+        }
     }
 }

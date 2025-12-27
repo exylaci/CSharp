@@ -14,7 +14,7 @@ namespace Vizsgaremek_Szallashelyek
         Other
     }
 
-    internal abstract class Accommodation
+    internal abstract class Accommodation : IComparable<Accommodation>
     {
         private string id;
         private string name;
@@ -63,6 +63,54 @@ namespace Vizsgaremek_Szallashelyek
         public override int GetHashCode()
         {
             return 1877310944 + EqualityComparer<string>.Default.GetHashCode(id);
+        }
+
+        public int CompareTo(Accommodation other)
+        {
+            if (other == null)
+            {
+                return 1;
+            }
+            int compareProfile = string.Compare(
+                this.Profile.ToString(),
+                other.Profile.ToString(),
+                StringComparison.CurrentCulture);
+            if (compareProfile != 0)
+            {
+                return compareProfile;
+            }
+            return string.Compare(
+                this.Name,
+                other.Name,
+                StringComparison.CurrentCulture);
+        }
+
+        public static bool operator <(Accommodation a, Accommodation b)
+        {
+            if (ReferenceEquals(a, null))
+            {
+                return !ReferenceEquals(b, null);
+            }
+            return a.CompareTo(b) < 0;
+        }
+
+        public static bool operator >(Accommodation a, Accommodation b)
+        {
+            if (ReferenceEquals(a, null))
+            {
+                return false;
+            }
+            return a.CompareTo(b) > 0;
+        }
+
+        public static bool operator <=(Accommodation a, Accommodation b)
+        {
+            return !(a > b);
+        }
+
+        public static bool operator >=(Accommodation a, Accommodation b)
+        {
+            return !(a < b);
         }
 
         public override string ToString()
