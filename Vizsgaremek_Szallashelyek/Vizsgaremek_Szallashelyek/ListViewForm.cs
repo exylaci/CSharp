@@ -24,7 +24,7 @@ namespace Vizsgaremek_Szallashelyek
 
         private void ListViewForm_Load(object sender, EventArgs e)
         {
-            refresh(original);
+            Refresh(original);
         }
 
         private void btnFilterOn_Click(object sender, EventArgs e)
@@ -32,13 +32,14 @@ namespace Vizsgaremek_Szallashelyek
             FilterForm form = new FilterForm();
             if (form.ShowDialog() == DialogResult.OK)
             {
-                refresh(original.Where(a => Conditions.Condition(a)).ToList());
+                Conditions conditions = form.Conditions;
+                Refresh(original.FindAll(conditions.Condition()));
             }
         }
 
         private void btnFilterOff_Click(object sender, EventArgs e)
         {
-            refresh(original);
+            Refresh(original);
         }
 
         private void btnCancel_Click(object sender, EventArgs e)
@@ -46,7 +47,7 @@ namespace Vizsgaremek_Szallashelyek
             Close();
         }
 
-        private void refresh(List<Accommodation> filtered)
+        private void Refresh(List<Accommodation> filtered)
         {
             lsv.View = View.Details;
             lsv.Items.Clear();

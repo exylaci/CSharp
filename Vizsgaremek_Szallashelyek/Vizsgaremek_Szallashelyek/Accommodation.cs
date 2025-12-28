@@ -14,7 +14,7 @@ namespace Vizsgaremek_Szallashelyek
         Other
     }
 
-    internal abstract class Accommodation : IComparable<Accommodation>
+    public abstract class Accommodation : IComparable<Accommodation>
     {
         private string id;
         private string name;

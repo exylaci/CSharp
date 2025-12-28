@@ -13,6 +13,9 @@ namespace Vizsgaremek_Szallashelyek
 {
     public partial class FilterForm : Form
     {
+        public Conditions Conditions { get; private set; }
+
+
         internal FilterForm()
         {
             InitializeComponent();
@@ -21,6 +24,7 @@ namespace Vizsgaremek_Szallashelyek
 
         private void FilterForm_Load(object sender, EventArgs e)
         {
+            Conditions = new Conditions();
             cmbProfile.DataSource = Enum.GetValues(typeof(AccommodationProfile));
             cmbProfile.SelectedIndex = -1;
         }
