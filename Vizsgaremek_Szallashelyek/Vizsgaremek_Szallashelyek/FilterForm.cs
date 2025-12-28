@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Windows.Forms;
 using Vizsgaremek_Szallashelyek.AccommodationProfileDLL;
 using Vizsgaremek_Szallashelyek.ConditionsDLL;
@@ -19,7 +20,13 @@ namespace Vizsgaremek_Szallashelyek
         private void FilterForm_Load(object sender, EventArgs e)
         {
             Conditions = new AccommodationConditions();
-            cmbProfile.DataSource = Enum.GetValues(typeof(AccommodationProfile));
+            cmbProfile.DataSource = Enum
+                .GetValues(typeof(AccommodationProfile))
+                .Cast<AccommodationProfile>()
+                .Select(ap => new { Value = ap, Text = Accommodation.GetDescription(ap) })
+                .ToList();
+            cmbProfile.DisplayMember = "Text";
+            cmbProfile.ValueMember = "Value";
             cmbProfile.SelectedIndex = -1;
         }
 

@@ -59,7 +59,7 @@ namespace Vizsgaremek_Szallashelyek
                 {
                     lsv.Columns.Add(typeof(Address).GetProperties().ElementAt(i).Name);
                 }
-                lsv.Columns.Add("Aktuális ár",100,HorizontalAlignment.Right);
+                lsv.Columns.Add("Aktuális ár", 100, HorizontalAlignment.Right);
                 lsv.Columns.Add("Extrák");
             }
             foreach (Accommodation accommodation in filtered)
@@ -87,7 +87,7 @@ namespace Vizsgaremek_Szallashelyek
                 }
                 lsv.Items.Add(new ListViewItem(new string[]
                 {
-                    accommodation.Id,accommodation.Name,accommodation.Profile.ToString(),stars,
+                    accommodation.Id,accommodation.Name,Accommodation.GetDescription(accommodation.Profile),stars,
                     accommodation.Address.City,accommodation.Address.Street,accommodation.Address.HouseNumber,
                     accommodation.GetPrice().ToString(),service
                 }));

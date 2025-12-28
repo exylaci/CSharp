@@ -1,11 +1,13 @@
-﻿namespace Vizsgaremek_Szallashelyek.AccommodationProfileDLL
+﻿using System.ComponentModel;
+
+namespace Vizsgaremek_Szallashelyek.AccommodationProfileDLL
 {
     public enum AccommodationProfile
     {
-        Bussines,
-        Sport,
-        Medical,
-        Other
+        [Description("Üzleti")] Bussines,
+        [Description("Sport")] Sport,
+        [Description("Gyógy")] Medical,
+        [Description("Egyéb")] Other
     }
 
     public interface IAccommodation

@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.Reflection;
 using Vizsgaremek_Szallashelyek.AccommodationProfileDLL;
 
 namespace Vizsgaremek_Szallashelyek
@@ -101,6 +103,13 @@ namespace Vizsgaremek_Szallashelyek
         public static bool operator >=(Accommodation a, Accommodation b)
         {
             return !(a < b);
+        }
+
+        internal static string GetDescription(Enum value)
+        {
+            FieldInfo? field = value.GetType().GetField(value.ToString());
+            DescriptionAttribute? attr = field?.GetCustomAttribute<DescriptionAttribute>();
+            return attr?.Description ?? value.ToString();
         }
 
         public override string ToString()

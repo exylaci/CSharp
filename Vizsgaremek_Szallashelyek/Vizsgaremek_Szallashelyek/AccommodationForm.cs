@@ -1,6 +1,8 @@
 ﻿using System;
+using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
+using System.Reflection;
 using System.Windows.Forms;
 using Vizsgaremek_Szallashelyek.AccommodationProfileDLL;
 
@@ -8,9 +10,9 @@ namespace Vizsgaremek_Szallashelyek
 {
     public enum AccommodationType
     {
-        Hotel,
-        Guesthouse,
-        Camping
+        [Description("Szálloda")] Hotel,
+        [Description("Panzió")] Guesthouse,
+        [Description("Kemping")] Camping
     }
 
     public partial class AccommodationForm : Form
@@ -23,8 +25,20 @@ namespace Vizsgaremek_Szallashelyek
         internal AccommodationForm()
         {
             InitializeComponent();
-            cmbProfile.DataSource = Enum.GetValues(typeof(AccommodationProfile));
-            cmbType.DataSource = Enum.GetValues(typeof(AccommodationType));
+            cmbProfile.DataSource = Enum
+                .GetValues(typeof(AccommodationProfile))
+                .Cast<AccommodationProfile>()
+                .Select(ap => new { Value = ap, Text = Accommodation.GetDescription(ap) })
+                .ToList();
+            cmbProfile.DisplayMember = "Text";
+            cmbProfile.ValueMember = "Value";
+            cmbType.DataSource = Enum
+                .GetValues(typeof(AccommodationType))
+                .Cast<AccommodationType>()
+                .Select(at => new { Value = at, Text = Accommodation.GetDescription(at) })
+                .ToList();
+            cmbType.DisplayMember = "Text";
+            cmbType.ValueMember = "Value";
             for (int i = 0; i < 5; i++)
             {
                 Label star = new Label();
