@@ -32,7 +32,6 @@
             this.btnNew = new System.Windows.Forms.Button();
             this.btnModify = new System.Windows.Forms.Button();
             this.btnDelete = new System.Windows.Forms.Button();
-            this.btnFiltered = new System.Windows.Forms.Button();
             this.btnSorted = new System.Windows.Forms.Button();
             this.SuspendLayout();
             // 
@@ -82,16 +81,6 @@
             this.btnDelete.UseVisualStyleBackColor = true;
             this.btnDelete.Click += new System.EventHandler(this.btnDelete_Click);
             // 
-            // btnFiltered
-            // 
-            this.btnFiltered.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
-            this.btnFiltered.Location = new System.Drawing.Point(360, 227);
-            this.btnFiltered.Name = "btnFiltered";
-            this.btnFiltered.Size = new System.Drawing.Size(196, 36);
-            this.btnFiltered.TabIndex = 4;
-            this.btnFiltered.Text = "Szűrt lista";
-            this.btnFiltered.UseVisualStyleBackColor = true;
-            // 
             // btnSorted
             // 
             this.btnSorted.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
@@ -99,7 +88,7 @@
             this.btnSorted.Name = "btnSorted";
             this.btnSorted.Size = new System.Drawing.Size(196, 36);
             this.btnSorted.TabIndex = 5;
-            this.btnSorted.Text = "Rendezett lista";
+            this.btnSorted.Text = "Részletes lista";
             this.btnSorted.UseVisualStyleBackColor = true;
             this.btnSorted.Click += new System.EventHandler(this.btnSorted_Click);
             // 
@@ -109,7 +98,6 @@
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
             this.ClientSize = new System.Drawing.Size(568, 319);
             this.Controls.Add(this.btnSorted);
-            this.Controls.Add(this.btnFiltered);
             this.Controls.Add(this.btnDelete);
             this.Controls.Add(this.btnModify);
             this.Controls.Add(this.btnNew);
@@ -128,7 +116,6 @@
         private System.Windows.Forms.Button btnNew;
         private System.Windows.Forms.Button btnModify;
         private System.Windows.Forms.Button btnDelete;
-        private System.Windows.Forms.Button btnFiltered;
         private System.Windows.Forms.Button btnSorted;
     }
 }

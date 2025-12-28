@@ -10,17 +10,43 @@ using System.Windows.Forms;
 
 namespace Vizsgaremek_Szallashelyek
 {
-    public partial class SortedForm : Form
+    public partial class ListViewForm : Form
     {
-        List<Accommodation> accommodations;
-        internal SortedForm(AccommodationList accommodations)
+        List<Accommodation> original;
+
+
+        internal ListViewForm(AccommodationList accommodations)
         {
             InitializeComponent();
-            this.accommodations = accommodations.ToList();
-            this.accommodations.Sort();
+            original = accommodations.ToList();
+            original.Sort();
         }
 
-        private void SortedForm_Load(object sender, EventArgs e)
+        private void ListViewForm_Load(object sender, EventArgs e)
+        {
+            refresh(original);
+        }
+
+        private void btnFilterOn_Click(object sender, EventArgs e)
+        {
+            FilterForm form = new FilterForm();
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                refresh(original.Where(a => Conditions.Condition(a)).ToList());
+            }
+        }
+
+        private void btnFilterOff_Click(object sender, EventArgs e)
+        {
+            refresh(original);
+        }
+
+        private void btnCancel_Click(object sender, EventArgs e)
+        {
+            Close();
+        }
+
+        private void refresh(List<Accommodation> filtered)
         {
             lsv.View = View.Details;
             lsv.Items.Clear();
@@ -37,7 +63,7 @@ namespace Vizsgaremek_Szallashelyek
                 }
                 lsv.Columns.Add(" ");
             }
-            foreach (Accommodation accommodation in accommodations)
+            foreach (Accommodation accommodation in filtered)
             {
                 string stars = string.Empty;
                 if (accommodation is Building)

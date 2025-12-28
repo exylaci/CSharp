@@ -10,7 +10,7 @@ namespace Vizsgaremek_Szallashelyek
     {
         Bussines,
         Sport,
-        Mecical,
+        Medical,
         Other
     }
 
@@ -87,16 +87,16 @@ namespace Vizsgaremek_Szallashelyek
 
         public static bool operator <(Accommodation a, Accommodation b)
         {
-            if (ReferenceEquals(a, null))
+            if (a is null)
             {
-                return !ReferenceEquals(b, null);
+                return !(b is null);
             }
             return a.CompareTo(b) < 0;
         }
 
         public static bool operator >(Accommodation a, Accommodation b)
         {
-            if (ReferenceEquals(a, null))
+            if (a is null)
             {
                 return false;
             }

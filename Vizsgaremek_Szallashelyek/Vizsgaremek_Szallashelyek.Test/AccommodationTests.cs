@@ -33,7 +33,7 @@ namespace Vizsgaremek_Szallashelyek.Test
         public void CompareTo_ProfileTextOrder()
         {
             var a = new TestAccommodation("ABCDEFGH", "Hilton", AccommodationProfile.Sport, sampleAddress);
-            var b = new TestAccommodation("ABCDEFGH", "Hilton", AccommodationProfile.Mecical, sampleAddress);
+            var b = new TestAccommodation("ABCDEFGH", "Hilton", AccommodationProfile.Medical, sampleAddress);
 
             // Mecical < Sport (ABC szerint)
             Assert.True(a.CompareTo(b) > 0);
@@ -54,7 +54,7 @@ namespace Vizsgaremek_Szallashelyek.Test
         public void LessThanOperator()
         {
             var a = new TestAccommodation("ABCDEFGH", "Hilton", AccommodationProfile.Sport, sampleAddress);
-            var b = new TestAccommodation("ABCDEFGH", "Hilton", AccommodationProfile.Mecical, sampleAddress);
+            var b = new TestAccommodation("ABCDEFGH", "Hilton", AccommodationProfile.Medical, sampleAddress);
 
             Assert.True(b < a);
             Assert.False(a < b);
@@ -63,7 +63,7 @@ namespace Vizsgaremek_Szallashelyek.Test
         public void GreaterThanOperator()
         {
             var a = new TestAccommodation("ABCDEFGH", "Hilton", AccommodationProfile.Sport, sampleAddress);
-            var b = new TestAccommodation("ABCDEFGH", "Hilton", AccommodationProfile.Mecical, sampleAddress);
+            var b = new TestAccommodation("ABCDEFGH", "Hilton", AccommodationProfile.Medical, sampleAddress);
 
             Assert.True(a > b);
             Assert.False(b > a);
@@ -84,14 +84,14 @@ namespace Vizsgaremek_Szallashelyek.Test
             List<Accommodation> list = new List<Accommodation>
                 {
                     new TestAccommodation("ABCDEFGH", "Hilton", AccommodationProfile.Sport, sampleAddress),
-                    new TestAccommodation("ABCDEFGH", "Hilton", AccommodationProfile.Mecical, sampleAddress),
-                    new TestAccommodation("ABCDEFGH", "Árpád", AccommodationProfile.Mecical, sampleAddress)
+                    new TestAccommodation("ABCDEFGH", "Hilton", AccommodationProfile.Medical, sampleAddress),
+                    new TestAccommodation("ABCDEFGH", "Árpád", AccommodationProfile.Medical, sampleAddress)
                 };
 
             list.Sort();
 
             Assert.Equal("Árpád", list[0].Name);
-            Assert.Equal(AccommodationProfile.Mecical, list[1].Profile);
+            Assert.Equal(AccommodationProfile.Medical, list[1].Profile);
             Assert.Equal(AccommodationProfile.Sport, list[2].Profile);
         }
 

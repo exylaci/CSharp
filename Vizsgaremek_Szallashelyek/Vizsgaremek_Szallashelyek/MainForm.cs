@@ -19,15 +19,24 @@ namespace Vizsgaremek_Szallashelyek
         public MainForm()
         {
             InitializeComponent();
-            accommodations = new AccommodationList();
+            //accommodations = new AccommodationList();
         }
 
 
         private void MainForm_Load(object sender, EventArgs e)
         {
-            accommodations = Repositories.LoadAllAccommodations();
-            accommodations.AccommodationListChanged += TitleUpdate;
-            RefreshList();
+            try
+            {
+                accommodations = Repositories.LoadAllAccommodations();
+                accommodations.AccommodationListChanged += TitleUpdate;
+                RefreshList();
+
+            }
+            catch (Exception)
+            {
+                MessageBox.Show($"Nem sikerült kapcsolódni és beolvasni az adatbázist!{Environment.NewLine}A program leáll.", "Hiba!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                Close();
+            }
         }
 
         private void RefreshList(bool keepSelection = false)
@@ -109,7 +118,7 @@ namespace Vizsgaremek_Szallashelyek
 
         private void MainForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (MessageBox.Show("Biztosan ki akar lépni?", "Kilépés", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
+            if (accommodations != null && MessageBox.Show("Biztosan ki akar lépni?", "Kilépés", MessageBoxButtons.YesNo, MessageBoxIcon.Question) != DialogResult.Yes)
             {
                 e.Cancel = true;
             }
@@ -125,7 +134,7 @@ namespace Vizsgaremek_Szallashelyek
 
         private void btnSorted_Click(object sender, EventArgs e)
         {
-            new SortedForm(accommodations).Show();
+            new ListViewForm(accommodations).Show();
         }
     }
 }
