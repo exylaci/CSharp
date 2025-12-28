@@ -107,7 +107,6 @@
     <Compile Include="Address.cs" />
     <Compile Include="Building.cs" />
     <Compile Include="Camping.cs" />
-    <Compile Include="Conditions.cs" />
     <Compile Include="DBExceptions.cs" />
     <Compile Include="FilterForm.cs">
       <SubType>Form</SubType>
@@ -167,6 +166,16 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\Vizsgaremek_Szallashelyek.AccommodationProfileDLL\Vizsgaremek_Szallashelyek.AccommodationProfileDLL.csproj">
+      <Project>{5b2d62ef-0c8d-422c-b474-f4d9b1bf02bd}</Project>
+      <Name>Vizsgaremek_Szallashelyek.AccommodationProfileDLL</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Vizsgaremek_Szallashelyek.ConditionsDLL\Vizsgaremek_Szallashelyek.ConditionsDLL.csproj">
+      <Project>{eef70519-ad2a-411e-90f6-84a4202cb462}</Project>
+      <Name>Vizsgaremek_Szallashelyek.ConditionsDLL</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

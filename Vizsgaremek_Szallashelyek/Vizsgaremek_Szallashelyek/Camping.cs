@@ -3,12 +3,20 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Vizsgaremek_Szallashelyek.AccommodationProfileDLL;
 
 namespace Vizsgaremek_Szallashelyek
 {
     internal class Camping : Accommodation
     {
-        public bool AtWaterfront { get; private set; }
+        private bool atWaterfront;
+
+
+        public bool AtWaterfront
+        {
+            get;
+            private set;
+        }
 
 
         public Camping(string id, string name, AccommodationProfile profile, Address address, bool atWaterfront) : base(id, name, profile, address)

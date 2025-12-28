@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Vizsgaremek_Szallashelyek
 {
-    public class Address
+    internal class Address
     {
         private int id;
         private short zipCode;

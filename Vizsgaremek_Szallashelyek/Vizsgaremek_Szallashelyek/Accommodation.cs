@@ -3,18 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Vizsgaremek_Szallashelyek.AccommodationProfileDLL;
 
 namespace Vizsgaremek_Szallashelyek
 {
-    public enum AccommodationProfile
-    {
-        Bussines,
-        Sport,
-        Medical,
-        Other
-    }
-
-    public abstract class Accommodation : IComparable<Accommodation>
+    internal abstract class Accommodation : IComparable<Accommodation>, IAccommodation
     {
         private string id;
         private string name;

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Vizsgaremek_Szallashelyek;
+using Vizsgaremek_Szallashelyek.AccommodationProfileDLL;
 using Xunit;
 
 namespace Vizsgaremek_Szallashelyek.Test

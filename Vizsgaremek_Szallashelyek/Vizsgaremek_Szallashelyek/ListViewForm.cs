@@ -7,12 +7,14 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Vizsgaremek_Szallashelyek.ConditionsDLL;
+
 
 namespace Vizsgaremek_Szallashelyek
 {
     public partial class ListViewForm : Form
     {
-        List<Accommodation> original;
+        private List<Accommodation> original;
 
 
         internal ListViewForm(AccommodationList accommodations)
@@ -32,7 +34,7 @@ namespace Vizsgaremek_Szallashelyek
             FilterForm form = new FilterForm();
             if (form.ShowDialog() == DialogResult.OK)
             {
-                Conditions conditions = form.Conditions;
+                AccommodationConditions conditions = form.Conditions;
                 Refresh(original.FindAll(conditions.Condition()));
             }
         }

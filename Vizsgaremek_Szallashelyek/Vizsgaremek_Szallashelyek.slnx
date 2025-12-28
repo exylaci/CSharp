@@ -1,4 +1,6 @@
 <Solution>
+  <Project Path="Vizsgaremek_Szallashelyek.AccommodationProfileDLL/Vizsgaremek_Szallashelyek.AccommodationProfileDLL.csproj" Id="5b2d62ef-0c8d-422c-b474-f4d9b1bf02bd" />
+  <Project Path="Vizsgaremek_Szallashelyek.ConditionsDLL/Vizsgaremek_Szallashelyek.ConditionsDLL.csproj" Id="eef70519-ad2a-411e-90f6-84a4202cb462" />
   <Project Path="Vizsgaremek_Szallashelyek.Test/Vizsgaremek_Szallashelyek.Test.csproj" />
   <Project Path="Vizsgaremek_Szallashelyek/Vizsgaremek_Szallashelyek.csproj" Id="9de7e9b5-10a5-4fbf-aec0-265921643f31" />
 </Solution>

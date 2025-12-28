@@ -11,12 +11,12 @@ using System.Windows.Forms;
 
 namespace Vizsgaremek_Szallashelyek
 {
-    public partial class MainForm : Form
+    internal partial class MainForm : Form
     {
         private AccommodationList accommodations;
 
 
-        public MainForm()
+        internal MainForm()
         {
             InitializeComponent();
             //accommodations = new AccommodationList();

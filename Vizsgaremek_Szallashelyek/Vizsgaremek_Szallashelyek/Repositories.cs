@@ -8,13 +8,16 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Vizsgaremek_Szallashelyek.AccommodationProfileDLL;
 
 namespace Vizsgaremek_Szallashelyek
 {
     static internal class Repositories
     {
-        static MySqlConnection connection;
-        static MySqlCommand command;
+        private static MySqlConnection connection;
+        private static MySqlCommand command;
+
+
         static Repositories()
         {
             try

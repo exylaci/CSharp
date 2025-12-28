@@ -1,4 +1,4 @@
-﻿using Vizsgaremek_Szallashelyek;
+﻿using Vizsgaremek_Szallashelyek.AccommodationProfileDLL;
 
 namespace Vizsgaremek_Szallashelyek.Tests
 {
@@ -11,8 +11,6 @@ namespace Vizsgaremek_Szallashelyek.Tests
             Address address,
             float basePrice,
             byte stars)
-            : base(id, name, profile, address, basePrice, stars)
-        {
-        }
+            : base(id, name, profile, address, basePrice, stars) { }
     }
 }

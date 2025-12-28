@@ -3,12 +3,16 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Vizsgaremek_Szallashelyek.AccommodationProfileDLL;
 
 namespace Vizsgaremek_Szallashelyek
 {
     internal class Guesthouse : Building
     {
-        public bool HasBreakfast { get; set; }
+        private bool hasBreakfast;
+
+
+        public bool HasBreakfast { get; internal set; }
 
 
         public Guesthouse(string id, string name, AccommodationProfile profile, Address address, float basePrice, byte stars, bool hasBreakfast) : base(id, name, profile, address, basePrice, stars)

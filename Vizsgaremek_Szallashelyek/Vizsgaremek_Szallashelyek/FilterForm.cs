@@ -8,12 +8,14 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 using System.Xml.Linq;
+using Vizsgaremek_Szallashelyek.AccommodationProfileDLL;
+using Vizsgaremek_Szallashelyek.ConditionsDLL;
 
 namespace Vizsgaremek_Szallashelyek
 {
     public partial class FilterForm : Form
     {
-        public Conditions Conditions { get; private set; }
+        internal AccommodationConditions Conditions { get; set; }
 
 
         internal FilterForm()
@@ -24,7 +26,7 @@ namespace Vizsgaremek_Szallashelyek
 
         private void FilterForm_Load(object sender, EventArgs e)
         {
-            Conditions = new Conditions();
+            Conditions = new AccommodationConditions();
             cmbProfile.DataSource = Enum.GetValues(typeof(AccommodationProfile));
             cmbProfile.SelectedIndex = -1;
         }

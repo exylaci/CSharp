@@ -1,6 +1,5 @@
 ﻿using System;
 using Xunit;
-using Vizsgaremek_Szallashelyek;
 
 namespace Vizsgaremek_Szallashelyek.Tests
 {

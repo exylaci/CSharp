@@ -7,6 +7,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Windows.Forms;
+using Vizsgaremek_Szallashelyek.AccommodationProfileDLL;
 
 namespace Vizsgaremek_Szallashelyek
 {
@@ -24,7 +25,7 @@ namespace Vizsgaremek_Szallashelyek
         private AccommodationList accommodations;
 
 
-        public AccommodationForm()
+        internal AccommodationForm()
         {
             InitializeComponent();
             cmbProfile.DataSource = Enum.GetValues(typeof(AccommodationProfile));

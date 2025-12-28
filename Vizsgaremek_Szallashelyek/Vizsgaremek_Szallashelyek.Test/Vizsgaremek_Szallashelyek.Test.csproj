@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Vizsgaremek_Szallashelyek.AccommodationProfileDLL\Vizsgaremek_Szallashelyek.AccommodationProfileDLL.csproj" />
     <ProjectReference Include="..\Vizsgaremek_Szallashelyek\Vizsgaremek_Szallashelyek.csproj" />
   </ItemGroup>
 

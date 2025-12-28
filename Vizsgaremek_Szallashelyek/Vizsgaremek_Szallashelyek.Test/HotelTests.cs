@@ -1,6 +1,5 @@
-﻿using System;
+﻿using Vizsgaremek_Szallashelyek.AccommodationProfileDLL;
 using Xunit;
-using Vizsgaremek_Szallashelyek;
 
 namespace Vizsgaremek_Szallashelyek.Tests
 {
