@@ -1,11 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vizsgaremek_Szallashelyek.ConditionsDLL;
 
@@ -59,12 +54,13 @@ namespace Vizsgaremek_Szallashelyek
                 {
                     lsv.Columns.Add(typeof(Accommodation).GetProperties().ElementAt(i).Name);
                 }
-                lsv.Columns.Add(" ");
+                lsv.Columns.Add("Minősítés");
                 for (int i = 2; i < typeof(Address).GetProperties().Count(); ++i)
                 {
                     lsv.Columns.Add(typeof(Address).GetProperties().ElementAt(i).Name);
                 }
-                lsv.Columns.Add(" ");
+                lsv.Columns.Add("Aktuális ár",100,HorizontalAlignment.Right);
+                lsv.Columns.Add("Extrák");
             }
             foreach (Accommodation accommodation in filtered)
             {
@@ -92,7 +88,8 @@ namespace Vizsgaremek_Szallashelyek
                 lsv.Items.Add(new ListViewItem(new string[]
                 {
                     accommodation.Id,accommodation.Name,accommodation.Profile.ToString(),stars,
-                    accommodation.Address.City,accommodation.Address.Street,accommodation.Address.HouseNumber,service
+                    accommodation.Address.City,accommodation.Address.Street,accommodation.Address.HouseNumber,
+                    accommodation.GetPrice().ToString(),service
                 }));
             }
             lsv.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);

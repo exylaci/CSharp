@@ -60,6 +60,7 @@ namespace Vizsgaremek_Szallashelyek.Test
             Assert.False(a < b);
         }
 
+        [Fact]
         public void GreaterThanOperator()
         {
             var a = new TestAccommodation("ABCDEFGH", "Hilton", AccommodationProfile.Sport, sampleAddress);
@@ -69,13 +70,14 @@ namespace Vizsgaremek_Szallashelyek.Test
             Assert.False(b > a);
         }
 
+        [Fact]
         public void GreaterLessOrEqualThanOperator()
         {
             var a = new TestAccommodation("ABCDEFGH", "Hilton", AccommodationProfile.Sport, sampleAddress);
             var b = new TestAccommodation("ABCDEFGH", "Hilton", AccommodationProfile.Sport, sampleAddress);
 
             Assert.True(a >= b);
-            Assert.False(a <= b);
+            Assert.True(a <= b);
         }
 
         [Fact]

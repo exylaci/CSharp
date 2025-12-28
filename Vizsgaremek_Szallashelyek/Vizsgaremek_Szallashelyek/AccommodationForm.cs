@@ -1,11 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
 using System.Drawing;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 using Vizsgaremek_Szallashelyek.AccommodationProfileDLL;
 
@@ -140,7 +135,11 @@ namespace Vizsgaremek_Szallashelyek
 
         private void CalculateFinalPrice()
         {
-            if (stars > 0)
+            if (cmbType.SelectedIndex == 2)
+            {
+                txbFinalPrice.Text = new Camping(null, AccommodationProfile.Other, new Address(1000, "a", "a", null), chbSpeciality.Checked).GetPrice().ToString();
+            }
+            else if (stars > 0)
             {
                 switch (cmbType.SelectedIndex)
                 {
@@ -149,12 +148,6 @@ namespace Vizsgaremek_Szallashelyek
                         break;
                     case 1:
                         txbFinalPrice.Text = new Guesthouse(null, AccommodationProfile.Other, new Address(1000, "a", "a", null), (int)numBasePrice.Value, stars, chbSpeciality.Checked).GetPrice().ToString();
-                        break;
-                    case 2:
-                        txbFinalPrice.Text = new Camping(null, AccommodationProfile.Other, new Address(1000, "a", "a", null), chbSpeciality.Checked).GetPrice().ToString();
-                        break;
-                    default:
-                        txbFinalPrice.Text = string.Empty;
                         break;
                 }
             }

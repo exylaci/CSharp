@@ -1,13 +1,6 @@
 ﻿using MySql.Data.MySqlClient;
-using Mysqlx.Crud;
 using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Windows.Forms;
 using Vizsgaremek_Szallashelyek.AccommodationProfileDLL;
 
 namespace Vizsgaremek_Szallashelyek
