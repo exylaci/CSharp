@@ -41,6 +41,17 @@ namespace Vizsgaremek_Szallashelyek.Test
         }
 
         [Fact]
+        public void CompareTo_ProfileTextOrderHungarianTranslationCausesDifferentOrder()
+        {
+            var a = new TestAccommodation("ABCDEFGH", "Hilton", AccommodationProfile.Bussines, sampleAddress);
+            var b = new TestAccommodation("ABCDEFGH", "Hilton", AccommodationProfile.Other, sampleAddress);
+
+            // Mecical < Sport (ABC szerint)
+            Assert.True(a.CompareTo(b) > 0);
+            Assert.True(b.CompareTo(a) < 0);
+        }
+
+        [Fact]
         public void CompareTo_NameOrder_WhenProfileSame()
         {
             var a = new TestAccommodation("ABCDEFGH", "Árpád", AccommodationProfile.Sport, sampleAddress);

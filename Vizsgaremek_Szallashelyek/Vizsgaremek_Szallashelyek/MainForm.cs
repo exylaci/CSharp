@@ -23,9 +23,9 @@ namespace Vizsgaremek_Szallashelyek
                 RefreshList();
 
             }
-            catch (Exception)
+            catch (Exception ex)
             {
-                MessageBox.Show($"Nem sikerült kapcsolódni és beolvasni az adatbázist!{Environment.NewLine}A program leáll.", "Hiba!", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show($"Nem sikerült kapcsolódni és beolvasni az adatbázist!{Environment.NewLine}A program leáll.{Environment.NewLine}{Environment.NewLine}Hibaüzenet: {ex.Message}", "Hiba!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
             }
         }

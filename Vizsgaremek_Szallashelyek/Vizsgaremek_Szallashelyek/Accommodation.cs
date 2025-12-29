@@ -65,8 +65,8 @@ namespace Vizsgaremek_Szallashelyek
                 return 1;
             }
             int compareProfile = string.Compare(
-                this.Profile.ToString(),
-                other.Profile.ToString(),
+                GetDescription(this.Profile),
+                GetDescription(other.Profile),
                 StringComparison.CurrentCulture);
             if (compareProfile != 0)
             {

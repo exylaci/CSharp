@@ -6,6 +6,12 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Compile Remove="docker_files\**" />
+    <EmbeddedResource Remove="docker_files\**" />
+    <None Remove="docker_files\**" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="17.8.0" />
     <PackageReference Include="xunit" Version="2.5.3" />
     <PackageReference Include="xunit.runner.visualstudio" Version="2.5.3" />
@@ -14,6 +20,12 @@
   <ItemGroup>
     <ProjectReference Include="..\Vizsgaremek_Szallashelyek.AccommodationProfileDLL\Vizsgaremek_Szallashelyek.AccommodationProfileDLL.csproj" />
     <ProjectReference Include="..\Vizsgaremek_Szallashelyek\Vizsgaremek_Szallashelyek.csproj" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Update="App.config">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </None>
   </ItemGroup>
 
 </Project>

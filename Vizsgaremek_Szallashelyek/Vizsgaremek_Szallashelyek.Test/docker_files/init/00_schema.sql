@@ -1,5 +1,11 @@
-CREATE DATABASE IF NOT EXISTS `Szallashelyek`;
-USE `Szallashelyek`;
+SET FOREIGN_KEY_CHECKS = 0;
+
+DROP TABLE IF EXISTS `Camping`;
+DROP TABLE IF EXISTS `Guesthouse`;
+DROP TABLE IF EXISTS `Hotel`;
+DROP TABLE IF EXISTS `Building`;
+DROP TABLE IF EXISTS `Accommodation`;
+DROP TABLE IF EXISTS `Address`;
 
 SET FOREIGN_KEY_CHECKS = 1;
 
@@ -18,7 +24,8 @@ CREATE TABLE IF NOT EXISTS `Accommodation` (
   `Profile` VARCHAR(8) NOT NULL,
   `AddressId` INT NOT NULL,
   CONSTRAINT `PK_AccommodationId` PRIMARY KEY (`Id`),
-  CONSTRAINT `FK_Accommodation_Address` FOREIGN KEY (`AddressId`) REFERENCES `Address`(`Id`)
+  CONSTRAINT `FK_Accommodation_Address`
+    FOREIGN KEY (`AddressId`) REFERENCES `Address`(`Id`)
     ON UPDATE CASCADE
     ON DELETE RESTRICT
 ) ENGINE=InnoDB;
@@ -27,7 +34,8 @@ CREATE TABLE IF NOT EXISTS `Camping` (
   `CampingId` VARCHAR(8) NOT NULL UNIQUE,
   `AtWaterfront` BOOLEAN NOT NULL,
   CONSTRAINT `PK_CampingId` PRIMARY KEY (`CampingId`),
-  CONSTRAINT `FK_Camping_Accommodation` FOREIGN KEY (`CampingId`) REFERENCES `Accommodation`(`Id`)
+  CONSTRAINT `FK_Camping_Accommodation`
+    FOREIGN KEY (`CampingId`) REFERENCES `Accommodation`(`Id`)
     ON UPDATE CASCADE
     ON DELETE RESTRICT
 ) ENGINE=InnoDB;
@@ -37,7 +45,8 @@ CREATE TABLE IF NOT EXISTS `Building` (
   `BasePrice` DOUBLE NOT NULL,
   `Stars` TINYINT UNSIGNED NOT NULL,
   CONSTRAINT `PK_BuildingId` PRIMARY KEY (`BuildingId`),
-  CONSTRAINT `FK_Building_Accommodation` FOREIGN KEY (`BuildingId`) REFERENCES `Accommodation`(`Id`)
+  CONSTRAINT `FK_Building_Accommodation`
+    FOREIGN KEY (`BuildingId`) REFERENCES `Accommodation`(`Id`)
     ON UPDATE CASCADE
     ON DELETE RESTRICT
 ) ENGINE=InnoDB;
@@ -46,7 +55,8 @@ CREATE TABLE IF NOT EXISTS `Guesthouse` (
   `GuesthouseId` VARCHAR(8) NOT NULL UNIQUE,
   `HasBreakfast` BOOLEAN NOT NULL,
   CONSTRAINT `PK_GuesthouseId` PRIMARY KEY (`GuesthouseId`),
-  CONSTRAINT `FK_Guesthouse_Building` FOREIGN KEY (`GuesthouseId`) REFERENCES `Building`(`BuildingId`)
+  CONSTRAINT `FK_Guesthouse_Building`
+    FOREIGN KEY (`GuesthouseId`) REFERENCES `Building`(`BuildingId`)
     ON UPDATE CASCADE
     ON DELETE RESTRICT
 ) ENGINE=InnoDB;
@@ -55,7 +65,8 @@ CREATE TABLE IF NOT EXISTS `Hotel` (
   `HotelId` VARCHAR(8) NOT NULL UNIQUE,
   `HasWellness` BOOLEAN NOT NULL,
   CONSTRAINT `PK_HotelId` PRIMARY KEY (`HotelId`),
-  CONSTRAINT `FK_Hotel_Building` FOREIGN KEY (`HotelId`) REFERENCES `Building`(`BuildingId`)
+  CONSTRAINT `FK_Hotel_Building`
+    FOREIGN KEY (`HotelId`) REFERENCES `Building`(`BuildingId`)
     ON UPDATE CASCADE
     ON DELETE RESTRICT
 ) ENGINE=InnoDB;

@@ -10,6 +10,7 @@ namespace Vizsgaremek_Szallashelyek.Test
         private Guesthouse sampleGuesthouse = new Guesthouse("G1234567", "Oázis", AccommodationProfile.Bussines, new Address(1234, "Budapest", "Fő utca", "2/G"), 10000, 3, true);
         private Camping sampleCamping = new Camping("C1234567", "Levendula", AccommodationProfile.Other, new Address(1234, "Balaton", "Parti sétány", "3/C"), true);
 
+
         [Fact]
         public void InsertHotel_InsertToDatabase()
         {
