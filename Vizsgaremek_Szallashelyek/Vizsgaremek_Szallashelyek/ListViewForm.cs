@@ -52,12 +52,12 @@ namespace Vizsgaremek_Szallashelyek
             {
                 for (int i = 0; i < typeof(Accommodation).GetProperties().Count() - 1; ++i)
                 {
-                    lsv.Columns.Add(typeof(Accommodation).GetProperties().ElementAt(i).Name);
+                    lsv.Columns.Add(Accommodation.GetDescription((typeof(Accommodation).GetProperties().ElementAt(i))));
                 }
                 lsv.Columns.Add("Minősítés");
                 for (int i = 2; i < typeof(Address).GetProperties().Count(); ++i)
                 {
-                    lsv.Columns.Add(typeof(Address).GetProperties().ElementAt(i).Name);
+                    lsv.Columns.Add(Accommodation.GetDescription(typeof(Address).GetProperties().ElementAt(i)));
                 }
                 lsv.Columns.Add("Aktuális ár", 100, HorizontalAlignment.Right);
                 lsv.Columns.Add("Extrák");
@@ -92,7 +92,14 @@ namespace Vizsgaremek_Szallashelyek
                     accommodation.GetPrice().ToString(),service
                 }));
             }
-            lsv.AutoResizeColumns(ColumnHeaderAutoResizeStyle.ColumnContent);
+            foreach (ColumnHeader col in lsv.Columns)
+            {
+                col.Width = -1;
+                int dataWidth = col.Width;
+                col.Width = -2;
+                int headerWidth = col.Width;
+                col.Width = Math.Max(dataWidth, headerWidth);
+            }
         }
     }
 }

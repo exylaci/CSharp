@@ -2,7 +2,6 @@
 using System.ComponentModel;
 using System.Drawing;
 using System.Linq;
-using System.Reflection;
 using System.Windows.Forms;
 using Vizsgaremek_Szallashelyek.AccommodationProfileDLL;
 

@@ -14,6 +14,7 @@ namespace Vizsgaremek_Szallashelyek
         private Address address;
 
 
+        [Description("Azonosító")]
         public string Id
         {
             get => id;
@@ -29,9 +30,9 @@ namespace Vizsgaremek_Szallashelyek
                 }
             }
         }
-        public string Name { get; set; }
-        public AccommodationProfile Profile { get; set; }
-        public Address Address { get; private set; }
+        [Description("Név")] public string Name { get; set; }
+        [Description("Fajta")] public AccommodationProfile Profile { get; set; }
+        [Description("Cím")] public Address Address { get; private set; }
 
 
         public Accommodation(string id, string name, AccommodationProfile profile, Address address) : this(name, profile, address)
@@ -105,11 +106,15 @@ namespace Vizsgaremek_Szallashelyek
             return !(a < b);
         }
 
-        internal static string GetDescription(Enum value)
+        internal static string GetDescription(PropertyInfo propertyInfo)
         {
-            FieldInfo? field = value.GetType().GetField(value.ToString());
-            DescriptionAttribute? attr = field?.GetCustomAttribute<DescriptionAttribute>();
-            return attr?.Description ?? value.ToString();
+            return propertyInfo.GetCustomAttribute<DescriptionAttribute>()?.Description ?? propertyInfo.Name;
+        }
+
+        internal static string GetDescription(Enum @enum)
+        {
+            FieldInfo? field = @enum.GetType().GetField(@enum.ToString());
+            return field?.GetCustomAttribute<DescriptionAttribute>()?.Description ?? @enum.ToString();
         }
 
         public override string ToString()

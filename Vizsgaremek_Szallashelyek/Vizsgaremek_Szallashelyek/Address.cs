@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 
 namespace Vizsgaremek_Szallashelyek
 {
@@ -12,7 +13,8 @@ namespace Vizsgaremek_Szallashelyek
         private string houseNumber;
 
 
-        public int Id { get; internal set; }
+        [Description("Azonosító")] public int Id { get; internal set; }
+        [Description("IRSZ")]
         public short ZipCode
         {
             get => zipCode;
@@ -28,6 +30,7 @@ namespace Vizsgaremek_Szallashelyek
                 }
             }
         }
+        [Description("Város")]
         public string City
         {
             get => city;
@@ -43,6 +46,7 @@ namespace Vizsgaremek_Szallashelyek
                 }
             }
         }
+        [Description("Utca")]
         public string Street
         {
             get => street;
@@ -58,7 +62,7 @@ namespace Vizsgaremek_Szallashelyek
                 }
             }
         }
-        public string HouseNumber { get; set; }
+        [Description("Házszám")] public string HouseNumber { get; set; }
 
 
 
