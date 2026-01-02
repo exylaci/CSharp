@@ -1,0 +1,46 @@
+
+
+CREATE TABLE IF NOT EXISTS Kolcsonzok(
+    Megnevezes VARCHAR(30) NOT NULL,
+    Cim VARCHAR(60) NOT NULL,
+    Tulajdonos VARCHAR(60) NOT NULL,
+    PRIMARY KEY(Megnevezes, Cim)
+);
+
+CREATE TABLE IF NOT EXISTS Jarmuvek(
+    Rendszam VARCHAR(7) NOT NULL,
+    Marka VARCHAR(16) NOT NULL,
+    Tipus VARCHAR(16) NOT NULL,
+    Foglalt BIT(1) NOT NULL,
+    KolcsonzoMegnevezes VARCHAR(30) NOT NULL,
+    KolcsonzoCim VARCHAR(60) NOT NULL,
+    PRIMARY KEY(Rendszam),
+    CONSTRAINT `FK_Jarmu_Kolcsonzo` 
+        FOREIGN KEY (`KolcsonzoMegnevezes`,`KolcsonzoCim`)
+        REFERENCES `Kolcsonzok`(`Megnevezes`,`Cim`)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
+);
+
+CREATE TABLE IF NOT EXISTS SzemelyGepjarmuvek(
+    Rendszam VARCHAR(7) NOT NULL,
+    SzallSzemSzam TINYINT UNSIGNED NOT NULL,
+    Tipus VARCHAR(20) NOT NULL,
+    PRIMARY KEY(Rendszam),
+    CONSTRAINT `FK_SzemelyGepjarmuvek_Jarmuvek`
+        FOREIGN KEY (`Rendszam`)
+        REFERENCES `Jarmuvek`(`Rendszam`)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
+);
+
+CREATE TABLE IF NOT EXISTS KishaszonGepjarmuvek(
+    Rendszam VARCHAR(7) NOT NULL,
+    MaxTeher Float UNSIGNED NOT NULL,
+    PRIMARY KEY(Rendszam),
+    CONSTRAINT `FK_KishaszonGepjarmuvek_Jarmuvek`
+        FOREIGN KEY (`Rendszam`)
+        REFERENCES `Jarmuvek`(`Rendszam`)
+        ON UPDATE CASCADE
+        ON DELETE RESTRICT
+);

@@ -1,0 +1,70 @@
+INSERT INTO Kolcsonzok (Megnevezes, Cim, Tulajdonos) VALUES
+('CityRent', 'Budapest, Váci út 12.', 'Kovács Péter'),
+('AutoPlus', 'Debrecen, Kossuth u. 45.', 'Nagy László'),
+('AutoPlus', 'Miskolc, Külső sor 7.', 'Nagy László'),
+('MobilCar', 'Szeged, Tisza Lajos krt. 8.', 'Szabó András'),
+('Üres', 'Nincs benne egy autó sem.', 'Csődbe Mentem'),
+('ExpressRent', 'Győr, Bartók Béla út 22.', 'Tóth Gábor');
+
+INSERT INTO Jarmuvek
+(Rendszam, Marka, Tipus, Foglalt, KolcsonzoMegnevezes, KolcsonzoCim)
+VALUES
+-- CityRent
+('ABC123', 'Toyota', 'Corolla', 0, 'CityRent', 'Budapest, Váci út 12.'),
+('ABC124', 'Ford', 'Focus', 1, 'CityRent', 'Budapest, Váci út 12.'),
+('ABC125', 'Volkswagen', 'Golf', 0, 'CityRent', 'Budapest, Váci út 12.'),
+('ABC126', 'Opel', 'Astra', 0, 'CityRent', 'Budapest, Váci út 12.'),
+('ABC127', 'Renault', 'Clio', 1, 'CityRent', 'Budapest, Váci út 12.'),
+
+-- AutoPlus
+('DEF201', 'Skoda', 'Octavia', 0, 'AutoPlus', 'Debrecen, Kossuth u. 45.'),
+('DEF202', 'Hyundai', 'i30', 1, 'AutoPlus', 'Debrecen, Kossuth u. 45.'),
+('DEF203', 'Kia', 'Ceed', 0, 'AutoPlus', 'Debrecen, Kossuth u. 45.'),
+('DEF204', 'Ford', 'Transit', 0, 'AutoPlus', 'Debrecen, Kossuth u. 45.'),
+('DEF205', 'Renault', 'Master', 1, 'AutoPlus', 'Debrecen, Kossuth u. 45.'),
+
+-- MobilCar
+('GHI301', 'Toyota', 'Yaris', 0, 'MobilCar', 'Szeged, Tisza Lajos krt. 8.'),
+('GHI302', 'Suzuki', 'Swift', 1, 'MobilCar', 'Szeged, Tisza Lajos krt. 8.'),
+('GHI303', 'Volkswagen', 'Polo', 0, 'MobilCar', 'Szeged, Tisza Lajos krt. 8.'),
+('GHI304', 'Fiat', 'Ducato', 0, 'MobilCar', 'Szeged, Tisza Lajos krt. 8.'),
+('GHI305', 'Iveco', 'Daily', 1, 'MobilCar', 'Szeged, Tisza Lajos krt. 8.'),
+
+-- ExpressRent
+('JKL401', 'BMW', '320d', 0, 'ExpressRent', 'Győr, Bartók Béla út 22.'),
+('JKL402', 'Audi', 'A4', 1, 'ExpressRent', 'Győr, Bartók Béla út 22.'),
+('JKL403', 'Mercedes', 'C200', 0, 'ExpressRent', 'Győr, Bartók Béla út 22.'),
+('JKL404', 'Peugeot', 'Boxer', 0, 'ExpressRent', 'Győr, Bartók Béla út 22.'),
+('JKL405', 'Citroen', 'Jumper', 1, 'ExpressRent', 'Győr, Bartók Béla út 22.');
+
+INSERT INTO SzemelyGepjarmuvek
+(Rendszam, SzallSzemSzam, Tipus)
+VALUES
+('ABC123', 5, 'Sedan'),
+('ABC124', 5, 'Kombi'),
+('ABC125', 5, 'Kombi'),
+('ABC126', 5, 'Sedan'),
+('ABC127', 5, 'Kombi'),
+
+('DEF201', 5, 'Sedan'),
+('DEF202', 5, 'Kombi'),
+('DEF203', 5, 'Kombi'),
+
+('GHI301', 5, 'Kombi'),
+('GHI302', 5, 'Kombi'),
+('GHI303', 5, 'Kombi'),
+
+('JKL401', 5, 'Sedan'),
+('JKL402', 5, 'Sedan'),
+('JKL403', 5, 'Sedan');
+
+INSERT INTO KishaszonGepjarmuvek
+(Rendszam, MaxTeher)
+VALUES
+('DEF204', 1200),
+('DEF205', 1500),
+('GHI304', 1300),
+('GHI305', 1600),
+('JKL404', 1400),
+('JKL405', 1700);
+

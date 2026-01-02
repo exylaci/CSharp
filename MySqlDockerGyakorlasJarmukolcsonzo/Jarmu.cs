@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 namespace MySqlDockerGyakorlasJarmukolcsonzo
 {
     public enum JarmuTipus { Kisteherauto, Szemelyauto }
-    internal class Jarmu
+    abstract class Jarmu
     {
         int id;
         string rendszam;
