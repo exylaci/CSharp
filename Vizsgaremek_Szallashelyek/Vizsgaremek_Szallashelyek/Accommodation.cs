@@ -106,6 +106,12 @@ namespace Vizsgaremek_Szallashelyek
             return !(a < b);
         }
 
+        public override string ToString()
+        {
+            return $"{Name} - {Address.City}";
+        }
+
+        public abstract double GetPrice();
         internal static string GetDescription(PropertyInfo propertyInfo)
         {
             return propertyInfo.GetCustomAttribute<DescriptionAttribute>()?.Description ?? propertyInfo.Name;
@@ -116,12 +122,5 @@ namespace Vizsgaremek_Szallashelyek
             FieldInfo? field = @enum.GetType().GetField(@enum.ToString());
             return field?.GetCustomAttribute<DescriptionAttribute>()?.Description ?? @enum.ToString();
         }
-
-        public override string ToString()
-        {
-            return $"{Name} - {Address.City}";
-        }
-
-        public abstract double GetPrice();
     }
 }

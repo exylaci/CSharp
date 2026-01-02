@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Windows.Forms;
+using Vizsgaremek_Szallashelyek.AccommodationProfileDLL;
 using Vizsgaremek_Szallashelyek.ConditionsDLL;
 
 

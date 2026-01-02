@@ -1,4 +1,6 @@
 ﻿using System;
+using System.Drawing;
+using System.Text;
 using System.Windows.Forms;
 
 namespace Vizsgaremek_Szallashelyek
@@ -28,6 +30,7 @@ namespace Vizsgaremek_Szallashelyek
                 MessageBox.Show($"Nem sikerült kapcsolódni és beolvasni az adatbázist!{Environment.NewLine}A program leáll.{Environment.NewLine}{Environment.NewLine}Hibaüzenet: {ex.Message}", "Hiba!", MessageBoxButtons.OK, MessageBoxIcon.Error);
                 Close();
             }
+            timer.Enabled = true;
         }
 
         private void RefreshList(bool keepSelection = false)
@@ -126,6 +129,33 @@ namespace Vizsgaremek_Szallashelyek
         private void btnSorted_Click(object sender, EventArgs e)
         {
             new ListViewForm(accommodations).Show();
+        }
+
+        private void timer_Tick(object sender, EventArgs e)
+        {
+            try
+            {
+                accommodations = Repositories.LoadAllAccommodations();
+                RefreshList(true);
+            }
+            catch (Exception ex)
+            {
+                MessageToStatusBar($"{DateTime.Now}-kor nem sikerült frissíteni az adatokat az adatbázisból: {ex.Message}");
+            }
+        }
+
+        private void MessageToStatusBar(string message)
+        {
+            StringBuilder truncatedMessage = new StringBuilder();
+            truncatedMessage.Append(message.ToString());
+            int width = this.Width - 20;
+            Graphics g = stl.Owner.CreateGraphics();
+            while (g.MeasureString(truncatedMessage.ToString(), stl.Font).Width > width && truncatedMessage.Length > 5)
+            {
+                truncatedMessage.Length -= 5;
+                truncatedMessage.Append(" ...");
+            }
+            stl.Text = truncatedMessage.ToString();
         }
     }
 }

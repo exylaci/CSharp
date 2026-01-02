@@ -11,12 +11,10 @@ namespace Vizsgaremek_Szallashelyek
             try
             {
                 File.AppendAllText("log.txt", $"[{DateTime.Now}] - {message}" + Environment.NewLine);
-
             }
             catch (Exception)
             {
-
-                MessageBox.Show("Nem lehet a log fájlba írni!", "Logolási hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Nem lehet a log fájlba írni!", "Logolás hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
 
@@ -28,8 +26,7 @@ namespace Vizsgaremek_Szallashelyek
             }
             catch (Exception)
             {
-
-                MessageBox.Show("Nem lehet a log fájlba írni!", "Logolási hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                MessageBox.Show("Nem lehet a log fájlba írni!", "Logolás hiba", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
         }
     }

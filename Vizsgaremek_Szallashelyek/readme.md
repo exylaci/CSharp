@@ -3,6 +3,8 @@
 
 A **`vizsgaremek kiírás.pdf`** dokumentumban megadott szálláshely-adatokat kiegészítettem a szálláshely **nevével** is.
 
+---
+
 ## Rendezési elv indoklása  
   
 A kiírás **8. feladatában** szereplő  
@@ -21,7 +23,7 @@ Ennek megfelelően a szálláshelyeket:
 - **először a fajtájuk**
 - **majd a nevük**
 
-szerint jelenítem meg,  
+szerint jelenítem meg, 
 a **7. pontban megadott szűrési lehetőségek figyelembevételével**.
 
 ---

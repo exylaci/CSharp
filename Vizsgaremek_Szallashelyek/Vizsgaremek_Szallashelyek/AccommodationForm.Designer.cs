@@ -76,6 +76,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txbName.Location = new System.Drawing.Point(169, 39);
             this.txbName.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txbName.MaxLength = 60;
             this.txbName.Name = "txbName";
             this.txbName.Size = new System.Drawing.Size(179, 22);
             this.txbName.TabIndex = 1;
@@ -107,6 +108,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txbHouseNumber.Location = new System.Drawing.Point(157, 94);
             this.txbHouseNumber.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txbHouseNumber.MaxLength = 10;
             this.txbHouseNumber.Name = "txbHouseNumber";
             this.txbHouseNumber.Size = new System.Drawing.Size(174, 22);
             this.txbHouseNumber.TabIndex = 12;
@@ -127,6 +129,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txbStreet.Location = new System.Drawing.Point(157, 68);
             this.txbStreet.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txbStreet.MaxLength = 60;
             this.txbStreet.Name = "txbStreet";
             this.txbStreet.Size = new System.Drawing.Size(174, 22);
             this.txbStreet.TabIndex = 10;
@@ -147,6 +150,7 @@
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txbCity.Location = new System.Drawing.Point(157, 43);
             this.txbCity.Margin = new System.Windows.Forms.Padding(3, 2, 3, 2);
+            this.txbCity.MaxLength = 30;
             this.txbCity.Name = "txbCity";
             this.txbCity.Size = new System.Drawing.Size(174, 22);
             this.txbCity.TabIndex = 8;
@@ -361,6 +365,7 @@
             this.txbID.Anchor = ((System.Windows.Forms.AnchorStyles)(((System.Windows.Forms.AnchorStyles.Top | System.Windows.Forms.AnchorStyles.Left) 
             | System.Windows.Forms.AnchorStyles.Right)));
             this.txbID.Location = new System.Drawing.Point(169, 12);
+            this.txbID.MaxLength = 8;
             this.txbID.Name = "txbID";
             this.txbID.Size = new System.Drawing.Size(179, 22);
             this.txbID.TabIndex = 26;
