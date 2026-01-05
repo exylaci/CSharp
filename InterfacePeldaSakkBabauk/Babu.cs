@@ -1,25 +1,27 @@
 ﻿using System.Drawing;
 
-internal abstract class Babu
+namespace InterfacePeldaSakkBabauk
 {
-    bool feher;
-    string megnevezes;
-    Point pozicio;
-
-    public bool Feher { get => feher; }
-    public string Megnevezes { get => megnevezes; }
-    public Point Pozicio { get => pozicio; protected set => pozicio = value; }
-
-    protected Babu(bool feher, string megnevezes, Point pozicio)
+    internal abstract class Babu
     {
-        this.feher = feher;
-        this.megnevezes = megnevezes;
-        Pozicio = pozicio;
-    }
+        bool feher;
+        string megnevezes;
+        Point pozicio;
 
-    public override string ToString()
-    {
-        return $"{megnevezes} - {(Feher ? "Feher" : "Fekete")}";
+        public bool Feher { get => feher; }
+        public string Megnevezes { get => megnevezes; }
+        public Point Pozicio { get => pozicio; protected set => pozicio = value; }
+
+        protected Babu(bool feher, string megnevezes, Point pozicio)
+        {
+            this.feher = feher;
+            this.megnevezes = megnevezes;
+            Pozicio = pozicio;
+        }
+
+        public override string ToString()
+        {
+            return $"{megnevezes} - {(Feher ? "Feher" : "Fekete")}";
+        }
     }
 }
-

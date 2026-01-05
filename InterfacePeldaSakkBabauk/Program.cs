@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Drawing;
 
 namespace InterfacePeldaSakkBabauk
 {
@@ -23,7 +18,7 @@ namespace InterfacePeldaSakkBabauk
             {
                 if (item is IFuggolegesenMozog)
                 {
-                    fuggoleges.Add((IFuggolegesenMozog)item);       //hiába biztos, hogy az item teljesíti a IFuggolesesenMozog -ba tartozast akkor is be kell cast-olni
+                    fuggoleges.Add((IFuggolegesenMozog)item);       //hiába biztos, hogy az item teljesíti a IFuggolesesenMozog -ba tartozast akkor is be kell cast-olni, mert a Babu szülő osztálynak még nem volt ilyen metódusa.
                 }
                 if (item is IVizszintesenMozog)
                 {
@@ -39,7 +34,7 @@ namespace InterfacePeldaSakkBabauk
             foreach (IFuggolegesenMozog item in fuggoleges)
             {
                 Console.WriteLine(item);
-                item.FuggolegesMozgas(2);
+                item.FuggolegesMozgas(1);       //Mindenki, aki tud függőlegesen mozogni, lépjen előre egyet.
             }
         }
     }
