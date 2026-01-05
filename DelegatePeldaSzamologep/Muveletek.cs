@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace DelegatePeldaSzamologep
+﻿namespace DelegatePeldaSzamologep
 {
     public enum MuveletekFunkciok
     {
@@ -16,7 +10,7 @@ namespace DelegatePeldaSzamologep
 
     delegate double Muvelet(double szam1, double szam2);
 
-    internal class Muveletek
+    internal static class Muveletek
     {
         public static double Osszead(double a, double b)
         {
