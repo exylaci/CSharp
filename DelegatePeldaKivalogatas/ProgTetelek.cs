@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DelegatePeldaKivalogatas
 {
@@ -26,6 +22,16 @@ namespace DelegatePeldaKivalogatas
             return i < tomb.Length ? i : -1;
         }
 
+        public static int LinearisKereses_Predicatetel(int[] tomb, Predicate<int> feltetel)
+        {
+            int i = 0;
+            while (i < tomb.Length && !feltetel(tomb[i]))
+            {
+                ++i;
+            }
+            return i < tomb.Length ? i : -1;
+        }
+
         public static int[] Kivalogatas(int[] tomb, KeresesiFeltetel feltetel)
         {
             List<int> kivalogatott = new List<int>();
@@ -36,7 +42,8 @@ namespace DelegatePeldaKivalogatas
                     kivalogatott.Add(tomb[i]);
                 }
             }
-            return kivalogatott.ToArray();
+            //return kivalogatott.ToArray();
+            return [.. kivalogatott];
         }
 
         public static bool MulticastAnd(KeresesiFeltetel feltetelek, int elem)
@@ -65,7 +72,7 @@ namespace DelegatePeldaKivalogatas
             foreach (Delegate item in feltetelek.GetInvocationList())
             {
                 KeresesiFeltetel d = (KeresesiFeltetel)item;
-                if (!d(elem))
+                if (d(elem))
                 {
                     return true;
                 }
