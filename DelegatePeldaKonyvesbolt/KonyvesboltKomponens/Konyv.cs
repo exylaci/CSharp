@@ -1,8 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace KonyvesboltKomponens
 {
@@ -92,10 +88,10 @@ namespace KonyvesboltKomponens
             Tipus = tipus;
             Darab = darab;
         }
-        
+
         public override string ToString()
         {
-            return iro + " - " + cim;
+            return $"{iro} - {cim} ({darab} db, {ar} Ft)";
         }
     }
 }

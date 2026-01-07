@@ -1,12 +1,5 @@
 ﻿using KonyvesboltKomponens;
 using System;
-using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace KonyvesboltWinForms
@@ -51,7 +44,7 @@ namespace KonyvesboltWinForms
 
         private void timer1_Tick(object sender, EventArgs e)
         {
-            string[] vezetek = { "gipsz", "Teszt", "Trab" };
+            string[] vezetek = { "Gipsz", "Teszt", "Trab" };
             string[] kereszt = { "Jakab", "Elek", "Antal" };
             string[] cimek = { "Harry", "Potter", "Legyek", "Ura", "Péntek", "13" };
             Random r = new Random();
