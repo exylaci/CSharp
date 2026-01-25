@@ -1,0 +1,11 @@
+<Solution>
+  <Project Path="2-LINQ_SzamokKiiratasa/2-LINQ_SzamokKiiratasa.csproj" Id="1028a04b-ac24-426b-8f4f-efdf59adfe2e" />
+  <Project Path="3-LINQ_to_Objects/3-LINQ_to_Objects.csproj" Id="1e9ab521-ae87-4bd9-8efb-5b1d13956307" />
+  <Project Path="4-LINQ_osztalybol/4-LINQ_osztalybol.csproj" Id="ea78d2a5-2d75-4767-9388-0b492cf58e5a" />
+  <Project Path="5-LINQ_to_XML/5-LINQ_to_XML.csproj" Id="3a219d0c-15f6-4b57-bfd0-2617c20681d3" />
+  <Project Path="6-LINQ_AlapFilter/6-LINQ_AlapFilter.csproj" Id="b9f96bea-dab8-4e45-b72b-282855a0d516" />
+  <Project Path="7-LINQ_Join/7-LINQ_Join.csproj" Id="dad8b4bb-9a35-431b-815f-f049eb8cc934" />
+  <Project Path="8-Lambda_szintaktika/8-Lambda_szintaktika.csproj" Id="5e885716-d807-462f-af6d-0741cb647b8a" />
+  <Project Path="9-LINQ_valtozok/9-LINQ_valtozok.csproj" Id="563ce689-6c8d-4b34-8ce9-22298edd724e" />
+  <Project Path="LINQEsLambdaKifejezesek/1-LINQ_SzavakKiiratasa.csproj" Id="fb1bd1b5-6fbe-4f2a-aba6-391f1c39207d" />
+</Solution>
