@@ -1,0 +1,7 @@
+<Solution>
+  <Project Path="1_Singleton/1_Singleton.csproj" Id="ba683045-0669-49bc-be68-98632e897bea" />
+  <Project Path="2_Factory/2_Factory.csproj" Id="113cfae5-4c44-453a-a00f-ab713b6a084c" />
+  <Project Path="3_Strategy/3_Strategy.csproj" Id="945b7f72-f546-4074-b80d-a65796323c96" />
+  <Project Path="4_Observer/4_Observer_Event.csproj" Id="b7cba6fc-f6b6-4c2c-8578-677b5768d1cd" />
+  <Project Path="DependencyInjectedPattern/DependencyInjectedPattern.csproj" Id="7565c4ab-0219-42fd-9031-95cc487016d5" />
+</Solution>
