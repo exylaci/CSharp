@@ -1,0 +1,37 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Emberek>
+	<Ember nev="Gipsz Jakab" szuldatum="1980.01.03">
+		<Lakcimek>
+			<Lakcim varos="Budapest" cim="Vaci u."/>
+			<Lakcim varos="Győr" cim="Fő út"/>
+		</Lakcimek>
+		<Telefonok>
+			<Telefon szam="+36201234567" />
+		</Telefonok>
+		<Emailek>
+			<Email cim="gipsz.jakab@teszt.hu"/>"
+		</Emailek>
+	</Ember>
+	<Ember nev="Matr Ica" szuldatum="1990.05.06">
+		<Lakcimek>
+			<Lakcim varos="Budapest" cim="Lomb u."/>
+		</Lakcimek>
+		<Telefonok>
+			<Telefon szam="+36701234567" />
+			<Telefon szam="+36307654321" />
+		</Telefonok>
+		<Emailek>
+			<Email cim="matr.ica@teszt.hu"/>"
+		</Emailek>
+	</Ember>
+	<Ember nev="Trab Antal" szuldatum="1989.10.16">
+		<Lakcimek>
+			<Lakcim varos="Eger" cim="Petőfi u."/>
+		</Lakcimek>
+		<Telefonok/>
+		<Emailek>
+			<Email cim="trab.antal@teszt.hu"/>"
+			<Email cim="trab.antal@pelda.hu"/>"
+		</Emailek>
+	</Ember>
+</Emberek>
