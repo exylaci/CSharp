@@ -44,6 +44,11 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Demo01_AsyncAwait.cs" />
+    <Compile Include="Demo02_ThreadJoin.cs" />
+    <Compile Include="Demo03_RaceConditionLock.cs" />
+    <Compile Include="Demo04_TaskWhenAllException.cs" />
+    <Compile Include="Demo05_CancellationToken.cs" />
+    <Compile Include="Demo06_ParallelFor.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>

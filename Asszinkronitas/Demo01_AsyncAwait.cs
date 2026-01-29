@@ -1,9 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Diagnostics;
-using System.Linq;
-using System.Runtime.InteropServices.ComTypes;
-using System.Text;
 using System.Threading.Tasks;
 
 namespace Asszinkronitas
@@ -19,7 +15,6 @@ namespace Asszinkronitas
             Task t1 = SimulateLongRunningOperationAsync("A", 1000);          // Start the asynchronous operation without awaiting
             Task t2 = SimulateLongRunningOperationAsync("B", 2000);          // Start the asynchronous operation without awaiting
             Task t3 = SimulateLongRunningOperationAsync("C", 800);           // Start the asynchronous operation without awaiting
-
 
             await Task.WhenAll(t1, t2, t3);                                  // Call the asynchronous methods
 
