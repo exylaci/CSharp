@@ -74,6 +74,7 @@
             this.cmbMunkafolyamatok.Name = "cmbMunkafolyamatok";
             this.cmbMunkafolyamatok.Size = new System.Drawing.Size(198, 24);
             this.cmbMunkafolyamatok.TabIndex = 3;
+            this.cmbMunkafolyamatok.SelectedIndexChanged += new System.EventHandler(this.cmbMunkafolyamatok_SelectedIndexChanged);
             // 
             // btnGeneralas
             // 
@@ -104,6 +105,7 @@
             this.btnUjMunkafolyamat.TabIndex = 6;
             this.btnUjMunkafolyamat.Text = "Munka felvétele";
             this.btnUjMunkafolyamat.UseVisualStyleBackColor = true;
+            this.btnUjMunkafolyamat.Click += new System.EventHandler(this.btnUjMunkafolyamat_Click);
             // 
             // btnSzamlazas
             // 
@@ -114,6 +116,7 @@
             this.btnSzamlazas.TabIndex = 7;
             this.btnSzamlazas.Text = "Számlázás";
             this.btnSzamlazas.UseVisualStyleBackColor = true;
+            this.btnSzamlazas.Click += new System.EventHandler(this.btnSzamlazas_Click);
             // 
             // Form1
             // 

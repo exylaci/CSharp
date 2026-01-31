@@ -1,11 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
-using System.Data;
-using System.Drawing;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace VizsgaMunkafolyamatok
@@ -62,12 +56,34 @@ namespace VizsgaMunkafolyamatok
         private void lsbSzemelyek_SelectedIndexChanged(object sender, EventArgs e)
         {
             btnTorles.Enabled = lsbSzemelyek.SelectedIndex >= 0;
-            btnSzamlazas.Enabled = cmbMunkafolyamatok.SelectedIndex >= 0;
+            cmbMunkafolyamatok_SelectedIndexChanged(sender, e);
         }
 
         private void lsbSzemelyek_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            MessageBox.Show(((Szemely)lsbSzemelyek.SelectedValue).Information(),"SZemély asatai:",MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show(((Szemely)lsbSzemelyek.SelectedValue).Information(), "SZemély asatai:", MessageBoxButtons.OK, MessageBoxIcon.Information);
+        }
+
+        private void btnUjMunkafolyamat_Click(object sender, EventArgs e)
+        {
+            MunkafolyamatForm form = new MunkafolyamatForm();
+            if (form.ShowDialog() == DialogResult.OK)
+            {
+                munkafolyamatok.Add(form.munkafolyamat);
+                cmbMunkafolyamatok.DataSource = null;
+                cmbMunkafolyamatok.DataSource = munkafolyamatok;
+            }
+        }
+
+        private void cmbMunkafolyamatok_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            btnSzamlazas.Enabled = cmbMunkafolyamatok.SelectedIndex >= 0 && lsbSzemelyek.SelectedIndex >= 0;
+        }
+
+        private void btnSzamlazas_Click(object sender, EventArgs e)
+        {
+            Munkafolyamat munkafolyamat = (Munkafolyamat)cmbMunkafolyamatok.SelectedItem;
+            MessageBox.Show($"Megrendelő:\t{((Szemely)lsbSzemelyek.SelectedItem).Nev}{Environment.NewLine}Munka:    \t{munkafolyamat.Megnevezes}{Environment.NewLine}Bruttó ár:   \t{munkafolyamat.BruttoAr()} forint", "Számla adatai", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
