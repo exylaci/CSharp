@@ -29,5 +29,10 @@ namespace VizsgaMunkafolyamatok
         {
             return Ar * 1.27;
         }
+
+        public override string ToString()
+        {
+            return Megnevezes;
+        }
     }
 }

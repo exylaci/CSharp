@@ -31,5 +31,15 @@ namespace VizsgaMunkafolyamatok
             this.lakcim = lakcim;
             this.telefonszam = telefonszam;
         }
+
+        public override string ToString()
+        {
+            return Nev;
+        }
+
+        public string Information()
+        {
+            return $"Név: \t{Nev}{Environment.NewLine}Cím: \t{Lakcim}{Environment.NewLine}Telefon\t: {Telefonszam}";
+        }
     }
 }
