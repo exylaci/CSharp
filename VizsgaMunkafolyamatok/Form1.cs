@@ -83,7 +83,7 @@ namespace VizsgaMunkafolyamatok
         private void btnSzamlazas_Click(object sender, EventArgs e)
         {
             Munkafolyamat munkafolyamat = (Munkafolyamat)cmbMunkafolyamatok.SelectedItem;
-            MessageBox.Show($"Megrendelő:\t{((Szemely)lsbSzemelyek.SelectedItem).Nev}{Environment.NewLine}Munka:    \t{munkafolyamat.Megnevezes}{Environment.NewLine}Bruttó ár:   \t{munkafolyamat.BruttoAr():0.00} forint", "Számla adatai", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            MessageBox.Show($"Megrendelő:\t{((Szemely)lsbSzemelyek.SelectedItem).Nev}{Environment.NewLine}Munka:    \t{munkafolyamat.Megnevezes}{Environment.NewLine}Bruttó ár:   \t{munkafolyamat.BruttoAr():0.##} forint", "Számla adatai", MessageBoxButtons.OK, MessageBoxIcon.Information);
         }
     }
 }
