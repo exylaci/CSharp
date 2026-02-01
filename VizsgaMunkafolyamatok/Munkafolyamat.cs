@@ -15,15 +15,16 @@ namespace VizsgaMunkafolyamatok
         public double Ar
         {
             get => ar;
-            private set => ar = (ar > 0) ? value : throw new ArgumentException("Árnak pozitív számnak kell lennie!");
+            private set => ar = (value > 0) ? value : throw new ArgumentException("Árnak pozitív számnak kell lennie!");
         }
 
 
         public Munkafolyamat(string megnevezes, double ar)
         {
-            this.megnevezes = megnevezes;
-            this.ar = ar;
+            Megnevezes = megnevezes;
+            Ar = ar;
         }
+
 
         public double BruttoAr()
         {

@@ -27,9 +27,9 @@ namespace VizsgaMunkafolyamatok
 
         public Szemely(string nev, string lakcim, string telefonszam)
         {
-            this.nev = nev;
-            this.lakcim = lakcim;
-            this.telefonszam = telefonszam;
+            Nev = nev;
+            Lakcim = lakcim;
+            Telefonszam = telefonszam;
         }
 
         public override string ToString()

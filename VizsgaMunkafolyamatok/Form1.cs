@@ -16,10 +16,6 @@ namespace VizsgaMunkafolyamatok
             munkafolyamatok = new List<Munkafolyamat>();
         }
 
-        private void Form1_Load(object sender, EventArgs e)
-        {
-
-        }
 
         private void btnGeneralas_Click(object sender, EventArgs e)
         {
@@ -41,15 +37,13 @@ namespace VizsgaMunkafolyamatok
             int selected = lsbSzemelyek.SelectedIndex;
             lsbSzemelyek.DataSource = null;
             lsbSzemelyek.DataSource = szemelyek;
-            if (selected >= 0 && selected < szemelyek.Count)
-            {
-                lsbSzemelyek.SelectedIndex = selected;
-            }
+            lsbSzemelyek.SelectedIndex = selected;
         }
 
         private void btnTorles_Click(object sender, EventArgs e)
         {
             szemelyek.RemoveAt(lsbSzemelyek.SelectedIndex);
+            lsbSzemelyek.SelectedIndex = -1;
             LBFrissit();
         }
 
@@ -61,7 +55,10 @@ namespace VizsgaMunkafolyamatok
 
         private void lsbSzemelyek_MouseDoubleClick(object sender, MouseEventArgs e)
         {
-            MessageBox.Show(((Szemely)lsbSzemelyek.SelectedValue).Information(), "SZemély asatai:", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            if (lsbSzemelyek.SelectedIndex >= 0)
+            {
+                MessageBox.Show(((Szemely)lsbSzemelyek.SelectedValue).Information(), "Személy adatai:", MessageBoxButtons.OK, MessageBoxIcon.Information);
+            }
         }
 
         private void btnUjMunkafolyamat_Click(object sender, EventArgs e)
