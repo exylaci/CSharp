@@ -1,9 +1,8 @@
 ﻿using System;
-using System.ComponentModel.Design.Serialization;
 using System.IO;
 using System.Linq;
-using System.Runtime.CompilerServices;
 using System.Text;
+using System.Text.RegularExpressions;
 
 namespace convert2ascii
 {
@@ -12,6 +11,10 @@ namespace convert2ascii
         const string SOURCE = "őŐűŰ€→—\"“”„'‘’`*?|";
         const string TARGET = "ôÔûÛE--------------";
         static int succesful = 0, failed = 0;
+
+        private static readonly Regex MyCountingPattern = new Regex(@"_\d{2}$");
+        private static readonly Regex OtherCountingPattern = new Regex(@" *\(\d+\) *$");
+        private static readonly Regex BothCountingPattern = new Regex(@" *(?:\(\d+\)|_\d{2}) *$");
 
         private static void StartingMessage()
         {
@@ -39,11 +42,12 @@ namespace convert2ascii
 
         static void Main(string[] args)
         {
-            StartingMessage();
-
-            if (args.Length < 1)
+            Console.WriteLine();
+            if (args.Length != 1)
             {
-                Console.WriteLine("Nem adtál meg útvonalat, vagy fájlnevet!");
+                StartingMessage();
+                Console.WriteLine("Nem, vagy nem jól adtál meg útvonalat, vagy fájlnevet!");
+                Console.ReadKey();
                 Environment.Exit(-1);
             }
 
@@ -62,56 +66,74 @@ namespace convert2ascii
             }
             else
             {
+                StartingMessage();
                 Console.WriteLine("Nem létezik a megadott útvonal, vagy fájlnév!");
+                Console.ReadKey();
             }
-            Console.ReadKey();
         }
 
         private static string ConvertToASCII(string name)
         {
             name = name.Replace("EXTERNAL_", "");
             name = name.Replace("ΑΠ", "Re");
-            bool previous = false;
+            bool previousSpace = false;
+            bool previousHyphen = false;
+            bool previousUnderline = false;
             StringBuilder sb = new StringBuilder();
             int index;
             char oc;
             foreach (char c in name)
             {
-                if (previous && c == ' ') continue;
-                previous = c == ' ';
                 index = SOURCE.IndexOf(c);
-                oc = index >= 0 ? TARGET[index] : c;
-                sb.Append(oc > 254 ? '_' : oc);
+                oc = index >= 0 ? TARGET[index] : (c > 254 ? '_' : c);
+
+                if ((previousSpace && oc == ' ') || (previousHyphen && oc == '-') || (previousUnderline && oc == '_')) continue;
+                previousSpace = oc == ' ';
+                previousHyphen = oc == '-';
+                previousUnderline = oc == '_';
+
+                sb.Append(oc);
             }
             return sb.ToString();
         }
 
-        private static string IncreaseNumberingIfAlreadyExists(string currentName)
+        private static string IncreaseNumberingIfAlreadyExists(string originalFullPathAndNAme)
         {
-            string filename = Path.GetFileNameWithoutExtension(currentName);
-            if (filename.Length < 3 || filename.Substring(filename.Length - 3, 1) != "_")
-            {
-                return Path.Combine(Path.GetDirectoryName(currentName), filename + "_01" + Path.GetExtension(currentName));
-
-            }
-            string result = "";
+            string namePart = Path.GetFileNameWithoutExtension(originalFullPathAndNAme);
+            namePart = MyCountingPattern.IsMatch(namePart) ? namePart : namePart + "_00";
+            int numero;
+            string result;
             do
             {
-                int numero;
-                numero = int.TryParse(filename.Substring(filename.Length - 2, 2), out numero) ? numero : 0;
-                filename = filename.Substring(0, filename.Length - 2) + string.Format("{0:00}", ++numero);
-                result = Path.Combine(Path.GetDirectoryName(currentName), filename + Path.GetExtension(currentName));
+                numero = int.Parse(namePart.Substring(namePart.Length - 2, 2));
+                if (numero == 99)
+                {
+                    namePart += "_00";
+                    numero = 0;
+                }
+                namePart = namePart.Substring(0, namePart.Length - 2) + string.Format("{0:00}", ++numero);
+                result = Path.Combine(Path.GetDirectoryName(originalFullPathAndNAme), namePart + Path.GetExtension(originalFullPathAndNAme));
             } while (File.Exists(result));
             return result;
+        }
+
+        private static string RemoveBothCounting(string oldFileName)
+        {
+            return BothCountingPattern.Replace(Path.GetFileNameWithoutExtension(oldFileName).Trim(), "") + Path.GetExtension(oldFileName);
+        }
+
+        private static string RemoveOtherCounting(string oldFileName)
+        {
+            return OtherCountingPattern.Replace(Path.GetFileNameWithoutExtension(oldFileName).Trim(), "") + Path.GetExtension(oldFileName);
         }
 
         private static void RenameOneFile(string oldFullPath)
         {
             string oldFileName = Path.GetFileName(oldFullPath);
-            string newFileName = ConvertToASCII(oldFileName);
+            string newFileName = ConvertToASCII(RemoveOtherCounting(oldFileName));
             if (newFileName.Equals(oldFileName)) return;
 
-            string newFullPath = Path.Combine(Path.GetDirectoryName(oldFullPath), newFileName);
+            string newFullPath = Path.Combine(Path.GetDirectoryName(oldFullPath), RemoveBothCounting(newFileName));
             if (File.Exists(newFullPath))
             {
                 newFullPath = IncreaseNumberingIfAlreadyExists(newFullPath);
@@ -144,7 +166,7 @@ namespace convert2ascii
             foreach (var entry in files)
             {
                 y = Console.CursorTop;
-                Console.Write(new string(' ', Console.WindowWidth-1));
+                Console.Write(new string(' ', Console.WindowWidth - 1));
                 Console.SetCursorPosition(0, y);
                 Console.Write($"{index--} {entry}");
                 Console.SetCursorPosition(0, y);
@@ -154,7 +176,7 @@ namespace convert2ascii
             for (index = dirs.Count() - 1; index >= 0; --index)
             {
                 y = Console.CursorTop;
-                Console.Write(new string(' ', Console.WindowWidth-1));
+                Console.Write(new string(' ', Console.WindowWidth - 1));
                 Console.SetCursorPosition(0, y);
                 Console.Write($"{index} {dirs.ElementAt(index)}");
                 Console.SetCursorPosition(0, y);
@@ -175,16 +197,16 @@ namespace convert2ascii
             string parentDir = Directory.GetParent(oldPath)?.FullName;
             string newPath = parentDir == null ? newDir : Path.Combine(parentDir, newDir);
 
-            Console.WriteLine($"Átnevezés:  {oldPath}");
+            Console.WriteLine($"Átnevezendő könyvtár: {oldPath}");
             try
             {
                 Directory.Move(oldPath, newPath);
-                Console.WriteLine($"            {newPath}");
+                Console.WriteLine($"                      {newPath}");
                 ++succesful;
             }
             catch (Exception)
             {
-                Console.WriteLine($"Sikertelen: {newPath}");
+                Console.WriteLine($"Nem sikerült erre:    {newPath}");
                 ++failed;
             }
         }
