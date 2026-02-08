@@ -24,13 +24,13 @@ namespace Vizsgaremek_Szallashelyek
         public string City
         {
             get => city;
-            set => city = string.IsNullOrEmpty(value.Trim()) ? throw new ArgumentException("A város neve nem lehet üres!") : value.Trim();
+            set => city = string.IsNullOrEmpty(value?.Trim()) ? throw new ArgumentException("A város neve nem lehet üres!") : value.Trim();
         }
         [Description("Utca")]
         public string Street
         {
             get => street;
-            set => street = string.IsNullOrEmpty(value.Trim()) ? throw new ArgumentException("Az utca neve nem lehet üres!") : value.Trim();
+            set => street = string.IsNullOrEmpty(value?.Trim()) ? throw new ArgumentException("Az utca neve nem lehet üres!") : value.Trim();
         }
         [Description("Házszám")] public string HouseNumber { get; set; }
 
