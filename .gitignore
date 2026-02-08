@@ -16,6 +16,7 @@
 x64/
 [Bb]in/
 [Oo]bj/
+.idea/
 
 # MSTest test Results
 [Tt]est[Rr]esult*/
@@ -111,6 +112,8 @@ _UpgradeReport_Files/
 Backup*/
 UpgradeLog*.XML
 UpgradeLog*.htm
+*.bak
+*.old
 
 # SQL Server files
 App_Data/*.mdf
@@ -132,5 +135,21 @@ $RECYCLE.BIN/
 
 # Mac desktop service store files
 .DS_Store
-
 _NCrunch*
+.ncrunch/
+
+#MAUI
+.artifacts/
+.nuget/
+
+#log, dump
+*.log
+*.dmp
+
+#secret, env
+#  .env				Ez csak tanulás, gyakorlás. Semmi sem éles környezet, ezért nincs benne semmilyen titkos adat.
+appsettings.Development.json
+# secrets.json
+
+#OS
+[Tt]humbs.db
