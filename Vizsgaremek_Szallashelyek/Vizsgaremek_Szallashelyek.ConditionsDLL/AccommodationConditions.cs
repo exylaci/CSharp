@@ -16,7 +16,7 @@ namespace Vizsgaremek_Szallashelyek.ConditionsDLL
             InName = string.Empty;
         }
 
-
+        /// <returns> True: if the Id and Name contains the given strings and if Profile isn't null they have to be equal too </returns>
         public Predicate<IAccommodation> Condition()
         {
             return accommodation => accommodation.Id.Contains(InId) &&

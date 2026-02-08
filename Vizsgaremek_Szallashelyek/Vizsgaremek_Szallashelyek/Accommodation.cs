@@ -18,17 +18,7 @@ namespace Vizsgaremek_Szallashelyek
         public string Id
         {
             get => id;
-            private set
-            {
-                if (value?.Length != 8)
-                {
-                    throw new InvalidOperationException("Az azonosító pontosan 8 karakter kell legyen!");
-                }
-                else
-                {
-                    id = value;
-                }
-            }
+            private set => id = value?.Length == 8 ? value : throw new InvalidOperationException("Az azonosító pontosan 8 karakter kell legyen!");
         }
         [Description("Név")] public string Name { get; set; }
         [Description("Fajta")] public AccommodationProfile Profile { get; set; }
@@ -119,8 +109,7 @@ namespace Vizsgaremek_Szallashelyek
 
         internal static string GetDescription(Enum @enum)
         {
-            FieldInfo? field = @enum.GetType().GetField(@enum.ToString());
-            return field?.GetCustomAttribute<DescriptionAttribute>()?.Description ?? @enum.ToString();
+            return @enum.GetType().GetField(@enum.ToString())?.GetCustomAttribute<DescriptionAttribute>()?.Description ?? @enum.ToString();
         }
     }
 }

@@ -6,7 +6,7 @@ namespace Vizsgaremek_Szallashelyek
 {
     internal class AccommodationList : List<Accommodation>
     {
-        public delegate void AccommodationListChangeHandler(Accommodation accommodation, string direction);
+        public delegate void AccommodationListChangeHandler(Accommodation accommodation, string activity);
         public event AccommodationListChangeHandler AccommodationListChanged;
 
 

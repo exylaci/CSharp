@@ -6,12 +6,7 @@ namespace Vizsgaremek_Szallashelyek
     {
         private bool hasWellness;
 
-
-        public bool HasWellness
-        {
-            get;
-            private set;
-        }
+        public bool HasWellness { get; private set; }
 
 
         public Hotel(string id, string name, AccommodationProfile profile, Address address, float basePrice, byte stars, bool hasWellness) : base(id, name, profile, address, basePrice, stars)

@@ -12,32 +12,12 @@ namespace Vizsgaremek_Szallashelyek
         public double BasePrice
         {
             get => basePrice;
-            set
-            {
-                if (value > 0)
-                {
-                    basePrice = value;
-                }
-                else
-                {
-                    throw new ArgumentException("Az át pozitív szám kell legyen!");
-                }
-            }
+            set => basePrice = value > 0 ? value : throw new ArgumentException("Az át pozitív szám kell legyen!");
         }
         public byte Stars
         {
             get => stars;
-            private set
-            {
-                if (value >= 1 && value <= 5)
-                {
-                    stars = value;
-                }
-                else
-                {
-                    throw new ArgumentException("A csillagok száma 1 és 5 közötti kell legyen!");
-                }
-            }
+            private set => stars = value >= 1 && value <= 5 ? value : throw new ArgumentException("A csillagok száma 1 és 5 közötti kell legyen!");
         }
 
 

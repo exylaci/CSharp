@@ -6,7 +6,6 @@ namespace Vizsgaremek_Szallashelyek
     {
         private bool hasBreakfast;
 
-
         public bool HasBreakfast { get; internal set; }
 
 

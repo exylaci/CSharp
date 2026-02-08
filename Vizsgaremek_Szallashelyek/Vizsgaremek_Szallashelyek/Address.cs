@@ -18,49 +18,19 @@ namespace Vizsgaremek_Szallashelyek
         public short ZipCode
         {
             get => zipCode;
-            set
-            {
-                if (value >= 1000 && value <= 9999)
-                {
-                    zipCode = value;
-                }
-                else
-                {
-                    throw new ArgumentException("Az iranyitoszam 1000 és 9999 közötti szám kell legyen!");
-                }
-            }
+            set => zipCode = value >= 1000 && value <= 9999 ? value : throw new ArgumentException("Az iranyitoszam 1000 és 9999 közötti szám kell legyen!");
         }
         [Description("Város")]
         public string City
         {
             get => city;
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    throw new ArgumentException("A város neve nem lehet üres!");
-                }
-                else
-                {
-                    city = value;
-                }
-            }
+            set => city = string.IsNullOrEmpty(value.Trim()) ? throw new ArgumentException("A város neve nem lehet üres!") : value.Trim();
         }
         [Description("Utca")]
         public string Street
         {
             get => street;
-            set
-            {
-                if (string.IsNullOrEmpty(value))
-                {
-                    throw new ArgumentException("Az utca neve nem lehet üres!");
-                }
-                else
-                {
-                    street = value;
-                }
-            }
+            set => street = string.IsNullOrEmpty(value.Trim()) ? throw new ArgumentException("Az utca neve nem lehet üres!") : value.Trim();
         }
         [Description("Házszám")] public string HouseNumber { get; set; }
 

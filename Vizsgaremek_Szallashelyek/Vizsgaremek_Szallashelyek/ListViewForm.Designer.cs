@@ -42,7 +42,7 @@
             this.lsv.HideSelection = false;
             this.lsv.Location = new System.Drawing.Point(12, 12);
             this.lsv.Name = "lsv";
-            this.lsv.Size = new System.Drawing.Size(860, 372);
+            this.lsv.Size = new System.Drawing.Size(876, 372);
             this.lsv.TabIndex = 0;
             this.lsv.UseCompatibleStateImageBehavior = false;
             // 
@@ -72,7 +72,7 @@
             // 
             this.btnCancel.Anchor = ((System.Windows.Forms.AnchorStyles)((System.Windows.Forms.AnchorStyles.Bottom | System.Windows.Forms.AnchorStyles.Right)));
             this.btnCancel.DialogResult = System.Windows.Forms.DialogResult.Cancel;
-            this.btnCancel.Location = new System.Drawing.Point(718, 395);
+            this.btnCancel.Location = new System.Drawing.Point(734, 395);
             this.btnCancel.Name = "btnCancel";
             this.btnCancel.Size = new System.Drawing.Size(156, 32);
             this.btnCancel.TabIndex = 3;
@@ -84,7 +84,7 @@
             // 
             this.AutoScaleDimensions = new System.Drawing.SizeF(8F, 16F);
             this.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font;
-            this.ClientSize = new System.Drawing.Size(886, 439);
+            this.ClientSize = new System.Drawing.Size(902, 439);
             this.Controls.Add(this.btnCancel);
             this.Controls.Add(this.btnFilterOff);
             this.Controls.Add(this.btnFilterOn);

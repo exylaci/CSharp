@@ -6,11 +6,13 @@ namespace Vizsgaremek_Szallashelyek
 {
     static internal class Log
     {
+        private const string LOG_FILE_NAME = "log.txt";
+
         public static void Append(string message)
         {
             try
             {
-                File.AppendAllText("log.txt", $"[{DateTime.Now}] - {message}" + Environment.NewLine);
+                File.AppendAllText(LOG_FILE_NAME, $"[{DateTime.Now}] - {message}" + Environment.NewLine);
             }
             catch (Exception)
             {
@@ -18,11 +20,11 @@ namespace Vizsgaremek_Szallashelyek
             }
         }
 
-        public static void Append(Exception ex)
+        public static void Append(Exception exception)
         {
             try
             {
-                File.AppendAllText("log.txt", $"[{DateTime.Now}] - {ex.Message}{Environment.NewLine}{ex.StackTrace}{Environment.NewLine}");
+                File.AppendAllText(LOG_FILE_NAME, $"[{DateTime.Now}] - {exception.Message}{Environment.NewLine}{exception.StackTrace}{Environment.NewLine}");
             }
             catch (Exception)
             {
