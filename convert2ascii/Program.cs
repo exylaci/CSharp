@@ -1,8 +1,10 @@
 ﻿using System;
 using System.IO;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Text.RegularExpressions;
+using System.Threading;
 
 namespace convert2ascii
 {
@@ -19,23 +21,24 @@ namespace convert2ascii
         private static void StartingMessage()
         {
             Console.OutputEncoding = Encoding.UTF8;
-            Console.WriteLine("Ez a program a paraméterként megadott útvonaltól a fájl nevéből, ");
+            Console.WriteLine("Ez a program a paraméterként megadott útvonal plusz fájl nevéből, ");
             Console.WriteLine("vagy az alkönyvtárakban minden fájl és könyvtár bejegyzés nevéből");
             Console.WriteLine("   kiszedi: ");
             Console.WriteLine("     • a többlet szóközöket,");
             Console.WriteLine("     • az EXTERNAL_ szöveget.");
             Console.WriteLine("   kicseréli: ");
             Console.WriteLine("     • az őŐ és űŰ betűket, ôÔ és ûÛ betűkre");
-            Console.WriteLine("     • az € karaktert, E betüre,");
+            Console.WriteLine("     • az € karaktert, E betűre,");
             Console.WriteLine("     • az → — \" “ ” „ ' ‘ ’ ` * ? karaktereket, - karakterre,");
             Console.WriteLine("     • a görög ΑΠ(Re) szöveget latin betűs Re szövegre,");
             Console.WriteLine("     • minden más nem ASCII karaktert, _ jelre.");
-            Console.WriteLine("Ha így azonossá válna fájlok neve, akkor a további átnevezéseknél egy _ jel");
-            Console.WriteLine("után növekvő sorszámot tesz a fájlnév végére a kiterjesztés elé." + Environment.NewLine);
+            Console.WriteLine("Ha így azonossá válna két fájl neve, akkor az utóbbi fálj átneve-");
+            Console.WriteLine("zése előtt egy _ jel után növekvő sorszámot tesz a fájlnév végére,");
+            Console.WriteLine("a kiterjesztés elé." + Environment.NewLine);
             Console.WriteLine("Használata egy könyvtár és alkönyvtárai minden bejegyzésére:");
             Console.WriteLine("   • convert2ascii c:\\temp\\e-mailek");
             Console.WriteLine("   • convert2ascii \"c:\\temp\\inbox 2023\"");
-            Console.WriteLine("Használata csak egy fájl nevének módosítása esetén:");
+            Console.WriteLine("Használata csak egyetlen fájl nevének módosítása esetén:");
             Console.WriteLine("   • convert2ascii c:\\temp\\minta.msg");
             Console.WriteLine("   • convert2ascii \"c:\\temp\\minta levél.msg\"" + Environment.NewLine + Environment.NewLine);
         }
@@ -153,8 +156,21 @@ namespace convert2ascii
             }
         }
 
+        private static void PrintOut(string text)
+        {
+            int row = Console.CursorTop;
+            Console.Write(text);
+            int width = Console.WindowWidth;
+            int height = Console.WindowHeight;
+            if (row + (text.Length - 1) / width > height - 2)
+                row = height - (text.Length - 1) / width - 1;
+            row = Math.Min(height - 1, Math.Max(0, row));
+            try { Console.SetCursorPosition(0, row); } catch { }
+        }
+
         private static void RenameAllFile(string rootPath)
         {
+            Console.WriteLine($"kiindulási hely: {rootPath}");
             var dirs = Directory.EnumerateDirectories(rootPath, "*", SearchOption.AllDirectories);
             Console.Write($"A {dirs.Count()} darab alkönyvtárral együtt összesen ");
             var files = Directory.EnumerateFiles(rootPath, "*", SearchOption.AllDirectories);
@@ -162,29 +178,27 @@ namespace convert2ascii
 
             Console.WriteLine($"[{DateTime.Now}] Átnevezések:");
             int index = dirs.Count() + files.Count();
-            int y;
-            foreach (var entry in files)
+            string empty = string.Empty;
+            foreach (string entry in files)
             {
-                y = Console.CursorTop;
-                Console.Write(new string(' ', Console.WindowWidth - 1));
-                Console.SetCursorPosition(0, y);
-                Console.Write($"{index--} {entry}");
-                Console.SetCursorPosition(0, y);
+                string text = $"{index--} {entry}";
+                PrintOut(empty);
+                PrintOut(text);
+                empty = new string(' ', text.Length);
                 RenameOneFile(entry);
             }
 
-            for (index = dirs.Count() - 1; index >= 0; --index)
+            dirs.Reverse();
+            foreach (string entry in dirs)
             {
-                y = Console.CursorTop;
-                Console.Write(new string(' ', Console.WindowWidth - 1));
-                Console.SetCursorPosition(0, y);
-                Console.Write($"{index} {dirs.ElementAt(index)}");
-                Console.SetCursorPosition(0, y);
-                RenameOneDirectory(dirs.ElementAt(index));
+                string text = $"{index--} {entry}";
+                PrintOut(empty);
+                PrintOut(text);
+                empty = new string(' ', text.Length);
+                RenameOneDirectory(entry);
             }
-            y = Console.CursorTop;
-            Console.Write(new string(' ', Console.WindowWidth));
-            Console.SetCursorPosition(0, y);
+            PrintOut(empty);
+
             Console.WriteLine($"A {dirs.Count() + files.Count()} bejegyzésből {succesful} darab sikeresen átnevezve, nem sikerűlt átnevezni {failed} darabot.");
         }
 
