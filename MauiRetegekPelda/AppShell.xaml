@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<Shell
+    x:Class="MauiRetegekPelda.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:pages="clr-namespace:MauiRetegekPelda.Pages"
+    Title="MauiRetegekPelda"
+    FlyoutBehavior="Flyout">
+    <!-- xmlns:pages="clr-namespace: Meg kell adni a névteret, amiben a megjelenítésen dolgozunk.
+         FlyoutBehavior: nem tagozódik be az alap megjelenítésbe, lebeg minden felett fix helyen a képernyőn -->
+
+    <FlyoutItem Title="XAML + Code-behind"
+                Route="codebehind">
+        <ShellContent ContentTemplate="{DataTemplate pages:ContactEditorCodeBehindPage}" />
+        <!-- ContentTemplate: Mit szeretnénk megjeleníteni. A mi ContactEditorCodeBehindPage-ben megírt dobozunkat. -->
+    </FlyoutItem>
+</Shell>

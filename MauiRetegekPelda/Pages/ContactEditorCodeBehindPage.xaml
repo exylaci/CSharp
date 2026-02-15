@@ -1,0 +1,184 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiRetegekPelda.Pages.ContactEditorCodeBehindPage"
+             Title="Contact builder (Code-behind példa)">
+
+    <!--  Példa arra, amikor minden a csak a megjelenítésért felelős program modulban van. Nagyon erőforrás igényes! -->
+
+    <ContentPage.Resources>                 <!-- Ez az üres képernyő. -->
+        <ResourceDictionary>                <!-- Itt lehet a default stílusokat meghatározni. -->
+            <Style TargetType="Label">      <!-- Labelek stílusa -->
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+            <Style TargetType="Label" x:Key="SelectionTitle">          <!-- x:Key: Ezzel a névvel lehet egyedileg formázni Label-eket. -->
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Margin" Value="0,10,0,6" />    <!-- left,top,right,bottom -->
+            </Style>
+            <Style TargetType="Border" x:Key="ChipBorder">
+                <Setter Property="Padding" Value="10,6" />
+                <Setter Property="Margin" Value="0,0,8,6" />
+                <Setter Property="StrokeThickness" Value="1" />              <!-- A border vastagsága -->
+                <Setter Property="Stroke" Value="#D0D0D0" />                 <!-- Border színe -->
+                <Setter Property="Background" Value="#F5F5F5" />             <!-- Háttér szín -->
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <AbsoluteLayout>                        <!-- Ez a teljes dobozunk (A programunk "ablaka".)-->
+        <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1"
+                    AbsoluteLayout.LayoutFlags="All">
+            <!-- ScrollView: Ha nagyobb a tartalmunk mint a képernyő, gördíthető. 
+                 LayoutBounds: Child window poziciója, mérete a szülőn belül. x,y,width,height 
+                 LayoutFlags: A Boundsban megadott érték abszolút [pixel], vagy arányos [%]. -->
+            <VerticalStackLayout Padding="16"
+                                 Spacing="14">
+                <!-- Belső térköz és az egyes elemek közötti távolság -->
+                <Grid ColumnDefinitions="Auto,*"
+                      RowDefinitions="Auto,Auto">
+                    <!-- Táblázat szerű elrendezés,
+                         0.oszlop a minimmálisan szükséges szélességű, 1. oszlop maradék hely
+                         sorok a minimálisan szükséges magasságúak. -->
+                    <Label Text="Contact Builder"
+                           FontSize="22"
+                           FontAttributes="Bold" />
+                    <!-- Az első elemek alapból a 0.sorban vannak,
+                            adott sor első eleme alapból a 0. oszlopban van. (bal felső sarokban).
+                         Az itteni stílus beálítás felül írja a default értéket -->
+                    <Button Grid.Column="1"
+                            Text="Reset"
+                            Clicked="OnResetClicked" />
+                    <!-- A 2. elemnek máar meg kell adni a helyét, legalább az oszlopot. (1. oszlop)
+                         Mi történjen, ha tákattintanak: Meghívja ezt a függvényt. (Alt+Enter / Create event handler) -> Látrehozza a függvényt a .cs fájlban -->
+                    <Label Grid.Row="1"
+                           Grid.ColumnSpan="2"
+                           Text="Layoutok: Grid és még sok egyéb"
+                           Opacity="0.7" />
+                    <!-- 0. sor megtelt, ez hanyadik sorba kerüljön.
+                         2 oszlop szélességű -->
+                </Grid>
+                <!-- Ez már a tábklázaton kívül van, az az alatti része a doboznak. -->
+
+                <Label Style="{StaticResource SelectionTitle}"
+                       Text="Adatok (Grid)" />              <!-- Az előre definiált stílus használata. -->
+
+                <Grid ColumnDefinitions="Auto,*"
+                      RowDefinitions="Auto,Auto,Auto"
+                      ColumnSpacing="12"
+                      RowSpacing="10">                      <!-- Távolság a sorok és az oszlopok között. -->
+                    <Label Text="Név"
+                           VerticalOptions="Center" />      <!-- Középre helyezi. -->
+                    <Entry x:Name="NameEntry"
+                           Grid.Column="1"
+                           Placeholder="pl.: Teszt Elek"
+                           TextChanged="OnFormChange" />
+                    <!-- x:Name: Az elem elnevezése, ahogyan hivatkozni lehet rá a programban. 
+                         Placeholder: Minta szöveg, milyen adatot várunk.
+                         TextChanged: Mi történjen, ha bármit bele írnak: Meghívja ezt a függvényt. -->
+
+                    <Label Text="Email:"
+                           Grid.Row="1"
+                           VerticalOptions="Center" />
+                    <Entry x:Name="EmailEntry"
+                           Grid.Row="1"
+                           Grid.Column="1"
+                           Placeholder="pl.: teszt.elek@minta.hu"
+                           Keyboard="Email"
+                           TextChanged="OnFormChange" />
+                    <!-- Keyboard: Email írásához jó billentyűzetet dob fel. -->
+
+                    <Label Text="Telefon:"
+                           Grid.Row="2"
+                           VerticalOptions="Center" />
+                    <Entry x:Name="PhoneEntry"
+                           Grid.Row="2"
+                           Grid.Column="1"
+                           Placeholder="pl.: +36 20 1234567"
+                           Keyboard="Telephone"
+                           TextChanged="OnFormChange" />
+                    <!-- Keyboard: Telefonszám begépeléséhez jó billentyűzetet dob fel. -->
+
+                </Grid>
+
+                <Label Style="{StaticResource SelectionTitle}"
+                       Text="TAG-ek (FlexLayout - wrappelve)" />
+
+                <Grid ColumnDefinitions="*,Auto"
+                      ColumnSpacing="10">
+                    <Entry x:Name="TagEntry"
+                           Placeholder="Írjon be egy tag-et (Pl.: almafa)" />
+                    <Button Text="Add"
+                            Grid.Column="1"
+                            Clicked="OnAddTagClicked" />
+                </Grid>
+
+                <FlexLayout x:Name="TagsFlex"
+                            Wrap="Wrap"
+                            Direction="Row"
+                            AlignItems="Start" />
+
+                <Label Text="Előnézet"
+                       Style="{StaticResource SelectionTitle}" />
+
+
+                <!--'Frame' is obsolete as of .NET 9. Please use 'Border' instead. -->
+                <Frame Padding="14"
+                       CornerRadius="16"
+                       HasShadow="True">
+                    <!-- A 'Frame' kb egy vizuális konténer rengeteg beállítási lehetőséggel -->
+                    <Grid RowDefinitions="Auto,Auto,Auto"
+                          ColumnDefinitions="Auto,*"
+                          RowSpacing="8"
+                          ColumnSpacing="12">
+                        <!-- TAG-ek -->
+
+                        <Label Text="👤"
+                               FontSize="18" />
+                        <Label Text="(név)"
+                               x:Name="NameLabelPreview"
+                               Grid.Column="1"
+                               FontSize="18"
+                               FontAttributes="Bold" />
+                        <!-- Win + . -tal elő lehet hívni emoji map panelt. -->
+
+                        <Label Text="✉️"
+                               Grid.Row="1"
+                               FontSize="18" />
+                        <Label Text="(e-mail)"
+                               x:Name="EmailLabelPreview"
+                               Grid.Row="1"
+                               Grid.Column="1"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               Opacity="0.85" />
+                        <!-- Opacity: 85%-ban átlátszó -->
+
+                        <Label Text="📞"
+                               Grid.Row="2"
+                               FontSize="18" />
+                        <Label Text="(telefon)"
+                               x:Name="TelefonLabelPreview"
+                               Grid.Row="2"
+                               Grid.Column="1"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               Opacity="0.85" />
+
+                    </Grid>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+        <Button Text="💾"
+                FontSize="22"
+                WidthRequest="56"
+                HeightRequest="56"
+                CornerRadius="28"
+                AbsoluteLayout.LayoutBounds="1,1,56,56"
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                Clicked="OnSaveClicked" />
+        <!-- Ez gomb így a "Fő" dobozban lesz, nem része a görgethető tartalomnak, az "felett" van. -->
+    </AbsoluteLayout>
+</ContentPage>
