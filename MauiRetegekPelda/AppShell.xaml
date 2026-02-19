@@ -20,7 +20,14 @@
                 Route="modelview">
         <!-- Route: oldal (page) egyedi azonosítója -->
         <ShellContent ContentTemplate="{DataTemplate pages:ContactEditorModelViewPage}" />
-        <!-- ContentTemplate: Mit szeretnénk megjeleníteni. A mi ContactEditorCodeBehindPage-ben megírt dobozunkat. -->
+        <!-- ContentTemplate: Mit szeretnénk megjeleníteni. A mi ContactEditorModelViewPage-ben megírt dobozunkat. -->
+    </FlyoutItem>
+
+    <FlyoutItem Title="XAML + ModelView CleanPage" 
+                Route="modelview-cleanpage">
+        <!-- Route: oldal (page) egyedi azonosítója -->
+        <ShellContent ContentTemplate="{DataTemplate pages:ContactEditorModelViewCleanPage}" />
+        <!-- ContentTemplate: Mit szeretnénk megjeleníteni. A mi ContactEditorodelViewCleanPage-ben megírt dobozunkat. -->
     </FlyoutItem>
 
 </Shell>

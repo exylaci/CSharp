@@ -1,0 +1,220 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiRetegekPelda.Pages.ContactEditorModelViewCleanPage"
+             Title="Contact Builder (ModelView CleanPage)">
+    <ContentPage.Resources>                 <!-- Ez az üres képernyő. -->
+        <ResourceDictionary>                <!-- Itt lehet a default stílusokat meghatározni. -->
+            <Style TargetType="Label">      <!-- Labelek stílusa -->
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+            <Style TargetType="Label" x:Key="SelectionTitle">          <!-- x:Key: Ezzel a névvel lehet egyedileg formázni Label-eket. -->
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Margin" Value="0,10,0,6" />    <!-- left,top,right,bottom -->
+            </Style>
+            <Style TargetType="Border" x:Key="ChipBorder">
+                <Setter Property="Padding" Value="10,6" />
+                <Setter Property="Margin" Value="0,0,8,6" />
+                <Setter Property="StrokeThickness" Value="1" />              <!-- A border vastagsága -->
+                <Setter Property="Stroke" Value="#D0D0D0" />                 <!-- Border színe -->
+                <Setter Property="Background" Value="#F5F5F5" />             <!-- Háttér szín -->
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <AbsoluteLayout>                        <!-- Ez a teljes dobozunk (A programunk "ablaka".)-->
+        <ScrollView AbsoluteLayout.LayoutBounds="0,0,1,1"
+                    AbsoluteLayout.LayoutFlags="All">
+            <!-- ScrollView: Ha nagyobb a tartalmunk mint a képernyő, gördíthető. 
+                 LayoutBounds: Child window poziciója, mérete a szülőn belül. x,y,width,height 
+                 LayoutFlags: A Boundsban megadott érték abszolút [pixel], vagy arányos [%]. -->
+            <VerticalStackLayout Padding="16"
+                                 Spacing="14">
+                <!-- Belső térköz és az egyes elemek közötti távolság -->
+                <Grid ColumnDefinitions="Auto,*"
+                      RowDefinitions="Auto,Auto">
+                    <!-- Táblázat szerű elrendezés,
+                         0.oszlop a minimmálisan szükséges szélességű, 1. oszlop maradék hely
+                         sorok a minimálisan szükséges magasságúak. -->
+                    <Label Text="Contact Builder"
+                           FontSize="22"
+                           FontAttributes="Bold" />
+                    <!-- Az első elemek alapból a 0.sorban vannak,
+                            adott sor első eleme alapból a 0. oszlopban van. (bal felső sarokban).
+                         Az itteni stílus beálítás felül írja a default értéket -->
+                    <Button Text="Reset"
+                            Grid.Column="1"
+                            Command="{Binding ResetCommand}" />
+                    <!-- A 2. elemnek máar meg kell adni a helyét, legalább az oszlopot. (1. oszlop)
+                         Command: Mi történjen, ha rákattintanak: Bindingoláson keresztül Meghívja ezt (ResetCommand) RelayCommand-ot, ami végül a VievModel Reset függvényét. -->
+                    <Label Text="Layoutok: Grid és még sok egyéb"
+                           Grid.Row="1"
+                           Grid.ColumnSpan="2"
+                           Opacity="0.7" />
+                    <!-- 0. sor megtelt, ez hanyadik sorba kerüljön.
+                         2 oszlop szélességű -->
+                </Grid>
+                <!-- Ez már a tábklázaton kívül van, az az alatti része a doboznak. -->
+
+                <Label Text="Adatok (Grid)"
+                       Style="{StaticResource SelectionTitle}" />
+                <!-- Az előre definiált stílus használata. -->
+
+                <Grid ColumnDefinitions="Auto,*"
+                      RowDefinitions="Auto,Auto,Auto"
+                      ColumnSpacing="12"
+                      RowSpacing="10">                      <!-- Távolság a sorok és az oszlopok között. -->
+                    <Label Text="Név"
+                           VerticalOptions="Center" />      <!-- Középre helyezi. -->
+                    <Entry x:Name="NameEntry"
+                           Grid.Column="1"
+                           Placeholder="pl.: Teszt Elek"
+                           Text="{Binding Name, Mode=TwoWay}" />
+                    <!-- x:Name: Az elem elnevezése, ahogyan hivatkozni lehet rá a programban. 
+                         Placeholder: Minta szöveg, milyen adatot várunk.
+                         Text: Mi történjen, ha bármit bele írnak: Meghívja a Name property setterét.
+                            A változást a property kezeli, ezért: binding a Name propertyvel.
+                            Mode=TwoWay: De mivel ez egy text mező gettere is van, kétirányú adatáramlás kell a getter is -->
+
+                    <Label Text="Email:"
+                           Grid.Row="1"
+                           VerticalOptions="Center" />
+                    <Entry x:Name="EmailEntry"
+                           Grid.Row="1"
+                           Grid.Column="1"
+                           Placeholder="pl.: teszt.elek@minta.hu"
+                           Keyboard="Email"
+                           Text="{Binding Email, Mode=TwoWay}" />
+                    <!-- Keyboard: Email írásához jó billentyűzetet dob fel. -->
+
+                    <Label Text="Telefon:"
+                           Grid.Row="2"
+                           VerticalOptions="Center" />
+                    <Entry x:Name="PhoneEntry"
+                           Grid.Row="2"
+                           Grid.Column="1"
+                           Placeholder="pl.: +36 20 1234567"
+                           Keyboard="Telephone"
+                           Text="{Binding Phone,Mode=TwoWay}" />
+                    <!-- Keyboard: Telefonszám begépeléséhez jó billentyűzetet dob fel. -->
+
+                </Grid>
+
+                <Label Text="TAG-ek (FlexLayout - wrappelve)"
+                       Style="{StaticResource SelectionTitle}" />
+
+                <Grid ColumnDefinitions="*,Auto"
+                      ColumnSpacing="10">
+                    <Entry x:Name="TagEntry"
+                           Placeholder="Írjon be egy tag-et (Pl.: almafa)"
+                           Text="{Binding  NewTag, Mode=TwoWay}" />
+                    <Button Text="Add"
+                            Grid.Column="1"
+                            Command="{Binding AddTagCommand}" />
+                </Grid>
+
+                <FlexLayout x:Name="TagsFlex"
+                            Wrap="Wrap"
+                            Direction="Row"
+                            AlignItems="Start"
+                            BindableLayout.ItemsSource="{Binding Tags}">
+                    <!-- Hozzákötjük a Tags observable collection listánk változását: -->
+                    <BindableLayout.ItemTemplate>
+                        <!-- Leírja, hogyan kezeljük a buborékok megjelenítését (Border) -->
+                        <DataTemplate>
+                            <Border Style="{StaticResource ChipBorder}">
+                                <Border.StrokeShape>
+                                    <RoundRectangle CornerRadius="16" />
+                                </Border.StrokeShape>
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                    <Label Text="{Binding .}" />
+                                    <!-- megjelenítendő Tag szöveg kiíratása
+                                         .: a "foreach" aktuális item-e. A megjelenítésekhez kb. végig lépked
+                                         az observable collection minden elemén, a kollecióban stringek vannak
+                                         eltárolva, tehát a . az aktuális (string típusú) adatot jelenti. -->
+                                    <Button Grid.Column="1"
+                                            Text="x"
+                                            FontSize="12"
+                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                                              Path=BindingContext.RemoveTagCommand}"
+                                            CommandParameter="{Binding .}" />
+                                    <!-- Eltávolító gomb.
+                                         Command: A RemoveTagCommand a ViewModel-ben van, ezért itt a binding megadása összetett.
+                                            Data template-en belül, alapbol az observable collection egy eleme tartozna a bindinghoz (lásd: itt alatta a CommandPaprmeter Binding-ja. Ezért megadjuk a binding forrását.
+                                            Source: RelativeSource: hozzá van bindingolva a ViewModel, tudunk abból indulni
+                                            AncestorType: A paraméteről megadott ContentPage binding conext-je kell (nem pedig a datatemplat-é)
+                                            Path: Milyen nevű RelayCommand-unkon keresztűl hívódjon a függvényünk.
+                                         CommandParameter: A "meghívott" függvénynek átadandó paraméter. A pont (.) Itt is a végig iterált observable collection aktuális eleme
+                                            Itt azért nem kell megadni a path, mert csak egy akármi van bindolva (BindableLayout.ItemsSource) a FlexLayout-hoz. Így az az alaoértelmezett. Azt nem kell külön újra megadni. Több source estén meg kellene adni, -->
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </BindableLayout.ItemTemplate>
+                </FlexLayout>
+                <!-- Mivel most már nem a flexlayoutot töltjük fel és nem abból törölgetünk, hanem egy oservable collectionba, a flexlayoutot hozzá kell kötni a collection változásaihoz  -->
+
+                <Label Text="Előnézet"
+                       Style="{StaticResource SelectionTitle}" />
+
+                <!--'Frame' is obsolete as of .NET 9. Please use 'Border' instead. -->
+                <Frame Padding="14"
+                       CornerRadius="16"
+                       HasShadow="True">
+                    <!-- A 'Frame' egy vizuális konténer rengeteg beállítási lehetőséggel. Kb. mint a div a html-ben egy plusz kis doboz, -->
+
+                    <Grid RowDefinitions="Auto,Auto,Auto"
+                          ColumnDefinitions="Auto,*"
+                          RowSpacing="8"
+                          ColumnSpacing="12">
+                        <!-- TAG-ek -->
+
+                        <Label Text="👤"
+                               FontSize="18" />
+                        <!-- Win + . -tal elő lehet hívni emoji map panelt. -->
+                        <Label x:Name="NameLabelPreview"
+                               Grid.Column="1"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               Text="{Binding Name}" />
+
+                        <Label Text="✉️"
+                               Grid.Row="1"
+                               FontSize="18" />
+                        <Label x:Name="EmailLabelPreview"
+                               Grid.Row="1"
+                               Grid.Column="1"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               Opacity="0.85"
+                               Text="{Binding Email}" />
+                        <!-- Opacity: 85%-ban átlátszó -->
+
+                        <Label Text="📞"
+                               Grid.Row="2"
+                               FontSize="18" />
+                        <Label x:Name="TelefonLabelPreview"
+                               Grid.Row="2"
+                               Grid.Column="1"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               Opacity="0.85"
+                               Text="{Binding Phone}" />
+
+                    </Grid>
+                </Frame>
+
+            </VerticalStackLayout>
+        </ScrollView>
+        <Button Text="💾"
+                FontSize="22"
+                WidthRequest="56"
+                HeightRequest="56"
+                CornerRadius="28"
+                AbsoluteLayout.LayoutBounds="1,1,56,56"
+                AbsoluteLayout.LayoutFlags="PositionProportional"
+                Command="{Binding SaveCommand}" />
+        <!-- Ez gomb itt már a "Fő" dobozban van, nem része a görgethető tartalomnak, az "felett" van. -->
+    </AbsoluteLayout>
+</ContentPage>
