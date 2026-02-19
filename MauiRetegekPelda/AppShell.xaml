@@ -16,10 +16,4 @@
         <!-- ContentTemplate: Mit szeretnénk megjeleníteni. A mi ContactEditorCodeBehindPage-ben megírt dobozunkat. -->
     </FlyoutItem>
 
-    <FlyoutItem Title="XAML + ModelView" 
-                Route="modelview">
-        <!-- Route: oldal (page) egyedi azonosítója -->
-        <ShellContent ContentTemplate="{DataTemplate pages:ContactEditorModelViewPage}" />
-        <!-- ContentTemplate: Mit szeretnénk megjeleníteni. A mi ContactEditorCodeBehindPage-ben megírt dobozunkat. -->
-    </FlyoutItem>
 </Shell>
