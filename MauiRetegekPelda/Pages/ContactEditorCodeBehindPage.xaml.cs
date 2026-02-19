@@ -47,8 +47,8 @@ public partial class ContactEditorCodeBehindPage : ContentPage
             return;
         }
 
-        Border chip = CreateChip(tag);
-        TagsFlex.Children.Add(chip);            //Ebben tároljuk őket    
+        Border chip = CreateChip(tag);          //Saját buborék gyártása
+        TagsFlex.Children.Add(chip);            //Ebben flex dobozban tároljuk a chip-einket    
         TagEntry.Text=string.Empty;             //Hozzáadás után kiürítjuk beviteli mezőt
     }
 
@@ -61,9 +61,10 @@ public partial class ContactEditorCodeBehindPage : ContentPage
         };
         border.Content = new Label { Text = text };
 
-        TapGestureRecognizer tap = new TapGestureRecognizer();          //Ha megérintik a kijelzőt
-        tap.Tapped += (_, _) => TagsFlex.Children.Remove(border);       //feliratjuk ennek a buboréknak a tap event listára a névtelen metódusunkat, ami hozzá értek a buborékunkhoz kiveszi a buborékokat tároló listából ezt a buborékot
-        border.GestureRecognizers.Add(tap);                             
+        TapGestureRecognizer tap = new TapGestureRecognizer();          //Ez az objektum akkor jön létre, ha megérintik a kijelzőt
+        tap.Tapped += (_, _) => TagsFlex.Children.Remove(border);       //feliratjuk ennek a buboréknak a tap event listára a névtelen metódusunkat, ami ha hozzá értek a buborékunkhoz kiveszi a buborékokat tároló listából ezt a buborékot
+        // (_,_) Az _ jellel jelezzük, hogy az érkező paramétereket nem használjuk fel sehol sem nem.
+        border.GestureRecognizers.Add(tap);      //itt adjuk hozzá a buborék "feladataihoz" a hozáérés esetén teendőt                       
         return border;
     }
 

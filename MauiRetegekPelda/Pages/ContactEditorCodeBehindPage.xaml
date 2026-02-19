@@ -3,9 +3,13 @@
 <ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="MauiRetegekPelda.Pages.ContactEditorCodeBehindPage"
-             Title="Contact builder (Code-behind példa)">
+             Title="Contact builder (Code-behind)">
 
-    <!--  Példa arra, amikor minden a csak a megjelenítésért felelős program modulban van. Nagyon erőforrás igényes! -->
+    <!--  Példa arra, amikor minden a csak a megjelenítésért felelős program modulban van.      
+          Nagyon erőforrás igényes!
+          Tesztelhetetlen. Entry-k a UI tesztekben nem példányosíthatók.
+          Egyre csak hízik a kód.
+          Megoldás: Model View használata. Szétválik a megjelenítés és a logika. Eventek helyett bindingok használatával. Nem ragasztgatunk kódrészleteket a UI-re. -->
 
     <ContentPage.Resources>                 <!-- Ez az üres képernyő. -->
         <ResourceDictionary>                <!-- Itt lehet a default stílusokat meghatározni. -->
@@ -47,22 +51,23 @@
                     <!-- Az első elemek alapból a 0.sorban vannak,
                             adott sor első eleme alapból a 0. oszlopban van. (bal felső sarokban).
                          Az itteni stílus beálítás felül írja a default értéket -->
-                    <Button Grid.Column="1"
-                            Text="Reset"
+                    <Button Text="Reset"
+                            Grid.Column="1"
                             Clicked="OnResetClicked" />
                     <!-- A 2. elemnek máar meg kell adni a helyét, legalább az oszlopot. (1. oszlop)
-                         Mi történjen, ha tákattintanak: Meghívja ezt a függvényt. (Alt+Enter / Create event handler) -> Látrehozza a függvényt a .cs fájlban -->
-                    <Label Grid.Row="1"
+                         Clicked: Mi történjen, ha rákattintanak: Meghívja ezt a függvényt. (Alt+Enter / Create event handler) -> Látrehozza a függvényt a .cs fájlban -->
+                    <Label Text="Layoutok: Grid és még sok egyéb"
+                           Grid.Row="1"
                            Grid.ColumnSpan="2"
-                           Text="Layoutok: Grid és még sok egyéb"
                            Opacity="0.7" />
                     <!-- 0. sor megtelt, ez hanyadik sorba kerüljön.
                          2 oszlop szélességű -->
                 </Grid>
                 <!-- Ez már a tábklázaton kívül van, az az alatti része a doboznak. -->
 
-                <Label Style="{StaticResource SelectionTitle}"
-                       Text="Adatok (Grid)" />              <!-- Az előre definiált stílus használata. -->
+                <Label Text="Adatok (Grid)"
+                       Style="{StaticResource SelectionTitle}" />
+                <!-- Az előre definiált stílus használata. -->
 
                 <Grid ColumnDefinitions="Auto,*"
                       RowDefinitions="Auto,Auto,Auto"
@@ -102,8 +107,8 @@
 
                 </Grid>
 
-                <Label Style="{StaticResource SelectionTitle}"
-                       Text="TAG-ek (FlexLayout - wrappelve)" />
+                <Label Text="TAG-ek (FlexLayout - wrappelve)"
+                       Style="{StaticResource SelectionTitle}" />
 
                 <Grid ColumnDefinitions="*,Auto"
                       ColumnSpacing="10">
@@ -118,16 +123,17 @@
                             Wrap="Wrap"
                             Direction="Row"
                             AlignItems="Start" />
+                <!-- Ebben tároljuk a buborékainkat -->
 
                 <Label Text="Előnézet"
                        Style="{StaticResource SelectionTitle}" />
-
 
                 <!--'Frame' is obsolete as of .NET 9. Please use 'Border' instead. -->
                 <Frame Padding="14"
                        CornerRadius="16"
                        HasShadow="True">
-                    <!-- A 'Frame' kb egy vizuális konténer rengeteg beállítási lehetőséggel -->
+                    <!-- A 'Frame' egy vizuális konténer rengeteg beállítási lehetőséggel. Kb. mint a bin a html-ben egy plusz kis doboz, -->
+
                     <Grid RowDefinitions="Auto,Auto,Auto"
                           ColumnDefinitions="Auto,*"
                           RowSpacing="8"
@@ -136,18 +142,18 @@
 
                         <Label Text="👤"
                                FontSize="18" />
-                        <Label Text="(név)"
-                               x:Name="NameLabelPreview"
+                        <!-- Win + . -tal elő lehet hívni emoji map panelt. -->
+                        <Label x:Name="NameLabelPreview"
+                               Text="(név)"
                                Grid.Column="1"
                                FontSize="18"
                                FontAttributes="Bold" />
-                        <!-- Win + . -tal elő lehet hívni emoji map panelt. -->
 
                         <Label Text="✉️"
                                Grid.Row="1"
                                FontSize="18" />
-                        <Label Text="(e-mail)"
-                               x:Name="EmailLabelPreview"
+                        <Label x:Name="EmailLabelPreview"
+                               Text="(e-mail)"
                                Grid.Row="1"
                                Grid.Column="1"
                                FontSize="18"
@@ -158,8 +164,8 @@
                         <Label Text="📞"
                                Grid.Row="2"
                                FontSize="18" />
-                        <Label Text="(telefon)"
-                               x:Name="TelefonLabelPreview"
+                        <Label x:Name="TelefonLabelPreview"
+                               Text="(telefon)"
                                Grid.Row="2"
                                Grid.Column="1"
                                FontSize="18"
@@ -179,6 +185,6 @@
                 AbsoluteLayout.LayoutBounds="1,1,56,56"
                 AbsoluteLayout.LayoutFlags="PositionProportional"
                 Clicked="OnSaveClicked" />
-        <!-- Ez gomb így a "Fő" dobozban lesz, nem része a görgethető tartalomnak, az "felett" van. -->
+        <!-- Ez gomb itt már a "Fő" dobozban van, nem része a görgethető tartalomnak, az "felett" van. -->
     </AbsoluteLayout>
 </ContentPage>
