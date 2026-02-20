@@ -4,13 +4,15 @@ namespace MauiRetegekPelda;
 
 public partial class App : Application
 {
-    public App()
+    public App(AppShell shell)
     {
         InitializeComponent();
+        MainPage = shell;
     }
 
-    protected override Window CreateWindow(IActivationState? activationState)
-    {
-        return new Window(new AppShell());
-    }
+    //    protected override Window CreateWindow(IActivationState? activationState)
+    //    {
+    //        return new Window(new AppShell());
+    //    }
+    //      Itt már nem példányosítunk, mert megkapja konstruktorban
 }
