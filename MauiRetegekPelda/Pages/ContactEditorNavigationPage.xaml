@@ -1,0 +1,153 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiRetegekPelda.Pages.ContactEditorNavigationPage"
+             Title="ContactBuilder ( NavigationService )">
+
+    <ContentPage.Resources>                 <!-- Ez az üres képernyő. -->
+        <ResourceDictionary>                <!-- Itt lehet a default stílusokat meghatározni. -->
+            <Style TargetType="Label">      <!-- Labelek stílusa -->
+                <Setter Property="FontSize" Value="14" />
+            </Style>
+            <Style TargetType="Label" x:Key="SelectionTitle">      <!-- x:Key: Ezzel a névvel lehet egyedileg formázni Label-eket. -->
+                <Setter Property="FontSize" Value="16" />
+                <Setter Property="FontAttributes" Value="Bold" />
+                <Setter Property="Margin" Value="0,10,0,6" />      <!-- left,top,right,bottom -->
+            </Style>
+            <Style TargetType="Border" x:Key="ChipBorder">
+                <Setter Property="Padding" Value="10,6" />
+                <Setter Property="Margin" Value="0,0,8,6" />
+                <Setter Property="StrokeThickness" Value="1" />    <!-- A border vastagsága -->
+                <Setter Property="Stroke" Value="#D0D0D0" />       <!-- Border színe -->
+                <Setter Property="Background" Value="#F5F5F5" />   <!-- Háttér szín -->
+            </Style>
+        </ResourceDictionary>
+    </ContentPage.Resources>
+
+    <ScrollView>
+        <VerticalStackLayout Padding="16" Spacing="14">
+            <Grid ColumnDefinitions="*,Auto,Auto" RowDefinitions="Auto,Auto" ColumnSpacing="10">
+                <Label Text="Contact Builder"
+                       FontSize="22" FontAttributes="Bold" />
+                <!-- Az első elemek alapból a 0.sorban vannak,
+                            adott sor első eleme alapból a 0. oszlopban van. (bal felső sarokban).
+                         Az itteni stílus beálítás felül írja a default értéket -->
+                <Button Text="Összgzés"
+                        Grid.Column="1"
+                        Command="{Binding OpenSummaryCommand}" />
+                <Button Text="Reset"
+                        Grid.Column="2"
+                        Command="{Binding ResetCommand}" />
+                <!-- A 2. elemnek máar meg kell adni a helyét, legalább az oszlopot. (1. oszlop)
+                         Command: Mi történjen, ha rákattintanak: Bindingoláson keresztül Meghívja ezt (ResetCommand) RelayCommand-ot, ami végül a VievModel Reset függvényét. -->
+                <Label Text="Layoutok: Grid és még sok egyéb"
+                       Grid.Row="1"
+                       Grid.ColumnSpan="3"
+                       Opacity="0.7" />
+            </Grid>
+
+            <Label Text="Adatok (Grid)"
+                   Style="{StaticResource SelectionTitle}" />
+            <!-- Az előre definiált stílus használata. -->
+
+            <Grid ColumnDefinitions="Auto,*"
+                  RowDefinitions="Auto,Auto,Auto"
+                  ColumnSpacing="12"
+                  RowSpacing="10">                      <!-- Távolság a sorok és az oszlopok között. -->
+                <Label Text="Név"
+                       VerticalOptions="Center" />      <!-- Középre helyezi. -->
+                <Entry x:Name="NameEntry"
+                       Grid.Column="1"
+                       Placeholder="pl.: Teszt Elek"
+                       Text="{Binding Name, Mode=TwoWay}" />
+                <!-- x:Name: Az elem elnevezése, ahogyan hivatkozni lehet rá a programban. 
+                         Placeholder: Minta szöveg, milyen adatot várunk.
+                         Text: Mi történjen, ha bármit bele írnak: Meghívja a Name property setterét.
+                            A változást a property kezeli, ezért: binding a Name propertyvel.
+                            Mode=TwoWay: De mivel ez egy text mező gettere is van, kétirányú adatáramlás kell a getter is -->
+
+                <Label Text="Email:"
+                       Grid.Row="1"
+                       VerticalOptions="Center" />
+                <Entry x:Name="EmailEntry"
+                       Grid.Row="1"
+                       Grid.Column="1"
+                       Placeholder="pl.: teszt.elek@minta.hu"
+                       Keyboard="Email"
+                       Text="{Binding Email, Mode=TwoWay}" />
+                <!-- Keyboard: Email írásához jó billentyűzetet dob fel. -->
+
+                <Label Text="Telefon:"
+                       Grid.Row="2"
+                       VerticalOptions="Center" />
+                <Entry x:Name="PhoneEntry"
+                       Grid.Row="2"
+                       Grid.Column="1"
+                       Placeholder="pl.: +36 20 1234567"
+                       Keyboard="Telephone"
+                       Text="{Binding Phone,Mode=TwoWay}" />
+                <!-- Keyboard: Telefonszám begépeléséhez jó billentyűzetet dob fel. -->
+
+            </Grid>
+
+            <Label Text="TAG-ek (FlexLayout - wrappelve)"
+                   Style="{StaticResource SelectionTitle}" />
+
+            <Grid ColumnDefinitions="*,Auto"
+                  ColumnSpacing="10">
+                <Entry x:Name="TagEntry"
+                       Placeholder="Írjon be egy tag-et (Pl.: almafa)"
+                       Text="{Binding  NewTag, Mode=TwoWay}" />
+                <Button Text="Add"
+                        Grid.Column="1"
+                        Command="{Binding AddTagCommand}" />
+            </Grid>
+
+            <FlexLayout x:Name="TagsFlex"
+                        Wrap="Wrap"
+                        Direction="Row"
+                        AlignItems="Start"
+                        BindableLayout.ItemsSource="{Binding Tags}">
+                <!-- Hozzákötjük a Tags observable collection listánk változását: -->
+                <BindableLayout.ItemTemplate>
+                    <!-- Leírja, hogyan kezeljük a buborékok megjelenítését (Border) -->
+                    <DataTemplate>
+                        <Border Style="{StaticResource ChipBorder}">
+                            <Border.StrokeShape>
+                                <RoundRectangle CornerRadius="16" />
+                            </Border.StrokeShape>
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                <Label Text="{Binding .}" />
+                                <!-- megjelenítendő Tag szöveg kiíratása
+                                         .: a "foreach" aktuális item-e. A megjelenítésekhez kb. végig lépked
+                                         az observable collection minden elemén, a kollecióban stringek vannak
+                                         eltárolva, tehát a . az aktuális (string típusú) adatot jelenti. -->
+                                <Button Grid.Column="1"
+                                        Text="x"
+                                        FontSize="12"
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                                                  Path=BindingContext.RemoveTagCommand}"
+                                        CommandParameter="{Binding .}" />
+                                <!-- Eltávolító gomb.
+                                         Command: A RemoveTagCommand a ViewModel-ben van, ezért itt a binding megadása összetett.
+                                            Data template-en belül, alapbol az observable collection egy eleme tartozna a bindinghoz (lásd: itt alatta a CommandPaprmeter Binding-ja. Ezért megadjuk a binding forrását.
+                                            Source: RelativeSource: hozzá van bindingolva a ViewModel, tudunk abból indulni
+                                            AncestorType: A paraméteről megadott ContentPage binding conext-je kell (nem pedig a datatemplat-é)
+                                            Path: Milyen nevű RelayCommand-unkon keresztűl hívódjon a függvényünk.
+                                         CommandParameter: A "meghívott" függvénynek átadandó paraméter. A pont (.) Itt is a végig iterált observable collection aktuális eleme
+                                            Itt azért nem kell megadni a path, mert csak egy akármi van bindolva (BindableLayout.ItemsSource) a FlexLayout-hoz. Így az az alaoértelmezett. Azt nem kell külön újra megadni. Több source estén meg kellene adni, -->
+                            </Grid>
+                        </Border>
+                    </DataTemplate>
+                </BindableLayout.ItemTemplate>
+            </FlexLayout>
+            <!-- Mivel most már nem a flexlayoutot töltjük fel és nem abból törölgetünk, hanem egy oservable collectionba, a flexlayoutot hozzá kell kötni a collection változásaihoz  -->
+
+
+            <Button Text="Mentés (dialog)"
+                    Command="{Binding SaveCommand}" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

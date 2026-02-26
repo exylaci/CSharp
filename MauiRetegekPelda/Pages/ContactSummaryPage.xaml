@@ -1,0 +1,56 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="MauiRetegekPelda.Pages.ContactSummaryPage"
+             Title="osszegzes">
+
+    <VerticalStackLayout Padding="16" Spacing="12">
+
+        <Label Text="Kapcsolat összegzése"
+               FontSize="20" FontAttributes="Bold" />
+
+        <Frame Padding="14" CornerRadius="16" HasShadow="True">
+            <Grid RowDefinitions="Auto,Auto,Auto"
+                  ColumnDefinitions="Auto,*"
+                  ColumnSpacing="12" RowSpacing="8">
+                <Label Text="👤"
+                       FontSize="20" />
+                <Label Text="{Binding Name}"
+                       Grid.Column="1"
+                       FontSize="18" FontAttributes="Bold" />
+                <Label Text="✉️"
+                       Grid.Row="1"
+                       FontSize="20" />
+                <Label Text="{Binding Email}"
+                       Grid.Row="1"
+                       Grid.Column="1"
+                       FontSize="18" FontAttributes="Bold" />
+                <Label Text="📞"
+                       Grid.Row="2"
+                       FontSize="20" />
+                <Label Text="{Binding Phone}"
+                       Grid.Row="2"
+                       Grid.Column="1"
+                       FontSize="18" FontAttributes="Bold" />
+            </Grid>
+        </Frame>
+
+        <Label Text="Tagek"
+               FontSize="20" FontAttributes="Bold" />
+
+        <CollectionView ItemsSource="{Binding Tags}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="10,6" CornerRadius="14" HasShadow="False" Margin="0,0,0,8">
+                        <Label Text="{Binding  .}" />
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+
+        <Button Text="Vissza"
+                Command="{Binding BackCommand}" />
+
+    </VerticalStackLayout>
+</ContentPage>

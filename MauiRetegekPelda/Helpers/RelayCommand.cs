@@ -43,7 +43,7 @@ public sealed class RelayCommand<T> : ICommand //Implementáljuk minden prperty-
     private readonly Func<T?, bool>? _canExecute;
 
     public RelayCommand(Action<T?> execute, Func<T?, bool>? canExecute = null)
-    {
+    {   
         _execute = execute;
         _canExecute = canExecute;
     }

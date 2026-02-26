@@ -42,6 +42,17 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<AppShell>(); //Kódbol adjuk hozzá
 
+        
+
+        //létre kell hozni a szervízt szingleton ként :
+        builder.Services.AddSingleton<INavigationService, NavigationService>();
+        
+        //létre kell hozni a viewmodel-eket és a page-eket tranziensként :
+        builder.Services.AddTransient<ContactEditorNavigationViewModel>();
+        builder.Services.AddTransient<ContactSummaryViewModel>();
+        builder.Services.AddTransient<ContactEditorNavigationPage>();
+        builder.Services.AddTransient<ContactSummaryPage>();
+   
         //még mielőtt a Buildelés elkezdődne, kell beállítani mindent.
 
 #if DEBUG
