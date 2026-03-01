@@ -15,10 +15,26 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
+        builder.Services.AddSingleton<IClock, SystemClock>();   //Beregisztráljuk a saját óránkat
+        
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
 
         return builder.Build();
+    }
+}
+
+
+public interface IClock
+{
+    public DateTimeOffset Now { get; }
+}
+
+public sealed class SystemClock : IClock
+{
+    public DateTimeOffset Now
+    {
+        get => DateTimeOffset.Now; //Csak hogy csináljon is valamit a program.
     }
 }

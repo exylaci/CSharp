@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GITdemoMAUI.Pages.HomePage">
+
+    <VerticalStackLayout Spacing="12" Padding="16">
+        <Label Text="Demo work példa" FontSize="24" />
+        <Label x:Name="TimeLabel"
+               Text="-"
+               FontSize="16" />
+        <!-- x:Name: neve, hogy kodbehind lehessen rá hivatkozni -->
+
+        <Button Text="Idő frissítése"
+                Clicked="OnRefreshClicked" />
+        <!-- Clicked: kód behind végrehajtás (Alt+Enter legyártja a kódot a .cs-ben)-->
+    </VerticalStackLayout>
+
+</ContentPage>
