@@ -1,0 +1,186 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{7B90CEB0-FB7F-4A82-9E3B-76874ED96D8B}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <RootNamespace>Donkeykongdemo</RootNamespace>
+    <AssemblyName>Donkeykongdemo</AssemblyName>
+    <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
+    <FileAlignment>512</FileAlignment>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugSymbols>true</DebugSymbols>
+    <DebugType>full</DebugType>
+    <Optimize>false</Optimize>
+    <OutputPath>bin\Debug\</OutputPath>
+    <DefineConstants>DEBUG;TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <PlatformTarget>AnyCPU</PlatformTarget>
+    <DebugType>pdbonly</DebugType>
+    <Optimize>true</Optimize>
+    <OutputPath>bin\Release\</OutputPath>
+    <DefineConstants>TRACE</DefineConstants>
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+  </PropertyGroup>
+  <PropertyGroup>
+    <StartupObject />
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="System" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="Form1.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="Form1.Designer.cs">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </Compile>
+    <Compile Include="JatekForm.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="JatekForm.Designer.cs">
+      <DependentUpon>JatekForm.cs</DependentUpon>
+    </Compile>
+    <Compile Include="NevBekero.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="NevBekero.Designer.cs">
+      <DependentUpon>NevBekero.cs</DependentUpon>
+    </Compile>
+    <Compile Include="Osztalyok\HordoAI.cs">
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="Osztalyok\Jatekos.cs" />
+    <Compile Include="Osztalyok\KomponensEffektek.cs" />
+    <Compile Include="Osztalyok\ToplistaElem.cs" />
+    <Compile Include="Program.cs" />
+    <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="TopAblak.cs">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="TopAblak.Designer.cs">
+      <DependentUpon>TopAblak.cs</DependentUpon>
+    </Compile>
+    <EmbeddedResource Include="Form1.resx">
+      <DependentUpon>Form1.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="JatekForm.resx">
+      <DependentUpon>JatekForm.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="NevBekero.resx">
+      <DependentUpon>NevBekero.cs</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="Properties\Resources.resx">
+      <Generator>ResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.cs</LastGenOutput>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+    <Compile Include="Properties\Resources.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Resources.resx</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <EmbeddedResource Include="TopAblak.resx">
+      <DependentUpon>TopAblak.cs</DependentUpon>
+    </EmbeddedResource>
+    <None Include="Properties\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <LastGenOutput>Settings.Designer.cs</LastGenOutput>
+    </None>
+    <Compile Include="Properties\Settings.Designer.cs">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="App.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\olajos_hordo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\sima_hordo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\talaj.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\tuzeshordo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\cancel.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\csharp_logo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey_kong_promo.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\Donkeykong-logo1.svg.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\elet.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hercegno.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hordo.png.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\jatekos_balra.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\jatekos_jobbra.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\letra.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\gombhang.mp3" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\donkey_kong_promo_Other.png" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hordo-f.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hordo-f-r.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hordo-roll-f.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hordo-roll.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hordo-r.gif" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="Resources\hordo.gif" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+</Project>

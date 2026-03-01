@@ -84,6 +84,8 @@ void CharacterReplace()
             if (text.ElementAt(i) == '`') text[i] = (char)39;
             // ’ csere '
             if (text.ElementAt(i) == '’') text[i] = (char)39;
+            // ‘ csere '
+            if (text.ElementAt(i) == '‘') text[i] = (char)39;
         }
         for (int i = 0; i < text.Count - 1; ++i)
         {

@@ -1,0 +1,24 @@
+CREATE TABLE IF NOT EXISTS Tanar (
+    Id       INTEGER PRIMARY KEY AUTOINCREMENT,
+    Nev      TEXT    NOT NULL,
+    Tantargy TEXT    NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Tanulo (
+    Id  INTEGER PRIMARY KEY AUTOINCREMENT,
+    Nev TEXT    NOT NULL
+);
+
+CREATE TABLE IF NOT EXISTS Jegy (
+    Id  INTEGER PRIMARY KEY AUTOINCREMENT,
+    Tid  INTEGER NOT NULL,
+    Did  INTEGER NOT NULL,
+    Jegy INTEGER NOT NULL,
+    FOREIGN KEY (Tid) REFERENCES Tanar (Id) ON DELETE CASCADE,
+    FOREIGN KEY (Did) REFERENCES Tanulo (Id) ON DELETE CASCADE
+);
+
+SELECT Jegy.Id as Jid, Tid, Did, Jegy, Tanulo.Nev as Dnev, Tanar.Nev as Tnev, Tantargy FROM Jegy 
+    LEFT JOIN Tanulo ON Jegy.Did = Tanulo.Id   
+    INNER JOIN Tanar ON Jegy.Tid = Tanar.Id
+    ORDER BY Tanulo.Id;

@@ -1,0 +1,8 @@
+<Solution>
+  <Project Path="Argon2/Argon2.csproj" Id="fe24ce94-a062-48f6-a476-f48673888df5" />
+  <Project Path="BlackJack/BlackJack.csproj" Id="efb5fa21-f797-4d7f-989b-e5aa91e5cd79" />
+  <Project Path="Fajlkezeles/Fajlkezeles.csproj" Id="2f58fc3a-d28d-409e-bb7d-05821412d7c1" />
+  <Project Path="KeresoAlgoritmusok/KeresoAlgoritmusok.csproj" Id="8c20cd04-9198-443d-ac74-129b7ec86739" />
+  <Project Path="MindenfeleKodolasiGyakorlatok/MindenfeleKodolasiGyakorlatok.csproj" Id="258345c8-3ba0-496c-8ff6-b0f63c6814d2" />
+  <Project Path="RendezesiAlgoritmusok/RendezoAlgoritmusok.csproj" Id="790431b6-96e3-4875-9c0e-4ab80a1fb058" />
+</Solution>

@@ -56,7 +56,7 @@ namespace Vizsgaremek_Szallashelyek
                         SELECT LAST_INSERT_ID();";
                     command.Parameters.AddWithValue("@zipcode", accommodation.Address.ZipCode);
                     command.Parameters.AddWithValue("@city", accommodation.Address.City);
-                    command.Parameters.AddWithValue("@street", accommodation.Address.City);
+                    command.Parameters.AddWithValue("@street", accommodation.Address.Street);
                     command.Parameters.AddWithValue("@housenumber", accommodation.Address.HouseNumber);
                     accommodation.Address.Id = Convert.ToInt32(command.ExecuteScalar());
 
