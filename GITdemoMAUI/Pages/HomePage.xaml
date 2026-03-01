@@ -4,16 +4,26 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GITdemoMAUI.Pages.HomePage">
 
-        <VerticalStackLayout Spacing="12" Padding="16">
-            <Label Text="Demo work példa" FontSize="24" />
-            <Label 
-                   Text="{Binding NowText}"
-                   FontSize="16" />
-            <!-- Text: Bindigolja az ModelView property geterét, hogy mit jelenítsen meg itt -->
+    <Grid Background="{DynamicResource AppBackgroundColor}">
+        <!-- Itt is használható az általunk készített stiluselnevezés -->
 
-            <Button Text="Idő frissítése"
-                    Command="{Binding RefreshCommand}" />
-            <!-- Command: (Clicked helyett) a ViewModelben létrehozott ICommandot hajtja végre -->
-        </VerticalStackLayout>
+        <ScrollView>
+            <VerticalStackLayout Spacing="12" Padding="16">
+                <Label Text="Demo work példa" Style="{StaticResource TitleLabelStyle}" />
+                <Frame Style="{StaticResource CardContainerStyle}">
+                    <VerticalStackLayout Spacing="8">
+                        <Label Text="Aktuális idő"
+                               Style="{StaticResource SubTitleLabelStyle}" /> 
+                        <Label Text="{Binding NowText}"
+                               FontSize="16" />
+                        <!-- Text: Bindigolja az ModelView property geterét, hogy mit jelenítsen meg itt -->
 
+                        <Button Text="Idő frissítése"
+                                Command="{Binding RefreshCommand}" />
+                        <!-- Command: (Clicked helyett) a ViewModelben létrehozott ICommandot hajtja végre -->
+                    </VerticalStackLayout>
+                </Frame>
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
 </ContentPage>
