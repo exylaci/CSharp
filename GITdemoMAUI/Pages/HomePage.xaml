@@ -4,16 +4,16 @@
              xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
              x:Class="GITdemoMAUI.Pages.HomePage">
 
-    <VerticalStackLayout Spacing="12" Padding="16">
-        <Label Text="Demo work példa" FontSize="24" />
-        <Label x:Name="TimeLabel"
-               Text="-"
-               FontSize="16" />
-        <!-- x:Name: neve, hogy kodbehind lehessen rá hivatkozni -->
+        <VerticalStackLayout Spacing="12" Padding="16">
+            <Label Text="Demo work példa" FontSize="24" />
+            <Label 
+                   Text="{Binding NowText}"
+                   FontSize="16" />
+            <!-- Text: Bindigolja az ModelView property geterét, hogy mit jelenítsen meg itt -->
 
-        <Button Text="Idő frissítése"
-                Clicked="OnRefreshClicked" />
-        <!-- Clicked: kód behind végrehajtás (Alt+Enter legyártja a kódot a .cs-ben)-->
-    </VerticalStackLayout>
+            <Button Text="Idő frissítése"
+                    Command="{Binding RefreshCommand}" />
+            <!-- Command: (Clicked helyett) a ViewModelben létrehozott ICommandot hajtja végre -->
+        </VerticalStackLayout>
 
 </ContentPage>

@@ -1,4 +1,5 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using GITdemoMAUI.ViewModels;
+using Microsoft.Extensions.Logging;
 
 namespace GITdemoMAUI;
 
@@ -16,7 +17,7 @@ public static class MauiProgram
             });
 
         builder.Services.AddSingleton<IClock, SystemClock>();   //Beregisztráljuk a saját óránkat
-        
+        builder.Services.AddSingleton<HomeViewModel>();         //Létrehozatjuk a ViewModelünket  
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
