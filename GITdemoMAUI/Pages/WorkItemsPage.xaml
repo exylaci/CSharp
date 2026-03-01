@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GITdemoMAUI.Pages.WorkItemsPage">
+
+    <Grid BackgroundColor="{DynamicResource AppBackgroundColor}">
+        <VerticalStackLayout Padding="16" Spacing="12">
+            <Label Text="Munkák" Style="{StaticResource TitleLabelStyle}" />
+
+            <CollectionView ItemsSource="{Binding Items}"
+                            SelectionMode="Single">
+                <!-- ItemSource: Az Items kollekciót járja végig az elemek megjelenítéshez. -->
+
+                <!-- Az egyes elemeket így jelenítse meg: -->
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
+                        <Frame Style="{StaticResource CardContainerStyle}">
+                            <Frame.GestureRecognizers>
+                                <TapGestureRecognizer Tapped="OnWorkItemTapped" />
+                            </Frame.GestureRecognizers>
+                            <VerticalStackLayout Spacing="6">
+                                <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="16" />
+                                <Label Text="{Binding Description}" FontSize="14" />
+                                <Label Text="{Binding Status}" FontSize="12" />
+                            </VerticalStackLayout>
+                        </Frame>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+        </VerticalStackLayout>
+    </Grid>
+</ContentPage>

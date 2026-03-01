@@ -18,6 +18,11 @@ public static class MauiProgram
 
         builder.Services.AddSingleton<IClock, SystemClock>();   //Beregisztráljuk a saját óránkat
         builder.Services.AddSingleton<HomeViewModel>();         //Létrehozatjuk a ViewModelünket  
+        
+        builder.Services.AddSingleton<WorkItemsViewModel>();
+        builder.Services.AddSingleton<Pages.WorkItemsPage>();
+        builder.Services.AddTransient<Pages.WorkItemDetailPage>(); //Akkor jön létre amikor rákattintuk a egy workitem-re a listában. Tehát minden egyes navigációnál egy új példány jön létre.
+        
 #if DEBUG
         builder.Logging.AddDebug();
 #endif

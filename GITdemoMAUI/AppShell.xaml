@@ -13,6 +13,8 @@
         <ShellContent Title="Kezdőlap"
                       ContentTemplate="{DataTemplate pages:HomePage}" />
         <!-- egér áll a HomePage-n / alt+enter / Import type: 'GITdemoMAUI.Pages.HomePage' -re megcsinálja a fenti: xmlns:pages="clr-namespace:GITdemoMAUI.Pages" -t -->
+        <ShellContent Title="Munkák"
+                      ContentTemplate="{DataTemplate pages:WorkItemsPage}" />
         <ShellContent Title="Beállítások"
                       ContentTemplate="{DataTemplate pages:SettingsPage}" />
     </TabBar>
