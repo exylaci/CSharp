@@ -7,16 +7,21 @@
     <Grid BackgroundColor="{DynamicResource AppBackgroundColor}">
         <ScrollView>
             <VerticalStackLayout Padding="16" Spacing="12">
-                <Label Text="Részletek" Style="{StaticResource TitleLabelStyle}" />
+                <Label Text="{Binding Title}" Style="{StaticResource TitleLabelStyle}" />
+                <!-- Text="Részletek helyett" bindingoljuk a Title-hez. --> 
 
                 <Frame Style="{StaticResource CardContainerStyle}">
                     <VerticalStackLayout Spacing="8">
-                        <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="18" />
-                        <Label Text="{Binding Description}" FontSize="16" />
-                        <Label Text="{Binding Status}" FontSize="14" />
-                        <Label Text="{Binding UpdatedAt}" FontSize="12" />
+                        <Label Text="{Binding Item.Title}" FontAttributes="Bold" FontSize="18" />
+                        <Label Text="{Binding Item.Description}" FontSize="16" />
+                        <Label Text="{Binding Item.Status}" FontSize="14" />
+                        <Label Text="{Binding Item.UpdatedAt}" FontSize="12" />
+                        <!-- Az Item-en keresztűl kell hivatkozni a Propertikre. -->
                     </VerticalStackLayout>
                 </Frame>
+                
+                <Button Text="Vissza" Command="{Binding BackCommand}" />
+                
             </VerticalStackLayout>
         </ScrollView>
     </Grid>

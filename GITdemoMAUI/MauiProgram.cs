@@ -21,7 +21,13 @@ public static class MauiProgram
         
         builder.Services.AddSingleton<WorkItemsViewModel>();
         builder.Services.AddSingleton<Pages.WorkItemsPage>();
-        builder.Services.AddTransient<Pages.WorkItemDetailPage>(); //Akkor jön létre amikor rákattintuk a egy workitem-re a listában. Tehát minden egyes navigációnál egy új példány jön létre.
+        builder.Services.AddTransient<WorkItemDetailViewModel>();   //Előbb a ViewModel-t aztán a Page-et adja hozzá.
+        builder.Services.AddTransient<Pages.WorkItemDetailPage>();  //Akkor jön létre amikor rákattintuk a egy workitem-re a listában. Tehát minden egyes navigációnál egy új példány jön létre.
+        
+        builder.Services.AddSingleton<Services.INavigationService,Services.NavigationService>();    //A oldalak közötti navigációhoz kell
+
+
+      
         
 #if DEBUG
         builder.Logging.AddDebug();
