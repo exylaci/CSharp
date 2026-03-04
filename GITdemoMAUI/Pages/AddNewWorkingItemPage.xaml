@@ -1,0 +1,73 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+             x:Class="GITdemoMAUI.Pages.AddNewWorkingItemPage"
+             Title="AddNewItem">
+
+    <Grid BackgroundColor="{DynamicResource AppBackgroundColor}">
+        <ScrollView>
+
+
+            <VerticalStackLayout Padding="16" Spacing="12">
+                <Label Text="Title" Style="{StaticResource TitleLabelStyle}" />
+                <!-- Text="Részletek helyett" bindingoljuk a Title-hez. -->
+
+                <Frame Style="{StaticResource CardContainerStyle}">
+                    <Grid RowDefinitions="Auto,Auto,Auto,Auto"
+                          ColumnDefinitions="Auto,*"
+                          RowSpacing="8"
+                          ColumnSpacing="12">
+                        <!-- TAG-ek -->
+
+                        <Label Text="ID:"
+                               FontSize="18" />
+
+                        <Entry Grid.Column="1"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               Text="{Binding NewId, Mode=TwoWay}" />    <!-- -->
+
+                        <Label Text="Title:"
+                               Grid.Row="1"
+                               FontSize="18" />
+
+                        <Entry Grid.Row="1"
+                               Grid.Column="1"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               Text="{Binding NewTitle, Mode=TwoWay}" />
+
+
+                        <Label Text="Description:"
+                               Grid.Row="2"
+                               FontSize="18" />
+
+                        <Entry Grid.Row="2"
+                               Grid.Column="1"
+                               FontSize="18"
+                               FontAttributes="Bold"
+                               Text="{Binding NewDescription, Mode=TwoWay}" />
+
+
+                        <Label Text="Status:"
+                               Grid.Row="3"
+                               FontSize="18" />
+
+                        <Picker Grid.Row="3"
+                                Grid.Column="1"
+                                FontSize="18"
+                                FontAttributes="Bold"
+                                ItemsSource="{Binding StatusOptions}"
+                                SelectedItem="{Binding NewStatus, Mode=TwoWay}" />
+
+                    </Grid>
+                </Frame>
+
+                <Button Text="Clear" Command="{Binding ClearFieldsCommand}" />
+                <Button Text="Add" Command="{Binding AddNewItemCommand}" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

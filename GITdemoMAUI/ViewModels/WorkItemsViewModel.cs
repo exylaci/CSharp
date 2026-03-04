@@ -1,6 +1,7 @@
 ﻿using System.Collections.ObjectModel;
 using GITdemoMAUI.Infrastructure;
 using GITdemoMAUI.Models;
+using GITdemoMAUI.Pages;
 using GITdemoMAUI.Services;
 
 namespace GITdemoMAUI.ViewModels;
@@ -16,17 +17,19 @@ public class WorkItemsViewModel : BaseViewModel
 
     
 
-    public WorkItemsViewModel(INavigationService navigation) //Kostruktorban kapja meg a navigációt
+    public WorkItemsViewModel(INavigationService navigation, IWorkItemRepository repo) //Kostruktorban kapja meg a navigációt
     {
         _navigation = navigation;       //későbbi navigációhoz kell letárolni
         Title = "Munkák";
         
-        Items = new ObservableCollection<WorkItem>
-        {
-            new WorkItem("1", "MAUI Layoutok", "szertjük a layoutokat", WorkItemStatus.InProgress),
-            new WorkItem("2", "Stílusok", "Stílusok használata", WorkItemStatus.InProgress),
-            new WorkItem("3", "Lista és itemei", "Lista általában observable colléectionban", WorkItemStatus.InProgress)
-        };
+        
+        Items = repo.Items;
+//        Items = new ObservableCollection<WorkItem>
+//        {
+//            new WorkItem("1", "MAUI Layoutok", "szertjük a layoutokat", WorkItemStatus.InProgress),
+//            new WorkItem("2", "Stílusok", "Stílusok használata", WorkItemStatus.InProgress),
+//            new WorkItem("3", "Lista és itemei", "Lista általában observable colléectionban", WorkItemStatus.InProgress)
+//        };
 
         OpenItemCommand = new AsyncRelayCommand<WorkItem>(OpenItemAsync);   //A kiválasztottat átadva 
 
@@ -40,5 +43,10 @@ public class WorkItemsViewModel : BaseViewModel
         }
         
         await _navigation.GoToAsync(nameof(Pages.WorkItemDetailPage),new Dictionary<string, object>{{"WorkItem", selected}});
+    }
+    
+    private async Task GoToAddNewItem()
+    {
+        await Shell.Current.GoToAsync(nameof(AddNewWorkingItemPage));
     }
 }

@@ -11,11 +11,17 @@
     <!-- A két oldalunk közötti váltáshoz: -->
     <TabBar>
         <ShellContent Title="Kezdőlap"
+                      Route="HomePage"
                       ContentTemplate="{DataTemplate pages:HomePage}" />
         <!-- egér áll a HomePage-n / alt+enter / Import type: 'GITdemoMAUI.Pages.HomePage' -re megcsinálja a fenti: xmlns:pages="clr-namespace:GITdemoMAUI.Pages" -t -->
         <ShellContent Title="Munkák"
+                      Route="WorkItemsPage"
                       ContentTemplate="{DataTemplate pages:WorkItemsPage}" />
+        <ShellContent Title="Új munka felvétele"				
+                      Route="AddNewWorkingItemPage"
+                      ContentTemplate="{DataTemplate pages:AddNewWorkingItemPage}" />	
         <ShellContent Title="Beállítások"
+                      Route="SettingsPage"
                       ContentTemplate="{DataTemplate pages:SettingsPage}" />
     </TabBar>
 
