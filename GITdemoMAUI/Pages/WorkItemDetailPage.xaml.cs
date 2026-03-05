@@ -14,14 +14,15 @@ public partial class WorkItemDetailPage : ContentPage, IQueryAttributable
     public WorkItemDetailPage(WorkItemDetailViewModel vm)
     {
         InitializeComponent();
-        BindingContext = vm;        //Ettől a ViewModeltől kapja majd az adatokat és ennek is küldi. 
+        BindingContext = vm; //Ettől a ViewModeltől kapja majd az adatokat és ennek is küldi. 
     }
 
     public void ApplyQueryAttributes(IDictionary<string, object> query)
     {
         if (BindingContext is INavigationParameterReceiver receiver)
         {
-            receiver.Receive(query);        //Meghívja a WokrItemDetailViewModel Receive metódusát, amin keresztűl tárolódik az itt kinyert adat 
+            receiver.Receive(query);
+            //Meghívja a WokrItemDetailViewModel Receive metódusát, amin keresztűl tárolódik az itt kinyert adat 
         }
     }
 }

@@ -8,45 +8,39 @@ namespace GITdemoMAUI.ViewModels;
 
 public class WorkItemsViewModel : BaseViewModel
 {
+    public ObservableCollection<WorkItem> Items { get; }
+
+
     private readonly INavigationService _navigation;
-    
-    public ObservableCollection<WorkItem> Items { get; } 
 
-    
-    public AsyncRelayCommand<WorkItem> OpenItemCommand { get; } //Ebben a  gereikus Async OpenItemCommand-ban adjuk át a WorkItem-et
+    public AsyncRelayCommand<WorkItem>
+        OpenItemCommand { get; } //Ebben a  gereikus Async OpenItemCommand-ban adjuk át a WorkItem-et
 
-    
 
-    public WorkItemsViewModel(INavigationService navigation, IWorkItemRepository repo) //Kostruktorban kapja meg a navigációt
+    public WorkItemsViewModel(INavigationService navigation, IWorkItemRepository repository)
+        //Kostruktorban kapja meg a navigációt
     {
-        _navigation = navigation;       //későbbi navigációhoz kell letárolni
+        _navigation = navigation; //későbbi navigációhoz kell letárolni
         Title = "Munkák";
-        
-        
-        Items = repo.Items;
-//        Items = new ObservableCollection<WorkItem>
-//        {
-//            new WorkItem("1", "MAUI Layoutok", "szertjük a layoutokat", WorkItemStatus.InProgress),
-//            new WorkItem("2", "Stílusok", "Stílusok használata", WorkItemStatus.InProgress),
-//            new WorkItem("3", "Lista és itemei", "Lista általában observable colléectionban", WorkItemStatus.InProgress)
-//        };
 
-        OpenItemCommand = new AsyncRelayCommand<WorkItem>(OpenItemAsync);   //A kiválasztottat átadva 
+        Items = repository.Items;
 
+        OpenItemCommand = new AsyncRelayCommand<WorkItem>(OpenItemAsync); //A kiválasztottat átadva 
     }
 
-    private async Task OpenItemAsync(WorkItem? selected)    //Ezt a selected elemet választották ki
+    private async Task OpenItemAsync(WorkItem? selected) //Ezt a selected elemet választották ki
     {
-        if (selected is null)                               //Mindig ellenőrizni kell null-ra
+        if (selected is null) //Mindig ellenőrizni kell null-ra
         {
             return;
         }
-        
-        await _navigation.GoToAsync(nameof(Pages.WorkItemDetailPage),new Dictionary<string, object>{{"WorkItem", selected}});
+
+        await _navigation.GoToAsync(nameof(Pages.WorkItemDetailPage),
+            new Dictionary<string, object> { { "WorkItem", selected } });
     }
-    
+
     private async Task GoToAddNewItem()
     {
-        await Shell.Current.GoToAsync(nameof(AddNewWorkingItemPage));
+        await Shell.Current.GoToAsync(nameof(AddNewWorkItemPage));
     }
 }

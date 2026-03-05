@@ -6,7 +6,7 @@ public class AsyncRelayCommand : ICommand
 {
     private readonly Func<Task> _executeAsync;
     private readonly Func<bool>? _canExecute;
-    private bool _isExecuting;                  //Mivel async, kell tudni, hogy éppen fut-e
+    private bool _isExecuting; //Mivel async, kell tudni, hogy éppen fut-e
 
     public AsyncRelayCommand(Func<Task> executeAsync, Func<bool>? canExecute = null)
     {

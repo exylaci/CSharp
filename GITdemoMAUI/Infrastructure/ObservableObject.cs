@@ -3,8 +3,8 @@ using System.Runtime.CompilerServices;
 
 namespace GITdemoMAUI.Infrastructure;
 
-public abstract class ObservableObject : INotifyPropertyChanged
-{// Az INotifyPropertyChanged szól, ha változás történik
+public abstract class ObservableObject : INotifyPropertyChanged // Az INotifyPropertyChanged szól, ha változás történik
+{
     public event PropertyChangedEventHandler? PropertyChanged;
 
     protected virtual void OnPropertyChanged([CallerMemberName] string? propertyName = null)

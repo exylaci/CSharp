@@ -5,13 +5,14 @@ using System.Text;
 using System.Threading.Tasks;
 using GITdemoMAUI.Infrastructure;
 using GITdemoMAUI.Models;
+using GITdemoMAUI.Services;
 using GITdemoMAUI.ViewModels;
 
 namespace GITdemoMAUI.Pages;
 
-public partial class AddNewWorkingItemPage : ContentPage
+public partial class AddNewWorkItemPage : ContentPage
 {
-    public AddNewWorkingItemPage(AddNewWorkingItemViewModel vm)
+    public AddNewWorkItemPage(AddNewWorkItemViewModel vm)
     {
         InitializeComponent();
         BindingContext = vm;

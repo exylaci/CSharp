@@ -2,12 +2,17 @@
 using GITdemoMAUI.Infrastructure;
 using GITdemoMAUI.Models;
 using GITdemoMAUI.Services;
+using GITdemoMAUI.Pages;
 
 namespace GITdemoMAUI.ViewModels;
 
-public class AddNewWorkingItemViewModel : BaseViewModel, INotifyPropertyChanged
+public class AddNewWorkItemViewModel : BaseViewModel, INotifyPropertyChanged
 {
     private string _newId = string.Empty;
+    private string _newTitle = string.Empty;
+    private string _newDescription = string.Empty;
+    private WorkItemStatus _newStatus = WorkItemStatus.Todo;
+    public IEnumerable<WorkItemStatus> StatusOptions => Enum.GetValues(typeof(WorkItemStatus)).Cast<WorkItemStatus>();
 
     public string NewId
     {
@@ -22,8 +27,6 @@ public class AddNewWorkingItemViewModel : BaseViewModel, INotifyPropertyChanged
         }
     }
 
-    private string _newTitle = string.Empty;
-
     public string NewTitle
     {
         get => _newTitle;
@@ -36,8 +39,6 @@ public class AddNewWorkingItemViewModel : BaseViewModel, INotifyPropertyChanged
             }
         }
     }
-
-    private string _newDescription = string.Empty;
 
     public string NewDescription
     {
@@ -52,8 +53,6 @@ public class AddNewWorkingItemViewModel : BaseViewModel, INotifyPropertyChanged
         }
     }
 
-    private WorkItemStatus _newStatus = WorkItemStatus.Todo;
-
     public WorkItemStatus NewStatus
     {
         get => _newStatus;
@@ -67,17 +66,13 @@ public class AddNewWorkingItemViewModel : BaseViewModel, INotifyPropertyChanged
         }
     }
 
+
     public event PropertyChangedEventHandler PropertyChanged;
 
     private void OnPropertyChanged(string propertyName) =>
         PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
 
-    private readonly INavigationService _navigation;
     private WorkItem? _item;
-    private readonly IWorkItemRepository _repository;
-
-    public RelayCommand ClearFieldsCommand { get; }
-    public AsyncRelayCommand AddNewItemCommand { get; }
 
     public WorkItem? Item
     {
@@ -85,9 +80,17 @@ public class AddNewWorkingItemViewModel : BaseViewModel, INotifyPropertyChanged
         private set => SetField(ref _item, value);
     }
 
-    public AddNewWorkingItemViewModel(IWorkItemRepository repository)
+    private readonly IWorkItemRepository _repository;
+    private readonly INavigationService _navigation;
+
+    public RelayCommand ClearFieldsCommand { get; }
+    public AsyncRelayCommand AddNewItemCommand { get; }
+
+
+    public AddNewWorkItemViewModel(INavigationService navigation, IWorkItemRepository repository)
     {
         _repository = repository;
+        _navigation = navigation;
         Title = "Új elem felvétele";
 
         ClearFieldsCommand = new RelayCommand(ClearFields);
@@ -96,20 +99,16 @@ public class AddNewWorkingItemViewModel : BaseViewModel, INotifyPropertyChanged
 
     public async Task AddNewItem()
     {
-        //if (!Enum.TryParse<WorkItemStatus>(NewStatus, out var status)){status = WorkItemStatus.Todo;}
-
-        var item = new WorkItem(
+        _repository.Add(new WorkItem(
             NewId,
             NewTitle,
             NewDescription,
-            NewStatus);
-        _repository.Add(item);
+            NewStatus));
 
         ClearFields();
-        await Shell.Current.GoToAsync("//WorkItemsPage");
+        //await Shell.Current.GoToAsync("//WorkItemsPage");
+        await _navigation.GoToAsync(Routes.WorkItems);
     }
-
-    public IEnumerable<WorkItemStatus> StatusOptions => Enum.GetValues(typeof(WorkItemStatus)).Cast<WorkItemStatus>();
 
     private void ClearFields()
     {

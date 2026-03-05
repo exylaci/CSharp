@@ -4,7 +4,7 @@ using GITdemoMAUI.Services;
 
 namespace GITdemoMAUI.ViewModels;
 
-public sealed class WorkItemDetailViewModel: BaseViewModel, INavigationParameterReceiver
+public sealed class WorkItemDetailViewModel : BaseViewModel, INavigationParameterReceiver
 {
     private readonly INavigationService _navigation;
     private WorkItem? _item;
@@ -22,7 +22,7 @@ public sealed class WorkItemDetailViewModel: BaseViewModel, INavigationParameter
         _navigation = navigation;
         Title = "Részletek";
 
-        BackCommand = new AsyncRelayCommand(() => _navigation.GoBackAsync());   //Visszatérési hely beállítása
+        BackCommand = new AsyncRelayCommand(() => _navigation.GoBackAsync()); //Visszatérési hely beállítása
     }
 
     public void Receive(IDictionary<string, object> parameters)

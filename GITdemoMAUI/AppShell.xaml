@@ -18,8 +18,8 @@
                       Route="WorkItemsPage"
                       ContentTemplate="{DataTemplate pages:WorkItemsPage}" />
         <ShellContent Title="Új munka felvétele"				
-                      Route="AddNewWorkingItemPage"
-                      ContentTemplate="{DataTemplate pages:AddNewWorkingItemPage}" />	
+                      Route="AddNewWorkItemPage"
+                      ContentTemplate="{DataTemplate pages:AddNewWorkItemPage}" />	
         <ShellContent Title="Beállítások"
                       Route="SettingsPage"
                       ContentTemplate="{DataTemplate pages:SettingsPage}" />
