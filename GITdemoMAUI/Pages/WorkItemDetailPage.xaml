@@ -21,6 +21,7 @@
                 </Frame>
                 
                 <Button Text="Vissza" Command="{Binding BackCommand}" />
+                <Button Text="Munka törlése a feladat listából" Command="{Binding EraseWorkItem}" />
                 
             </VerticalStackLayout>
         </ScrollView>

@@ -5,36 +5,37 @@
              x:Class="GITdemoMAUI.Pages.WorkItemsPage">
 
     <Grid BackgroundColor="{DynamicResource AppBackgroundColor}">
-        <VerticalStackLayout Padding="16" Spacing="12">
-            <Label Text="Munkák" Style="{StaticResource TitleLabelStyle}" />
-
-            <CollectionView ItemsSource="{Binding Items}"
-                            SelectionMode="Single">
-                <!-- A CcollectionView végig iterál az
+        <ScrollView>
+            <VerticalStackLayout Padding="16" Spacing="12">
+                <Label Text="Munkák" Style="{StaticResource TitleLabelStyle}" />
+                <CollectionView ItemsSource="{Binding Items}"
+                                SelectionMode="Single">
+                    <!-- A CcollectionView végig iterál az
                      ItemSource:  ben megadott kollekción minden egyes elemének a megjelenítéshez. Gyakorlatilag egy ciklus. -->
 
-                <!-- Az egyes elemeket így jelenítse meg: -->
-                <CollectionView.ItemTemplate>   
-                    <DataTemplate>
-                        <Frame Style="{StaticResource CardContainerStyle}">
-                            <Frame.GestureRecognizers>
-                                <TapGestureRecognizer 
-                                    Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
+                    <!-- Az egyes elemeket így jelenítse meg: -->
+                    <CollectionView.ItemTemplate>
+                        <DataTemplate>
+                            <Frame Style="{StaticResource CardContainerStyle}">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
                                     Path=BindingContext.OpenItemCommand}"
-                                    CommandParameter="{Binding .}" />
-                                <!-- Source: A Binding-ban most maga a kollekció egyik példánya érhető el. Ebben nincsen OpenItemCommand. Az fent a szülőben van. Mivel ezen kívül van, kötelező sorce-ot megadni. Ami most relative source és a típusa ContentPage, az útvonala: A contentpage-en belül, BindingContext.OpenItemCommand.
+                                        CommandParameter="{Binding .}" />
+                                    <!-- Source: A Binding-ban most maga a kollekció egyik példánya érhető el. Ebben nincsen OpenItemCommand. Az fent a szülőben van. Mivel ezen kívül van, kötelező sorce-ot megadni. Ami most relative source és a típusa ContentPage, az útvonala: A contentpage-en belül, BindingContext.OpenItemCommand.
                                  Nem a collectionview eleme bindingolódik hozzá, hanem collection view-n kívüli contentpage-et, és abból a binding contextet, amibe le van mentve maga a view model, tehát ott van az OpenItemCommand is. -->
-                                <!-- CommandParameter: az aktuális elemet adom át. A pont a thist jelenti. -->
-                            </Frame.GestureRecognizers>
-                            <VerticalStackLayout Spacing="6">
-                                <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="16" />
-                                <Label Text="{Binding Description}" FontSize="14" />
-                                <Label Text="{Binding Status}" FontSize="12" />
-                            </VerticalStackLayout>
-                        </Frame>
-                    </DataTemplate>
-                </CollectionView.ItemTemplate>
-            </CollectionView>
-        </VerticalStackLayout>
+                                    <!-- CommandParameter: az aktuális elemet adom át. A pont a thist jelenti. -->
+                                </Frame.GestureRecognizers>
+                                <VerticalStackLayout Spacing="6">
+                                    <Label Text="{Binding Title}" FontAttributes="Bold" FontSize="16" />
+                                    <Label Text="{Binding Description}" FontSize="14" />
+                                    <Label Text="{Binding Status}" FontSize="12" />
+                                </VerticalStackLayout>
+                            </Frame>
+                        </DataTemplate>
+                    </CollectionView.ItemTemplate>
+                </CollectionView>
+            </VerticalStackLayout>
+        </ScrollView>
     </Grid>
 </ContentPage>

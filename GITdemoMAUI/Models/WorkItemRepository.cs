@@ -15,4 +15,9 @@ public class WorkItemRepository : IWorkItemRepository
     {
         Items.Add(item);
     }
+
+    public void Remove(WorkItem item)
+    {
+        Items.Remove(item);
+    }
 }
