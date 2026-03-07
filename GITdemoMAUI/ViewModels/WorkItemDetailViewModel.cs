@@ -17,27 +17,41 @@ public sealed class WorkItemDetailViewModel : BaseViewModel, INavigationParamete
         get => _item;
         private set => SetField(ref _item, value);
     }
+
     private readonly IWorkItemRepository _repository;
-    
-    public WorkItemDetailViewModel(INavigationService navigation, IWorkItemRepository repository)
+    private readonly IDialogService _service;
+
+    public WorkItemDetailViewModel(INavigationService navigation, IWorkItemRepository repository,
+        IDialogService dialogService)
     {
         _navigation = navigation;
         _repository = repository;
+        _service = dialogService;
+        
         Title = "Részletek";
 
-        BackCommand = new AsyncRelayCommand(() => _navigation.GoBackAsync()); //Visszatérési hely beállítása
-        EraseWorkItem = new AsyncRelayCommand(EraseItemAsync); //A kiválasztott elemet átadva 
+        BackCommand =
+            new AsyncRelayCommand(() =>
+                _navigation.GoBackAsync()); //Visszatérési helyre ugrás hozzárendelése a command-hoz
+        EraseWorkItem = new AsyncRelayCommand(EraseItemAsync); //EraseItemAsync metódus hozzárendelése a command-hoz
     }
 
-    private async Task EraseItemAsync() //Ezt a selected elemet választották ki
+    private async Task EraseItemAsync()
     {
         if (_item is null) //Mindig ellenőrizni kell null-ra
         {
             return;
         }
-        _repository.Remove(_item);
-        await _navigation.GoBackAsync();
-        // new Dictionary<string, object> { { "WorkItem", selected } };
+
+        //TODO: rákérdezni, hogy biztos-e benne
+
+
+        if (await _service.ShowConfirmationRequestAsync("Feladat törlése a listából", "Biztosan törölni szeretné?",
+                "Igen","Nem"))
+        {
+            _repository.Remove(_item); //elem törlése a kollekcióból
+            await _navigation.GoBackAsync(); //visszatérés az előző oldalra
+        }
     }
 
     public void Receive(IDictionary<string, object> parameters)

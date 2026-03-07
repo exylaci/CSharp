@@ -32,6 +32,10 @@ public static class MauiProgram
         builder.Services.AddTransient<ViewModels.AddNewWorkItemViewModel>();
         builder.Services.AddTransient<Pages.AddNewWorkItemPage>();
 
+        builder.Services.AddSingleton<Services.ICurrentPageAccessor, Services.CurrentPageAccessor>();
+        builder.Services.AddSingleton<Services.IDialogService, Services.DialogService>();
+
+        
 #if DEBUG
         builder.Logging.AddDebug();
 #endif
