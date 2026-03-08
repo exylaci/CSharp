@@ -1,4 +1,6 @@
-<?xml version="1.0" encoding="UTF-8"?>
+<?xml
+    version="1.0"
+    encoding="UTF-8"?>
 
 <Shell
     x:Class="GITdemoMAUI.AppShell"
@@ -10,19 +12,23 @@
 
     <!-- A két oldalunk közötti váltáshoz: -->
     <TabBar>
-        <ShellContent Title="Kezdőlap"
-                      Route="HomePage"
-                      ContentTemplate="{DataTemplate pages:HomePage}" />
+        <ShellContent
+            Title="Kezdőlap"
+            Route="HomePage"
+            ContentTemplate="{DataTemplate pages:HomePage}" />
         <!-- egér áll a HomePage-n / alt+enter / Import type: 'GITdemoMAUI.Pages.HomePage' -re megcsinálja a fenti: xmlns:pages="clr-namespace:GITdemoMAUI.Pages" -t -->
-        <ShellContent Title="Munkák"
-                      Route="WorkItemsPage"
-                      ContentTemplate="{DataTemplate pages:WorkItemsPage}" />
-        <ShellContent Title="Új munka felvétele"				
-                      Route="AddNewWorkItemPage"
-                      ContentTemplate="{DataTemplate pages:AddNewWorkItemPage}" />	
-        <ShellContent Title="Beállítások"
-                      Route="SettingsPage"
-                      ContentTemplate="{DataTemplate pages:SettingsPage}" />
+        <ShellContent
+            Title="Munkák"
+            Route="WorkItemsPage"
+            ContentTemplate="{DataTemplate pages:WorkItemsPage}" />
+        <ShellContent
+            Title="Új munka felvétele"
+            Route="AddNewWorkItemPage"
+            ContentTemplate="{DataTemplate pages:AddNewWorkItemPage}" />
+        <ShellContent
+            Title="Beállítások"
+            Route="SettingsPage"
+            ContentTemplate="{DataTemplate pages:SettingsPage}" />
     </TabBar>
 
 </Shell>

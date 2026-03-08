@@ -1,25 +1,38 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml
+    version="1.0"
+    encoding="utf-8"?>
 
-<ContentPage xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
-             xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
-             x:Class="GITdemoMAUI.Pages.HomePage">
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="GITdemoMAUI.Pages.HomePage">
 
-    <Grid Background="{DynamicResource AppBackgroundColor}">
+    <Grid
+        Background="{DynamicResource AppBackgroundColor}">
         <!-- Itt is használható az általunk készített stiluselnevezés -->
 
         <ScrollView>
-            <VerticalStackLayout Spacing="12" Padding="16">
-                <Label Text="Demo work példa" Style="{StaticResource TitleLabelStyle}" />
-                <Frame Style="{StaticResource CardContainerStyle}">
-                    <VerticalStackLayout Spacing="8">
-                        <Label Text="Aktuális idő"
-                               Style="{StaticResource SubTitleLabelStyle}" /> 
-                        <Label Text="{Binding NowText}"
-                               FontSize="16" />
+            <VerticalStackLayout
+                Spacing="12"
+                Padding="16">
+                <Label
+                    Text="Demo work példa"
+                    Style="{StaticResource TitleLabelStyle}" />
+                <Frame
+                    Style="{StaticResource CardContainerStyle}">
+                    <VerticalStackLayout
+                        Spacing="8">
+                        <Label
+                            Text="Aktuális idő"
+                            Style="{StaticResource SubTitleLabelStyle}" />
+                        <Label
+                            Text="{Binding NowText}"
+                            FontSize="16" />
                         <!-- Text: Bindigolja az ModelView property geterét, hogy mit jelenítsen meg itt -->
 
-                        <Button Text="Idő frissítése"
-                                Command="{Binding RefreshCommand}" />
+                        <Button
+                            Text="Idő frissítése"
+                            Command="{Binding RefreshCommand}" />
                         <!-- Command: (Clicked helyett) a ViewModelben létrehozott ICommandot hajtja végre -->
                     </VerticalStackLayout>
                 </Frame>

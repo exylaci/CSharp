@@ -51,7 +51,7 @@ public class AsyncRelayCommand : ICommand
 
 public class AsyncRelayCommand<T> : ICommand
 {
-    private readonly Func<T?,Task> _executeAsync;
+    private readonly Func<T?, Task> _executeAsync;
     private readonly Func<T?, bool>? _canExecute;
     private bool _isExecuting;
 

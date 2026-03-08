@@ -10,7 +10,7 @@ public sealed class DialogService : IDialogService
     }
 
     public Task<bool> ShowConfirmationRequestAsync(string title, string message,
-        string accept = "Igen",string cancel = "Nem")
+        string accept = "Igen", string cancel = "Nem")
     {
         Page page = _pageAccessor.CurrentPage
                     ?? Shell.Current?.CurrentPage

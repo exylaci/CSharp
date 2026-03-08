@@ -10,11 +10,9 @@ public class WorkItemsViewModel : BaseViewModel
 {
     public ObservableCollection<WorkItem> Items { get; }
 
-
     private readonly INavigationService _navigation;
 
-    public AsyncRelayCommand<WorkItem>
-        OpenItemCommand { get; } //Ebben a  gereikus Async OpenItemCommand-ban adjuk át a WorkItem-et
+    public AsyncRelayCommand<WorkItem> OpenItemCommand { get; } //Ebben a  gereikus Async OpenItemCommand-ban adjuk át a WorkItem-et
 
 
     public WorkItemsViewModel(INavigationService navigation, IWorkItemRepository repository)
