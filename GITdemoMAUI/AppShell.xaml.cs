@@ -6,5 +6,6 @@ public partial class AppShell : Shell
     {
         InitializeComponent();
         Routing.RegisterRoute(nameof(Pages.WorkItemDetailPage), typeof(Pages.WorkItemDetailPage));
+        Routing.RegisterRoute(nameof(Pages.WorkItemEditorPage), typeof(Pages.WorkItemEditorPage));
     }
 }

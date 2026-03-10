@@ -29,8 +29,9 @@ public static class MauiProgram
         //A oldalak közötti navigációhoz kell
 
         builder.Services.AddSingleton<Models.IWorkItemRepository, Models.WorkItemRepository>();
-        builder.Services.AddTransient<ViewModels.AddNewWorkItemViewModel>();
-        builder.Services.AddTransient<Pages.AddNewWorkItemPage>();
+        //Ebben tároljuk az adatokat. (Ha Transient lenne, akkor mindig új jönne létre és a hozzáadott adatok eltünnének.
+        builder.Services.AddTransient<ViewModels.WorkItemEditorViewModel>();
+        builder.Services.AddTransient<Pages.WorkItemEditorPage>();
 
         builder.Services.AddSingleton<Services.ICurrentPageAccessor, Services.CurrentPageAccessor>();
         builder.Services.AddSingleton<Services.IDialogService, Services.DialogService>();

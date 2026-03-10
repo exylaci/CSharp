@@ -2,10 +2,10 @@
 
 namespace GITdemoMAUI.Infrastructure;
 
-public class AsyncRelayCommand : ICommand
+public class AsyncRelayCommand : ICommand   //Ezeket kötögetjük be a UI
 {
-    private readonly Func<Task> _executeAsync;
-    private readonly Func<bool>? _canExecute;
+    private readonly Func<Task> _executeAsync;  //futtatásra kell
+    private readonly Func<bool>? _canExecute;   //futtatási feltétel ellenőrzésre (nem feltétlen van, ezért nullable)
     private bool _isExecuting; //Mivel async, kell tudni, hogy éppen fut-e
 
     public AsyncRelayCommand(Func<Task> executeAsync, Func<bool>? canExecute = null)
@@ -14,19 +14,21 @@ public class AsyncRelayCommand : ICommand
         _canExecute = canExecute;
     }
 
-    public event EventHandler? CanExecuteChanged;
+    public event EventHandler? CanExecuteChanged;   //Ez veszi észre ha megváltozik a command futtatás engedélyezése
 
-    public bool CanExecute(object? parameter)
+
+    public bool CanExecute(object? parameter)   //a kapott szabállyal eldönteti, hogy futtaható-e. (Lehet null, nem kap paraméterben szabályt)
+
     {
-        if (_isExecuting)
+        if (_isExecuting)       //Ha már fut a command akkor viszatér false-szal
         {
             return false;
         }
 
-        return _canExecute?.Invoke() ?? true;
+        return _canExecute?.Invoke() ?? true;   //Ha nincs szabály adva (null), akkor true -> végrehajtható a Command.
     }
 
-    public async void Execute(object? parameter)
+    public async void Execute(object? parameter)    //A konstruktor paraméterben kapott commandot végrehajtja
     {
         if (!CanExecute(parameter))
         {
@@ -46,7 +48,8 @@ public class AsyncRelayCommand : ICommand
         }
     }
 
-    private void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);
+    public void RaiseCanExecuteChanged() => CanExecuteChanged?.Invoke(this, EventArgs.Empty);   //ha kiváltódik a sendernek visszaadja a this oject-et
+
 }
 
 public class AsyncRelayCommand<T> : ICommand

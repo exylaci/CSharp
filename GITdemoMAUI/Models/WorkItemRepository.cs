@@ -3,9 +3,11 @@
 namespace GITdemoMAUI.Models;
 
 public class WorkItemRepository : IWorkItemRepository
+//Az adattároló interfész megvalósítása
 {
     public ObservableCollection<WorkItem> Items { get; } = new ObservableCollection<WorkItem>
     {
+        //Csak hogy legyen benne adat, amit megjeleníthet
         new WorkItem("1", "MAUI Layoutok", "szertjük a layoutokat", WorkItemStatus.InProgress),
         new WorkItem("2", "Stílusok", "Stílusok használata", WorkItemStatus.Done),
         new WorkItem("3", "Lista és itemei", "Lista általában observable colléectionban", WorkItemStatus.Todo)
@@ -15,6 +17,8 @@ public class WorkItemRepository : IWorkItemRepository
     {
         Items.Add(item);
     }
+
+    public WorkItem? FindById(string id) => Items.FirstOrDefault(x => x.Id == id);
 
     public void Remove(WorkItem item)
     {

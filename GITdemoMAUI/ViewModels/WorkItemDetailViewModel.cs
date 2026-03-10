@@ -27,7 +27,7 @@ public sealed class WorkItemDetailViewModel : BaseViewModel, INavigationParamete
         _repository = repository;
         _service = dialogService;
 
-        Title = "Részletek";
+        PageTitle = "Részletek";
 
         BackCommand = new AsyncRelayCommand(() => _navigation.GoBackAsync()); //Visszatérési helyre ugrás hozzárendelése a command-hoz
         EraseWorkItem = new AsyncRelayCommand(EraseItemAsync); //EraseItemAsync metódus hozzárendelése a command-hoz

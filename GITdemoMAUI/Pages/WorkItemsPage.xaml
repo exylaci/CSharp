@@ -7,6 +7,13 @@
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
     x:Class="GITdemoMAUI.Pages.WorkItemsPage">
 
+    <ContentPage.ToolbarItems><!-- Az oldal tetején (toolbar-ban) jelennek meg az ide beírtak -->
+        <ToolbarItem
+            Text="+"
+            Command="{Binding AddNewItemCommand}" />
+        <!-- Command: A + jelre kattintva meghívandó command hozzárendelése -->
+    </ContentPage.ToolbarItems>
+
     <Grid
         BackgroundColor="{DynamicResource AppBackgroundColor}">
         <ScrollView>
@@ -14,7 +21,7 @@
                 Padding="16"
                 Spacing="12">
                 <Label
-                    Text="Munkák"
+                    Text="{Binding PageTitle}"
                     Style="{StaticResource TitleLabelStyle}" />
                 <CollectionView
                     ItemsSource="{Binding Items}"

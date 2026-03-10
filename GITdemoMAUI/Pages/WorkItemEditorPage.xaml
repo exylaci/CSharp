@@ -1,0 +1,98 @@
+﻿<?xml
+    version="1.0"
+    encoding="utf-8"?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="GITdemoMAUI.Pages.WorkItemEditorPage"
+    Title="kézzel beírt: Save Work Item">
+
+
+    <!-- Todo: Ezzel a Title-vel még majd játszanom kell kicsit. Lehet, hogy törölhető?  -->
+
+
+    <Grid
+        BackgroundColor="{DynamicResource AppBackgroundColor}">
+        <ScrollView>
+            <VerticalStackLayout
+                Padding="16"
+                Spacing="12">
+                <!-- Az oldal fejléce -->
+                <Label
+                    Text="{Binding PageTitle}"
+                    Style="{StaticResource TitleLabelStyle}" />
+
+                <Frame
+                    Style="{StaticResource CardContainerStyle}">
+                    <VerticalStackLayout
+                        Spacing="10">
+
+                        <!-- Első mező -->
+                        <Label
+                            Text="Téma:"
+                            Style="{StaticResource SubTitleLabelStyle}" />
+                        <Entry
+                            Text="{Binding Title, Mode=TwoWay}"
+                            Placeholder="Pl.: Feladat rövid elnevezése" />
+
+                        <!-- Hibaüzenet, ha a title nem megfelelő -->
+                        <Label
+                            Text="{Binding TitleError}"
+                            TextColor="{DynamicResource Danger}"
+                            IsVisible="{Binding HasTitleError}" />
+
+                        <!-- Második mező -->
+                        <Label
+                            Text="Leírás:"
+                            Style="{StaticResource SubTitleLabelStyle}" />
+                        <Editor
+                            AutoSize="TextChanges"
+                            HeightRequest="120"
+                            Text="{Binding Description, Mode=TwoWay}" />
+                        <!-- AutoSize="TextChanges": Ahogy növekszik a szöveg mennyisége, úgy nő hozzá a mező mérete -->
+                        <!-- HeightRequest="120" kezdő, minimális magasság érték-->
+
+                        <!-- Harmadik mező -->
+                        <Label
+                            Text="Állapot:"
+                            Style="{StaticResource SubTitleLabelStyle}" />
+                        <Picker
+                            Title="Válassz állapotot!"
+                            ItemsSource="{Binding StatusOptions}"
+                            SelectedItem="{Binding Status, Mode=TwoWay}">
+                            <!-- <Picker.ItemsSource>      // Ha egy tömbben soroljuk fel a választható értékeket -->
+                            <!--     <x:Array Type="{x:Type x:String}"> -->
+                            <!--         <x:String>Todo</x:String> -->
+                            <!--         <x:String>InProgress</x:String> -->
+                            <!--         <x:String>Done</x:String> -->
+                            <!--     </x:Array> -->
+                            <!--      -->
+                            <!-- </Picker.ItemsSource> -->
+                        </Picker>
+                    </VerticalStackLayout>
+                </Frame>
+
+
+                <HorizontalStackLayout
+                    Spacing="10">
+                    <Button
+                        Text="Clear"
+                        Command="{Binding ClearFieldsCommand}" />
+                    <Button
+                        Text="Mégsem"
+                        Command="{Binding CancelCommand}"
+                        BackgroundColor="{AppThemeBinding Light=#65DCBF, Dark=#DC689A}" />
+                    <Button
+                        Text="Mentés"
+                        Command="{Binding SaveCommand}" />
+                </HorizontalStackLayout>
+
+                <ActivityIndicator
+                    IsRunning="{Binding IsBusy}"
+                    IsVisible="{Binding IsBusy}" />
+
+            </VerticalStackLayout>
+        </ScrollView>
+    </Grid>
+</ContentPage>

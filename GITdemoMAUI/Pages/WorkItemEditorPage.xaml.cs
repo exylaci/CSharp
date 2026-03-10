@@ -10,9 +10,9 @@ using GITdemoMAUI.ViewModels;
 
 namespace GITdemoMAUI.Pages;
 
-public partial class AddNewWorkItemPage : ContentPage
+public partial class WorkItemEditorPage : ContentPage
 {
-    public AddNewWorkItemPage(AddNewWorkItemViewModel vm)
+    public WorkItemEditorPage(WorkItemEditorViewModel vm)
     {
         InitializeComponent();
         BindingContext = vm;

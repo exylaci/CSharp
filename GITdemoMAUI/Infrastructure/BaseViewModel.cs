@@ -3,7 +3,7 @@
 public abstract class BaseViewModel : ObservableObject
 {
     private bool _isBusy;
-    private string _title = string.Empty;
+    private string _pageTitle = string.Empty;
 
     public bool IsBusy
     {
@@ -11,9 +11,9 @@ public abstract class BaseViewModel : ObservableObject
         set => SetField(ref _isBusy, value);
     }
 
-    public string Title
+    public string PageTitle
     {
-        get => _title;
-        set => SetField(ref _title, value);
+        get => _pageTitle;
+        set => SetField(ref _pageTitle, value);
     }
 }
