@@ -25,6 +25,18 @@ public class WorkItemRepository : IWorkItemRepository
         Items.Remove(item);
     }
 
+    public bool RemoveByIdf(string id)
+    {
+        WorkItem? existing = FindById(id);
+        if (existing is null)
+        {
+            return false;
+        }
+
+        Items.Remove(existing);
+        return true;
+    }
+
     public void Update(WorkItem item)
     {
         WorkItem? exitingItem = FindById(item.Id);

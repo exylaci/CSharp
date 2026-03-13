@@ -8,27 +8,49 @@ namespace GITdemoMAUI.ViewModels;
 
 public class WorkItemsViewModel : BaseViewModel
 {
-    private readonly INavigationService _navigation;    //A későbbi navigáció tárolására
-    public ObservableCollection<WorkItem> Items { get; }    //Az adatokat tároló kollekcióra hivatkozás tárolására
+    private readonly INavigationService _navigation; //A későbbi navigáció tárolására
+    private readonly IWorkItemRepository _repository; //Az adatok tárolásához
+    private readonly IDialogService _service;
+
+    public ObservableCollection<WorkItem> Items { get; } //Az adatokat tároló kollekcióra hivatkozás tárolására
 
 
-    public AsyncRelayCommand<WorkItem> OpenItemCommand { get; } //Ebben a gereikus async command-ban adjuk át a WorkItem-et
+    public AsyncRelayCommand<WorkItem> OpenItemCommand { get; } //Ebben a gereikus async command-ban adjuk át a kiválasztott WorkItem-et
+    public AsyncRelayCommand<WorkItem> DeleteItemCommand { get; } //Ebben a gereikus async command-ban adjuk át a törlendő WorkItem-et
     public AsyncRelayCommand AddNewItemCommand { get; } //Ebben az Async OpenItemCommand-ban adjuk át a WorkItem-et
 
 
-    public WorkItemsViewModel(INavigationService navigation, IWorkItemRepository repository)
+    public WorkItemsViewModel(INavigationService navigation, IWorkItemRepository repository, IDialogService dialogService)
         //Kostruktor paraméterében kapja meg a navigációt, és az adat tároló osztályra hivatkozást
     {
         _navigation = navigation; //későbbi navigációhoz kell letárolni a DI-ben fogadott navigációt
-        Items = repository.Items; //Mivel csak itt használjuk egyszer, nem tároljuk el a repository paramétert
+        _repository = repository;
+        _service = dialogService;
 
-        PageTitle = "Feladatok";    //Az oldal fejlécébe rakjuk majd be (jelenítjük meg), mint az oldal neve
+        Items = _repository.Items;
+
+        PageTitle = "Feladatok"; //Az oldal fejlécébe rakjuk majd be (jelenítjük meg), mint az oldal neve
 
         OpenItemCommand = new AsyncRelayCommand<WorkItem>(OpenItemAsync); //A lista egy elemére kattintva ugrik ide. "Jön vele" a CommandParameter="{Binding .} -gal hozzákötött <WorkItem> típusú aktuális eleme a listának. Ezt adja tovább a meghívott OpenItemAsync függvénynek. 
+        DeleteItemCommand = new AsyncRelayCommand<WorkItem>(DeleteItemAsync);
         AddNewItemCommand = new AsyncRelayCommand(AddNewItemAsync); //A [+] gomb megnyomására ide ugrik. Új elem hozzáadása esetén (mivel nem kell aktuálisan kiválasztott listaelemmel foglalkozni) az paraméter nélküli AsyncRelayCommandon keresztűl hívjuk az AddNewItemAsync függvényünket. 
     }
 
-    private Task AddNewItemAsync()  
+    private async Task DeleteItemAsync(WorkItem? selected)
+    {
+        if (selected is null) //Mindig ellenőrizni kell null-ra
+        {
+            return;
+        }
+
+        if (await _service.ShowConfirmationRequestAsync("Feladat törlése a listából", "Biztosan törölni szeretné?", "Igen", "Nem"))
+        {
+            _repository.Remove(selected); //elem törlése a kollekcióból
+            await _navigation.GoBackAsync(); //visszatérés az előző oldalra
+        }
+    }
+
+    private Task AddNewItemAsync()
     {
         return _navigation.GoToAsync(nameof(Pages.WorkItemEditorPage));
     }
