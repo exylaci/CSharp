@@ -6,7 +6,7 @@ using GITdemoMAUI.Pages;
 
 namespace GITdemoMAUI.ViewModels;
 
-public sealed class WorkItemEditorViewModel : BaseViewModel, INotifyPropertyChanged
+public sealed class WorkItemEditorViewModel : BaseViewModel, INotifyPropertyChanged, INavigationParameterReceiver
 {
     private string title = string.Empty; //A workitem beviteléhez szüksége, az egyes mezőihez tartozó lokális változók
     private string description = string.Empty;
@@ -17,6 +17,9 @@ public sealed class WorkItemEditorViewModel : BaseViewModel, INotifyPropertyChan
 
     private string titleError = string.Empty; //A címre vonatkozó szabályok megszegésekor kerül bele szöveg
     private bool hasTitleError; //Meg vannak-e szegve a címre vonatkozó szabályok
+
+    private string mode = "Create";
+    private string editedId;
 
     public string Title
     {
@@ -123,12 +126,19 @@ public sealed class WorkItemEditorViewModel : BaseViewModel, INotifyPropertyChan
         {
             IsBusy = true; //Éppen mentés zajlik, addig más már nem kérhet mentést
             SaveCommand.RaiseCanExecuteChanged();
-            _repository.Add( //eltároljuk az új feladatot
-                new WorkItem(
-                    Guid.NewGuid().ToString("N"), //generál egy 32 karakteres azonosítót
-                    Title.Trim(),
-                    Description.Trim(),
-                    Status));
+            if (mode == "Edit" && editedId is not null)
+            {
+                _repository.Update(new WorkItem(editedId, Title.Trim(), Description.Trim(), Status));
+            }
+            else
+            {
+                _repository.Add( //eltároljuk az új feladatot
+                    new WorkItem(
+                        Guid.NewGuid().ToString("N"), //generál egy 32 karakteres azonosítót
+                        Title.Trim(),
+                        Description.Trim(),
+                        Status));
+            }
 
             ClearFields();
             //await Shell.Current.GoToAsync("//WorkItemsPage");
@@ -146,5 +156,25 @@ public sealed class WorkItemEditorViewModel : BaseViewModel, INotifyPropertyChan
         Title = string.Empty;
         Description = string.Empty;
         Status = WorkItemStatus.Todo;
+    }
+
+    public void Receive(IDictionary<string, object> parameters)
+    {
+        if (parameters.TryGetValue("Mode", out var modeObj) && modeObj is string modeStr)
+        {
+            mode = modeStr;
+        }
+
+        if (parameters.TryGetValue("WorkItem", out var obj) && obj is WorkItem item)
+        {
+            editedId = item.Id;
+            Title = item.Title;
+            Description = item.Description;
+            Status = item.Status;
+            PageTitle = "Módosítás";
+        }
+
+        OnPropertyChanged(nameof(CanSave)); //Figyeli, hogy megváltozott-e a CanSave
+        SaveCommand.RaiseCanExecuteChanged();
     }
 }

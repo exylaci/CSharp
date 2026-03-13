@@ -42,8 +42,11 @@
                 Text="Vissza"
                 Command="{Binding BackCommand}" />
             <Button
+                Text="Módosítás"
+                Command="{Binding ModifyWorkItemCommand}" />
+            <Button
                 Text="Munka törlése a feladat listából"
-                Command="{Binding EraseWorkItem}" />
+                Command="{Binding EraseWorkItemCommand}" />
 
         </VerticalStackLayout>
     </Grid>

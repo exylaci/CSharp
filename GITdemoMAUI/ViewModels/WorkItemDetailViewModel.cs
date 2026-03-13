@@ -8,15 +8,18 @@ public sealed class WorkItemDetailViewModel : BaseViewModel, INavigationParamete
 {
     private readonly INavigationService _navigation;
     private WorkItem? _item;
+    private string? id;
 
     public AsyncRelayCommand BackCommand { get; }
-    public AsyncRelayCommand EraseWorkItem { get; }
+    public AsyncRelayCommand EraseWorkItemCommand { get; }
+    public AsyncRelayCommand ModifyWorkItemCommand { get; }
 
     public WorkItem? Item
     {
         get => _item;
         private set => SetField(ref _item, value);
     }
+
 
     private readonly IWorkItemRepository _repository;
     private readonly IDialogService _service;
@@ -30,7 +33,32 @@ public sealed class WorkItemDetailViewModel : BaseViewModel, INavigationParamete
         PageTitle = "Részletek";
 
         BackCommand = new AsyncRelayCommand(() => _navigation.GoBackAsync()); //Visszatérési helyre ugrás hozzárendelése a command-hoz
-        EraseWorkItem = new AsyncRelayCommand(EraseItemAsync); //EraseItemAsync metódus hozzárendelése a command-hoz
+        EraseWorkItemCommand = new AsyncRelayCommand(EraseItemAsync); //EraseItemAsync metódus hozzárendelése a command-hoz
+        ModifyWorkItemCommand = new AsyncRelayCommand(ModifyItemAsync, () => Item is not null); //EditItemAsync metódus hozzárendelése a command-hoz
+    }
+
+    public void Refresh()
+    {
+        if (id is null)
+        {
+            return;
+        }
+
+        Item = _repository.FindById(id);
+    }
+
+    private Task ModifyItemAsync()
+    {
+        if (Item is null)
+        {
+            return Task.CompletedTask;
+        }
+
+        return _navigation.GoToAsync(nameof(Pages.WorkItemDetailPage), new Dictionary<string, object>
+        {
+            { "Mode", "Edit" },
+            { "WorkItem", Item }
+        });
     }
 
     private async Task EraseItemAsync()
@@ -52,6 +80,7 @@ public sealed class WorkItemDetailViewModel : BaseViewModel, INavigationParamete
         if (parameters.TryGetValue("WorkItem", out var obj) && obj is WorkItem item)
         {
             Item = item;
+            id = item.Id;
         }
     }
 }

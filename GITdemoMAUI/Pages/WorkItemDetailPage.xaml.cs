@@ -25,4 +25,13 @@ public partial class WorkItemDetailPage : ContentPage, IQueryAttributable
             //Meghívja a WokrItemDetailViewModel Receive metódusát, amin keresztűl tárolódik az itt kinyert adat 
         }
     }
+
+    protected override void OnAppearing()
+    {
+        base.OnAppearing();
+        if (BindingContext is WorkItemDetailViewModel vm)
+        {
+            vm.Refresh();
+        }
+    }
 }
