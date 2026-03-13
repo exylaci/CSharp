@@ -11,7 +11,10 @@ public sealed class WorkItemEditorViewModel : BaseViewModel, INotifyPropertyChan
     private string title = string.Empty; //A workitem beviteléhez szüksége, az egyes mezőihez tartozó lokális változók
     private string description = string.Empty;
     private WorkItemStatus status = WorkItemStatus.Todo;
+
     public IEnumerable<WorkItemStatus> StatusOptions => Enum.GetValues(typeof(WorkItemStatus)).Cast<WorkItemStatus>(); //A picker-ben választható elemeket állítja elő
+    public IReadOnlyList<WorkItemStatus> StatusOptions2 { get; } = Enum.GetValues<WorkItemStatus>(); //A picker-ben választható elemeket állítja elő
+
     private string titleError = string.Empty; //A címre vonatkozó szabályok megszegésekor kerül bele szöveg
     private bool hasTitleError; //Meg vannak-e szegve a címre vonatkozó szabályok
 
@@ -118,11 +121,11 @@ public sealed class WorkItemEditorViewModel : BaseViewModel, INotifyPropertyChan
 
         try
         {
-            IsBusy = true;      //Éppen mentés zajlik, addig más már nem kérhet mentést
+            IsBusy = true; //Éppen mentés zajlik, addig más már nem kérhet mentést
             SaveCommand.RaiseCanExecuteChanged();
-            _repository.Add(                                  //eltároljuk az új feladatot
+            _repository.Add( //eltároljuk az új feladatot
                 new WorkItem(
-                    Guid.NewGuid().ToString("N"),   //generál egy 32 karakteres azonosítót
+                    Guid.NewGuid().ToString("N"), //generál egy 32 karakteres azonosítót
                     Title.Trim(),
                     Description.Trim(),
                     Status));
@@ -133,7 +136,7 @@ public sealed class WorkItemEditorViewModel : BaseViewModel, INotifyPropertyChan
         }
         finally
         {
-            IsBusy = false;     //ha hibára futott, akkor is törölni kell a foglaltság visszajelzését
+            IsBusy = false; //ha hibára futott, akkor is törölni kell a foglaltság visszajelzését
             SaveCommand.RaiseCanExecuteChanged();
         }
     }

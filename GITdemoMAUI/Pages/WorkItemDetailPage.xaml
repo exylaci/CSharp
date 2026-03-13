@@ -22,7 +22,7 @@
                 <VerticalStackLayout
                     Spacing="8">
                     <Label
-                        Text="{Binding Item.PageTitle}"
+                        Text="{Binding Item.Title}"
                         FontAttributes="Bold"
                         FontSize="18" />
                     <Label

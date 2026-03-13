@@ -5,6 +5,7 @@
 <ContentPage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:GITdemoMAUI.Pages.Controls"
     x:Class="GITdemoMAUI.Pages.WorkItemEditorPage"
     Title="kézzel beírt: Save Work Item">
 
@@ -36,11 +37,11 @@
                             Text="{Binding Title, Mode=TwoWay}"
                             Placeholder="Pl.: Feladat rövid elnevezése" />
 
-                        <!-- Hibaüzenet, ha a title nem megfelelő -->
-                        <Label
-                            Text="{Binding TitleError}"
-                            TextColor="{DynamicResource Danger}"
-                            IsVisible="{Binding HasTitleError}" />
+                        <!-- Hibaüzenet sor beszúródik , ha a title nem megfelelő -->
+                        <!-- Kiszervezzük egy külön ContentView metódusba a hibaüzenet megjelenítését. Így azt a metódust "újra felhasználva" a program más részeiből is meghívva egységes képet tud mutatni a teljes programunk. -->
+                        <controls:ValidationMessageView 
+                            Message="{Binding TitleError}"
+                            IsVisibleMessage="{Binding HasTitleError}"/>
 
                         <!-- Második mező -->
                         <Label
@@ -59,7 +60,7 @@
                             Style="{StaticResource SubTitleLabelStyle}" />
                         <Picker
                             Title="Válassz állapotot!"
-                            ItemsSource="{Binding StatusOptions}"
+                            ItemsSource="{Binding StatusOptions2}"
                             SelectedItem="{Binding Status, Mode=TwoWay}">
                             <!-- <Picker.ItemsSource>      // Ha egy tömbben soroljuk fel a választható értékeket -->
                             <!--     <x:Array Type="{x:Type x:String}"> -->
@@ -73,7 +74,7 @@
                     </VerticalStackLayout>
                 </Frame>
 
-
+                <!-- Nyomógombok -->
                 <HorizontalStackLayout
                     Spacing="10">
                     <Button
@@ -85,7 +86,8 @@
                         BackgroundColor="{AppThemeBinding Light=#65DCBF, Dark=#DC689A}" />
                     <Button
                         Text="Mentés"
-                        Command="{Binding SaveCommand}" />
+                        Command="{Binding SaveCommand}"
+                        IsEnabled="{Binding CanSave}" />
                 </HorizontalStackLayout>
 
                 <ActivityIndicator
