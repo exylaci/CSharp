@@ -27,9 +27,9 @@ public partial class WorkItemDetailPage : ContentPage, IQueryAttributable
     }
 
     protected override void OnAppearing()
-    {
+    {   //Ha szerkesztésből jöttünk vissza erre a Page-re van értelme frisíteni a létható tartalmat
         base.OnAppearing();
-        if (BindingContext is WorkItemDetailViewModel vm)
+        if (BindingContext is WorkItemDetailViewModel vm)   //Mindig ellenőrizzük, hogy melyik ViewModelhez vagyubj éppen kötődve
         {
             vm.Refresh();
         }

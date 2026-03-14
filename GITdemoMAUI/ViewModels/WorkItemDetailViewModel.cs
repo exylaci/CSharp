@@ -7,22 +7,22 @@ namespace GITdemoMAUI.ViewModels;
 public sealed class WorkItemDetailViewModel : BaseViewModel, INavigationParameterReceiver
 {
     private readonly INavigationService _navigation;
-    private WorkItem? _item;
-    private string? id;
+    private readonly IWorkItemRepository _repository;
+    private readonly IDialogService _service;
+
+    private WorkItem? item;
 
     public AsyncRelayCommand BackCommand { get; }
     public AsyncRelayCommand EraseWorkItemCommand { get; }
     public AsyncRelayCommand ModifyWorkItemCommand { get; }
 
+
     public WorkItem? Item
     {
-        get => _item;
-        private set => SetField(ref _item, value);
+        get => item;
+        private set => SetField(ref item, value);
     }
 
-
-    private readonly IWorkItemRepository _repository;
-    private readonly IDialogService _service;
 
     public WorkItemDetailViewModel(INavigationService navigation, IWorkItemRepository repository, IDialogService dialogService)
     {
@@ -39,48 +39,51 @@ public sealed class WorkItemDetailViewModel : BaseViewModel, INavigationParamete
 
     public void Refresh()
     {
-        if (id is null)
+        if (Item is null || Item.Id is null)
         {
             return;
         }
 
-        Item = _repository.FindById(id);
+        //Csak akkor van értelme a Page-et frissíteni, ha van workitem-ben adat, vagyis ha ID nem null 
+        Item = _repository.FindById(Item.Id);
     }
 
     private Task ModifyItemAsync()
     {
-        if (Item is null)
+        if (Item is null) //Mindig ellenőrizni kell null-ra
         {
-            return Task.CompletedTask;
+            return Task.CompletedTask; //Ha nem async akkor Task.Completed-del tudunk visszatérni
         }
 
-        return _navigation.GoToAsync(nameof(Pages.WorkItemDetailPage), new Dictionary<string, object>
+        return _navigation.GoToAsync(nameof(Pages.WorkItemEditorPage), new Dictionary<string, object>
         {
-            { "Mode", "Edit" },
-            { "WorkItem", Item }
+            { "Mode", "Edit" }, //hogy tudja az editorPage melyik funkciót kell csinálnia
+            { "WorkItem", Item } //átadjuk a workitem elemet is neki
         });
     }
 
     private async Task EraseItemAsync()
+        //Akkor kell async ha await van
     {
-        if (_item is null) //Mindig ellenőrizni kell null-ra
+        if (item is null) //Mindig ellenőrizni kell null-ra
         {
             return;
         }
 
         if (await _service.ShowConfirmationRequestAsync("Feladat törlése a listából", "Biztosan törölni szeretné?", "Igen", "Nem"))
         {
-            _repository.Remove(_item); //elem törlése a kollekcióból
+            _repository.RemoveById(item.Id); //elem törlése a kollekcióból
             await _navigation.GoBackAsync(); //visszatérés az előző oldalra
         }
     }
 
     public void Receive(IDictionary<string, object> parameters)
     {
-        if (parameters.TryGetValue("WorkItem", out var obj) && obj is WorkItem item)
+        if (parameters.TryGetValue("WorkItem", out var obj) && obj is WorkItem workItem)
+            //Mindig TryGetValue(-val, próbáljuk meg elérni a kapott paramétert, mert nem biztos, hogy stimmel a típusa
         {
-            Item = item;
-            id = item.Id;
+            //ha WorkItem típusú a kapott paraméter
+            Item = workItem; //eltároljuk a kapott workitem-et
         }
     }
 }

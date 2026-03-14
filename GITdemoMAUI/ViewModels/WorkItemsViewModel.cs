@@ -17,6 +17,7 @@ public class WorkItemsViewModel : BaseViewModel
 
     public AsyncRelayCommand<WorkItem> OpenItemCommand { get; } //Ebben a gereikus async command-ban adjuk át a kiválasztott WorkItem-et
     public AsyncRelayCommand<WorkItem> DeleteItemCommand { get; } //Ebben a gereikus async command-ban adjuk át a törlendő WorkItem-et
+    public AsyncRelayCommand<WorkItem> ModifyItemCommand { get; } //Ebben a gereikus async command-ban adjuk át a módosítandó WorkItem-et
     public AsyncRelayCommand AddNewItemCommand { get; } //Ebben az Async OpenItemCommand-ban adjuk át a WorkItem-et
 
 
@@ -33,7 +34,17 @@ public class WorkItemsViewModel : BaseViewModel
 
         OpenItemCommand = new AsyncRelayCommand<WorkItem>(OpenItemAsync); //A lista egy elemére kattintva ugrik ide. "Jön vele" a CommandParameter="{Binding .} -gal hozzákötött <WorkItem> típusú aktuális eleme a listának. Ezt adja tovább a meghívott OpenItemAsync függvénynek. 
         DeleteItemCommand = new AsyncRelayCommand<WorkItem>(DeleteItemAsync);
+        ModifyItemCommand = new AsyncRelayCommand<WorkItem>(ModifyItemAsync);
         AddNewItemCommand = new AsyncRelayCommand(AddNewItemAsync); //A [+] gomb megnyomására ide ugrik. Új elem hozzáadása esetén (mivel nem kell aktuálisan kiválasztott listaelemmel foglalkozni) az paraméter nélküli AsyncRelayCommandon keresztűl hívjuk az AddNewItemAsync függvényünket. 
+    }
+
+    private Task ModifyItemAsync(WorkItem? selected)
+    {
+        return _navigation.GoToAsync(nameof(Pages.WorkItemEditorPage), new Dictionary<string, object>
+        {
+            { "Mode", "Edit" }, 
+            { "WorkItem", selected }
+        });
     }
 
     private async Task DeleteItemAsync(WorkItem? selected)
@@ -45,14 +56,14 @@ public class WorkItemsViewModel : BaseViewModel
 
         if (await _service.ShowConfirmationRequestAsync("Feladat törlése a listából", "Biztosan törölni szeretné?", "Igen", "Nem"))
         {
-            _repository.Remove(selected); //elem törlése a kollekcióból
+            _repository.RemoveById(selected.Id); //elem törlése a kollekcióból
             await _navigation.GoBackAsync(); //visszatérés az előző oldalra
         }
     }
 
     private Task AddNewItemAsync()
     {
-        return _navigation.GoToAsync(nameof(Pages.WorkItemEditorPage));
+        return _navigation.GoToAsync(nameof(Pages.WorkItemEditorPage), new Dictionary<string, object> { { "Mode", "Create" } });
     }
 
     private async Task OpenItemAsync(WorkItem? selected) //Ezt a selected elemet választották ki a listából

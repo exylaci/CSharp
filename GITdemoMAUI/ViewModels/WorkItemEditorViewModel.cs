@@ -6,20 +6,30 @@ using GITdemoMAUI.Pages;
 
 namespace GITdemoMAUI.ViewModels;
 
-public sealed class WorkItemEditorViewModel : BaseViewModel, INotifyPropertyChanged, INavigationParameterReceiver
+public sealed class WorkItemEditorViewModel : BaseViewModel, INavigationParameterReceiver
+//INavigationParameterReceiver segítségével kapja meg az adatokat a hívótól
 {
+    private readonly IWorkItemRepository _repository; //Az adatok tárolásához
+    private readonly INavigationService _navigation; //A navigációhoz kell
+
+    private string? id;
     private string title = string.Empty; //A workitem beviteléhez szüksége, az egyes mezőihez tartozó lokális változók
     private string description = string.Empty;
     private WorkItemStatus status = WorkItemStatus.Todo;
-
-    public IEnumerable<WorkItemStatus> StatusOptions => Enum.GetValues(typeof(WorkItemStatus)).Cast<WorkItemStatus>(); //A picker-ben választható elemeket állítja elő
-    public IReadOnlyList<WorkItemStatus> StatusOptions2 { get; } = Enum.GetValues<WorkItemStatus>(); //A picker-ben választható elemeket állítja elő
-
     private string titleError = string.Empty; //A címre vonatkozó szabályok megszegésekor kerül bele szöveg
     private bool hasTitleError; //Meg vannak-e szegve a címre vonatkozó szabályok
 
     private string mode = "Create";
-    private string editedId;
+
+
+    public RelayCommand ClearFieldsCommand { get; } //A [CLEAR] gomb megnyomására ide ugrik
+    public AsyncRelayCommand SaveCommand { get; } //A [SAVE] gomb megnyomására ide ugrik
+    public AsyncRelayCommand CancelCommand { get; } //A [MÉGSEM] gomb megnyomására ide ugrik
+
+
+    public IEnumerable<WorkItemStatus> StatusOptions => Enum.GetValues(typeof(WorkItemStatus)).Cast<WorkItemStatus>(); //A picker-ben választható elemeket állítja elő
+    public IReadOnlyList<WorkItemStatus> StatusOptions2 { get; } = Enum.GetValues<WorkItemStatus>(); //A picker-ben választható elemeket állítja elő
+
 
     public string Title
     {
@@ -57,26 +67,6 @@ public sealed class WorkItemEditorViewModel : BaseViewModel, INotifyPropertyChan
         get => hasTitleError;
         set => SetField(ref hasTitleError, value);
     }
-
-
-    // public event PropertyChangedEventHandler PropertyChanged;
-    //
-    // private void OnPropertyChanged(string propertyName) =>
-    //     PropertyChanged?.Invoke(this, new PropertyChangedEventArgs(propertyName));
-
-    // private WorkItem? _item;
-    // public WorkItem? Item
-    // {
-    //     get => _item;
-    //     private set => SetField(ref _item, value);
-    // }
-
-    private readonly IWorkItemRepository _repository; //Az adatok tárolásához
-    private readonly INavigationService _navigation; //A navigációhoz kell
-
-    public RelayCommand ClearFieldsCommand { get; } //A [CLEAR] gomb megnyomására ide ugrik
-    public AsyncRelayCommand SaveCommand { get; } //A [SAVE] gomb megnyomására ide ugrik
-    public AsyncRelayCommand CancelCommand { get; } //A [MÉGSEM] gomb megnyomására ide ugrik
 
 
     public WorkItemEditorViewModel(INavigationService navigation, IWorkItemRepository repository)
@@ -126,9 +116,11 @@ public sealed class WorkItemEditorViewModel : BaseViewModel, INotifyPropertyChan
         {
             IsBusy = true; //Éppen mentés zajlik, addig más már nem kérhet mentést
             SaveCommand.RaiseCanExecuteChanged();
-            if (mode == "Edit" && editedId is not null)
+            if (mode == "Edit" && id is not null)
             {
-                _repository.Update(new WorkItem(editedId, Title.Trim(), Description.Trim(), Status));
+                _repository.Update(new WorkItem(id, Title.Trim(), Description.Trim(), Status));
+                ClearFields();
+                await _navigation.GoBackAsync();
             }
             else
             {
@@ -138,11 +130,9 @@ public sealed class WorkItemEditorViewModel : BaseViewModel, INotifyPropertyChan
                         Title.Trim(),
                         Description.Trim(),
                         Status));
+                ClearFields();
+                await _navigation.GoToAsync(Routes.WorkItems);
             }
-
-            ClearFields();
-            //await Shell.Current.GoToAsync("//WorkItemsPage");
-            await _navigation.GoToAsync(Routes.WorkItems);
         }
         finally
         {
@@ -160,14 +150,14 @@ public sealed class WorkItemEditorViewModel : BaseViewModel, INotifyPropertyChan
 
     public void Receive(IDictionary<string, object> parameters)
     {
-        if (parameters.TryGetValue("Mode", out var modeObj) && modeObj is string modeStr)
+        if (parameters.TryGetValue("Mode", out var modeObj) && modeObj is string mode)
         {
-            mode = modeStr;
+            this.mode = mode;
         }
 
         if (parameters.TryGetValue("WorkItem", out var obj) && obj is WorkItem item)
         {
-            editedId = item.Id;
+            id = item.Id;
             Title = item.Title;
             Description = item.Description;
             Status = item.Status;

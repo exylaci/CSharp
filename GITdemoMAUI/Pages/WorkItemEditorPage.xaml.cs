@@ -11,6 +11,7 @@ using GITdemoMAUI.ViewModels;
 namespace GITdemoMAUI.Pages;
 
 public partial class WorkItemEditorPage : ContentPage, IQueryAttributable
+//IQueryAttributable a receiver ezen keresztül kapja meg az adatokat
 {
     public WorkItemEditorPage(WorkItemEditorViewModel vm)
     {

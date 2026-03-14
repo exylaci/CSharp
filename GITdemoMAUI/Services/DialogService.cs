@@ -9,6 +9,7 @@ public sealed class DialogService : IDialogService
         _pageAccessor = pageAccessor;
     }
 
+    //Kérdést feltevő felugró Page
     public Task<bool> ShowConfirmationRequestAsync(string title, string message,
         string accept = "Igen", string cancel = "Nem")
     {
@@ -17,12 +18,15 @@ public sealed class DialogService : IDialogService
                     ?? Application.Current?.MainPage;
         if (page is null)
         {
-            return Task.FromResult(false);
+            return Task.FromResult(false);  //Nincs Page amire meg lehetne jeleníteni a felugró Page-et
         }
 
-        return page.DisplayAlertAsync(title, message, accept, cancel);
+        return page.DisplayAlertAsync(title, message, accept, cancel);  //Maga a felugró Page
     }
 
+
+    
+    //Példa megvalósítások:
     public Task ShowMessageAsync(string title, string message, string ok = "OK") =>
         InvokeOnUiAsync(() => GetMainPage().DisplayAlert(title, message, ok));
 
@@ -52,5 +56,4 @@ public sealed class DialogService : IDialogService
 
         return page;
     }
-
 }
