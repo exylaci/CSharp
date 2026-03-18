@@ -8,7 +8,7 @@ public sealed class WorkItemDetailViewModel : BaseViewModel, INavigationParamete
 {
     private readonly INavigationService _navigation;
     private readonly IWorkItemRepository _repository;
-    private readonly IDialogService _service;
+    private readonly IDialogService _dialog;
 
     private WorkItem? item;
 
@@ -20,20 +20,27 @@ public sealed class WorkItemDetailViewModel : BaseViewModel, INavigationParamete
     public WorkItem? Item
     {
         get => item;
-        private set => SetField(ref item, value);
+        private set
+        {
+            if (SetField(ref item, value))
+            {
+                ModifyWorkItemCommand.RaiseCanExecuteChanged();
+                EraseWorkItemCommand.RaiseCanExecuteChanged();
+            }
+        }
     }
 
 
-    public WorkItemDetailViewModel(INavigationService navigation, IWorkItemRepository repository, IDialogService dialogService)
+    public WorkItemDetailViewModel(INavigationService navigation, IWorkItemRepository repository, IDialogService dialog)
     {
         _navigation = navigation;
         _repository = repository;
-        _service = dialogService;
+        _dialog = dialog;
 
         PageTitle = "Részletek";
 
         BackCommand = new AsyncRelayCommand(() => _navigation.GoBackAsync()); //Visszatérési helyre ugrás hozzárendelése a command-hoz
-        EraseWorkItemCommand = new AsyncRelayCommand(EraseItemAsync); //EraseItemAsync metódus hozzárendelése a command-hoz
+        EraseWorkItemCommand = new AsyncRelayCommand(EraseItemAsync, () => Item is not null); //EraseItemAsync metódus hozzárendelése a command-hoz
         ModifyWorkItemCommand = new AsyncRelayCommand(ModifyItemAsync, () => Item is not null); //EditItemAsync metódus hozzárendelése a command-hoz
     }
 
@@ -70,10 +77,33 @@ public sealed class WorkItemDetailViewModel : BaseViewModel, INavigationParamete
             return;
         }
 
-        if (await _service.ShowConfirmationRequestAsync("Feladat törlése a listából", "Biztosan törölni szeretné?", "Igen", "Nem"))
+        if (await _dialog.ShowConfirmationRequestAsync(
+                title: "Feladat törlése a listából",
+                message: "Biztosan törölni szeretné?",
+                accept: "Igen",
+                cancel: "Nem") == false)
         {
-            _repository.RemoveById(item.Id); //elem törlése a kollekcióból
-            await _navigation.GoBackAsync(); //visszatérés az előző oldalra
+            return;
+        }
+
+        try
+        {
+            IsBusy = true;
+            if (_repository.RemoveById(item.Id) == false) //elem törlése a kollekcióból
+            {
+                await _dialog.ShowErrorAsync("Nem található. Lehet, már törölve lett.");
+                return;
+            }
+
+            await _navigation.GoBackAsync(); //sikeres törlés után visszatérés az előző oldalra
+        }
+        catch (Exception e)
+        {
+            await _dialog.ShowErrorAsync($"Váratlan hiba történt törlés közben:\n{e.Message}");
+        }
+        finally
+        {
+            IsBusy = false;
         }
     }
 

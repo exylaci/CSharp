@@ -5,8 +5,17 @@
 <ContentPage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:GITdemoMAUI.Pages.Controls"
     x:Class="GITdemoMAUI.Pages.WorkItemDetailPage">
 
+    <ContentPage.ToolbarItems>
+        <ToolbarItem
+            Text="Módosítás"
+            Command="{Binding ModifyWorkItemCommand}" />
+        <ToolbarItem
+            Text="Törlés"
+            Command="{Binding EraseWorkItemCommand}" />
+    </ContentPage.ToolbarItems>
     <Grid
         BackgroundColor="{DynamicResource AppBackgroundColor}">
         <VerticalStackLayout
@@ -49,5 +58,6 @@
                 Command="{Binding EraseWorkItemCommand}" />
 
         </VerticalStackLayout>
+        <controls:BusyOverlayView />
     </Grid>
 </ContentPage>

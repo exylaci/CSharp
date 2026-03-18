@@ -11,6 +11,7 @@ public sealed class WorkItemEditorViewModel : BaseViewModel, INavigationParamete
 {
     private readonly IWorkItemRepository _repository; //Az adatok tárolásához
     private readonly INavigationService _navigation; //A navigációhoz kell
+    private readonly IDialogService _dialog; //Felugró ablakok megjelenítéséhez kell
 
     private string? id;
     private string title = string.Empty; //A workitem beviteléhez szüksége, az egyes mezőihez tartozó lokális változók
@@ -69,10 +70,11 @@ public sealed class WorkItemEditorViewModel : BaseViewModel, INavigationParamete
     }
 
 
-    public WorkItemEditorViewModel(INavigationService navigation, IWorkItemRepository repository)
+    public WorkItemEditorViewModel(INavigationService navigation, IWorkItemRepository repository, IDialogService dialog)
     {
         _repository = repository; //Tárolt workitemek
         _navigation = navigation; //Navigáció
+        _dialog = dialog; //Másik ablak megjelenítéséhez kell
         base.PageTitle = "Új feladat hozzáadása"; //A page fejlécében kiírt név
 
         ClearFieldsCommand = new RelayCommand(ClearFields); //mezők kiürítése
@@ -133,6 +135,10 @@ public sealed class WorkItemEditorViewModel : BaseViewModel, INavigationParamete
                 ClearFields();
                 await _navigation.GoToAsync(Routes.WorkItems);
             }
+        }
+        catch (Exception ex)
+        {
+            await _dialog.ShowErrorAsync($"Váratlan hiba történt mentés közben:\n {ex.Message}");
         }
         finally
         {

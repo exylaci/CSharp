@@ -1,0 +1,31 @@
+﻿<?xml
+    version="1.0"
+    encoding="utf-8"?>
+
+<ContentView
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="GITdemoMAUI.Pages.Controls.BusyOverlayView"
+    IsVisible="{Binding IsBusy}">
+    <!-- ISBusy állaptától függőn látható, vagy sem. A szülő IsBusy-je mindenhonnan elérhető, azt használja -->
+    <!-- Ha már itt tesszük inaktívvá, akkor meg sem jelenik, nem tud eltakarni másik ablakot.  -->
+
+    <Grid>   
+        <BoxView
+            Color="{AppThemeBinding Light=#000000, Dark=#808080}"
+            Opacity="0.35" />
+        <VerticalStackLayout
+            HorizontalOptions="Center"
+            VerticalOptions="Center"
+            Spacing="10">
+            <ActivityIndicator
+                IsRunning="True" />
+            <!-- Tekeri a nyalókát -->
+            <Label
+                Text="Dolgozom..."
+                Opacity="0.9" />
+            <!-- saját felirat a nyalókához -->
+        </VerticalStackLayout>
+
+    </Grid>
+</ContentView>
