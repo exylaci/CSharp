@@ -5,6 +5,7 @@
 <ContentPage
     xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
     xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:controls="clr-namespace:GITdemoMAUI.Pages.Controls"
     x:Class="GITdemoMAUI.Pages.WorkItemsPage">
 
     <ContentPage.ToolbarItems><!-- Az oldal tetején (toolbar-ban) jelennek meg az ide beírtak -->
@@ -16,94 +17,88 @@
 
     <Grid
         BackgroundColor="{DynamicResource AppBackgroundColor}">
-        <ScrollView>
-            <VerticalStackLayout
-                Padding="16"
-                Spacing="12">
-                <Label
-                    Text="{Binding PageTitle}"
-                    Style="{StaticResource TitleLabelStyle}" />
-                <CollectionView
-                    ItemsSource="{Binding Items}"
-                    SelectionMode="None">
-                    <!-- A CcollectionView végig iterál az
-                     ItemSource:  ben megadott kollekción minden egyes elemének a megjelenítéshez. Gyakorlatilag egy ciklus. -->
+        <Label
+            Grid.Row="0"
+            Text="{Binding PageTitle}"
+            Style="{StaticResource TitleLabelStyle}"
+            Margin="16,16,16,0" />
+        <RefreshView
+            Grid.Row="1"
+            Margin="16"
+            IsRefreshing="{Binding IsRefreshing}"
+            Command="{Binding RefreshCommand}">
 
-                    <!-- Az egyes elemeket így jelenítse meg: -->
-                    <CollectionView.ItemTemplate>
-                        <DataTemplate>
+            <CollectionView
+                ItemsSource="{Binding Items}"
+                SelectionMode="None">
+
+                <!-- Ezt írja ki, ha üres a CollectionView, mert nincs elem a megadott Items kollekcióban  -->
+                <CollectionView.EmptyView>
+                    <VerticalStackLayout
+                        Padding="20"
+                        Spacing="10"
+                        Margin="0,20,0,0">
+                        <Label
+                            Text="Még nincs egyetlen feladat semm."
+                            FontSize="30" />
+                        <Label
+                            Text="Nyomd meg jobb fent a + gpmbot, új feladat felvételéhez!"
+                            Opacity="0.8" />
+                    </VerticalStackLayout>
+                </CollectionView.EmptyView>
+
+                <!-- Az egyes elemeket így jelenítse meg: -->
+                <CollectionView.ItemTemplate>
+                    <DataTemplate>
 
 
-                            <SwipeView>
-                                <!-- Balra húzás -->
-                                <SwipeView.RightItems>
-                                    <SwipeItems
-                                        Mode="Reveal">
-                                        <SwipeItemView
-                                            Command="{Binding
-                                                Source={RelativeSource AncestorType={x:Type ContentPage}}, 
-                                                Path=BindingContext.DeleteItemCommand}"
-                                            CommandParameter="{Binding .}">
+                        <SwipeView
+                            SwipeStarted="OnSwipeStarted"
+                            SwipeEnded="OnSwipeEnded">
 
-                                            <Grid
-                                                BackgroundColor="#ff5050">
-                                                    <Label
-                                                        Text="  🗑  "
-                                                        TextColor="#FFFFFF"
-                                                        FontSize="50"
-                                                        HorizontalOptions="Center"
-                                                        VerticalOptions="Center" />
-                                            </Grid>
-                                        </SwipeItemView>
-                                        <SwipeItemView
-                                            Command="{Binding
-                                                Source={RelativeSource AncestorType={x:Type ContentPage}}, 
-                                                Path=BindingContext.ModifyItemCommand}"
-                                            CommandParameter="{Binding .}">
 
-                                            <Grid>
-                                                    <Label
-                                                        Text=" Edit "
-                                                        TextColor="#000000"
-                                                        FontSize="50"
-                                                        HorizontalOptions="Center"
-                                                        VerticalOptions="Center" />
-                                            </Grid>
-                                        </SwipeItemView>
-                                    </SwipeItems>
-                                </SwipeView.RightItems>
+                            <!-- Balra húzás -->
+                            <SwipeView.RightItems>
+                                <SwipeItems
+                                    Mode="Reveal">
+                                    <SwipeItem
+                                        Text="Módosítás"
+                                        BackgroundColor="{StaticResource Blue600}"
+                                        Invoked="OnEditInvoked" />
+                                    <SwipeItem
+                                        Text="Törlés"
+                                        BackgroundColor="{StaticResource Red600}"
+                                        Invoked="OnDeleteInvoked" />
+                                </SwipeItems>
+                            </SwipeView.RightItems>
 
-                                <!-- Egy kártya kirajzolása -->
-                                <Frame
-                                    Style="{StaticResource CardContainerStyle}">
-                                    <Frame.GestureRecognizers>
-                                        <TapGestureRecognizer
-                                            Command="{Binding Source={RelativeSource AncestorType={x:Type ContentPage}},
-                                    Path=BindingContext.OpenItemCommand}"
-                                            CommandParameter="{Binding .}" />
-                                        <!-- Source: A Binding-ban most maga a kollekció egyik példánya érhető el. Ebben nincsen OpenItemCommand. Az fent a szülőben van. Mivel ezen kívül van, kötelező sorce-ot megadni. Ami most relative source és a típusa ContentPage, az útvonala: A contentpage-en belül, BindingContext.OpenItemCommand.
-                                    Nem a collectionview eleme bindingolódik hozzá, hanem collection view-n kívüli contentpage-et, és abból a binding contextet, amibe le van mentve maga a view model, tehát ott van az OpenItemCommand is. -->
-                                        <!-- CommandParameter: az aktuális elemet adom át. A pont a thist jelenti. -->
-                                    </Frame.GestureRecognizers>
-                                    <VerticalStackLayout
-                                        Spacing="6">
-                                        <Label
-                                            Text="{Binding Title}"
-                                            FontAttributes="Bold"
-                                            FontSize="16" />
-                                        <Label
-                                            Text="{Binding Description}"
-                                            FontSize="14" />
-                                        <Label
-                                            Text="{Binding Status}"
-                                            FontSize="12" />
-                                    </VerticalStackLayout>
-                                </Frame>
-                            </SwipeView>
-                        </DataTemplate>
-                    </CollectionView.ItemTemplate>
-                </CollectionView>
-            </VerticalStackLayout>
-        </ScrollView>
+                            <!-- Egy kártya kirajzolása -->
+                            <Frame
+                                Style="{StaticResource CardContainerStyle}">
+                                <Frame.GestureRecognizers>
+                                    <TapGestureRecognizer
+                                        Tapped="OnItemTapped" />
+                                </Frame.GestureRecognizers>
+                                <VerticalStackLayout
+                                    Spacing="6">
+                                    <Label
+                                        Text="{Binding Title}"
+                                        FontAttributes="Bold"
+                                        FontSize="16" />
+                                    <Label
+                                        Text="{Binding Description}"
+                                        FontSize="14" />
+                                    <Label
+                                        Text="{Binding Status}"
+                                        FontSize="12" />
+                                </VerticalStackLayout>
+                            </Frame>
+                        </SwipeView>
+                    </DataTemplate>
+                </CollectionView.ItemTemplate>
+            </CollectionView>
+
+        </RefreshView>
+        <controls:BusyOverlayView />
     </Grid>
 </ContentPage>
