@@ -7,7 +7,7 @@ namespace GITdemoMAUI.ViewModels;
 public sealed class WorkItemDetailViewModel : BaseViewModel, INavigationParameterReceiver
 {
     private readonly INavigationService _navigation;
-    private readonly IWorkItemRepository _repository;
+    private readonly IWorkItemStore store;
     private readonly IDialogService _dialog;
 
     private WorkItem? item;
@@ -31,10 +31,10 @@ public sealed class WorkItemDetailViewModel : BaseViewModel, INavigationParamete
     }
 
 
-    public WorkItemDetailViewModel(INavigationService navigation, IWorkItemRepository repository, IDialogService dialog)
+    public WorkItemDetailViewModel(INavigationService navigation, IWorkItemStore store, IDialogService dialog)
     {
         _navigation = navigation;
-        _repository = repository;
+        this.store = store;
         _dialog = dialog;
 
         PageTitle = "Részletek";
@@ -52,7 +52,7 @@ public sealed class WorkItemDetailViewModel : BaseViewModel, INavigationParamete
         }
 
         //Csak akkor van értelme a Page-et frissíteni, ha van workitem-ben adat, vagyis ha ID nem null 
-        Item = _repository.FindById(Item.Id);
+        Item = store.FindByIdAsync(Item.Id).Result;
     }
 
     private Task ModifyItemAsync()
@@ -89,7 +89,7 @@ public sealed class WorkItemDetailViewModel : BaseViewModel, INavigationParamete
         try
         {
             IsBusy = true;
-            if (_repository.RemoveById(item.Id) == false) //elem törlése a kollekcióból
+            if (!store.RemoveByIdAsync(item.Id).Result) //elem törlése a kollekcióból
             {
                 await _dialog.ShowErrorAsync("Nem található. Lehet, már törölve lett.");
                 return;

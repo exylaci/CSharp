@@ -17,6 +17,15 @@ public sealed class WorkItem
         Status = status;
         UpdatedAt = DateTimeOffset.Now;
     }
+
+    public WorkItem(string id, string title, string description, WorkItemStatus status, DateTimeOffset updatedAt)
+    {
+        Id = id;
+        Title = title;
+        Description = description;
+        Status = status;
+        UpdatedAt = updatedAt;
+    }
 }
 
 public enum WorkItemStatus

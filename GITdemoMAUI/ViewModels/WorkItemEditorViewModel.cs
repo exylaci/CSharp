@@ -9,7 +9,7 @@ namespace GITdemoMAUI.ViewModels;
 public sealed class WorkItemEditorViewModel : BaseViewModel, INavigationParameterReceiver
 //INavigationParameterReceiver segítségével kapja meg az adatokat a hívótól
 {
-    private readonly IWorkItemRepository _repository; //Az adatok tárolásához
+    private readonly IWorkItemStore store; //Az adatok tárolásához
     private readonly INavigationService _navigation; //A navigációhoz kell
     private readonly IDialogService _dialog; //Felugró ablakok megjelenítéséhez kell
 
@@ -70,9 +70,9 @@ public sealed class WorkItemEditorViewModel : BaseViewModel, INavigationParamete
     }
 
 
-    public WorkItemEditorViewModel(INavigationService navigation, IWorkItemRepository repository, IDialogService dialog)
+    public WorkItemEditorViewModel(INavigationService navigation, IWorkItemStore store, IDialogService dialog)
     {
-        _repository = repository; //Tárolt workitemek
+        this.store = store; //Tárolt workitemek
         _navigation = navigation; //Navigáció
         _dialog = dialog; //Másik ablak megjelenítéséhez kell
         base.PageTitle = "Új feladat hozzáadása"; //A page fejlécében kiírt név
@@ -120,13 +120,13 @@ public sealed class WorkItemEditorViewModel : BaseViewModel, INavigationParamete
             SaveCommand.RaiseCanExecuteChanged();
             if (mode == "Edit" && id is not null)
             {
-                _repository.Update(new WorkItem(id, Title.Trim(), Description.Trim(), Status));
+                await store.UpdateAsync(new WorkItem(id, Title.Trim(), Description.Trim(), Status));
                 ClearFields();
                 await _navigation.GoBackAsync();
             }
             else
             {
-                _repository.Add( //eltároljuk az új feladatot
+                await store.AddAsync( //eltároljuk az új feladatot
                     new WorkItem(
                         Guid.NewGuid().ToString("N"), //generál egy 32 karakteres azonosítót
                         Title.Trim(),

@@ -1,4 +1,7 @@
-﻿using Microsoft.Extensions.Logging;
+﻿using GITdemoMAUI.Infrastructure;
+using GITdemoMAUI.Repositories;
+using GITdemoMAUI.Services;
+using Microsoft.Extensions.Logging;
 
 namespace GITdemoMAUI;
 
@@ -28,13 +31,22 @@ public static class MauiProgram
         builder.Services.AddSingleton<Services.INavigationService, Services.NavigationService>();
         //A oldalak közötti navigációhoz kell
 
-        builder.Services.AddSingleton<Models.IWorkItemRepository, Models.WorkItemRepository>();
+        builder.Services.AddSingleton<Services.IWorkItemStore, Services.InMemoryWorkItemStore>();
         //Ebben tároljuk az adatokat. (Ha Transient lenne, akkor mindig új jönne létre és a hozzáadott adatok eltünnének.
         builder.Services.AddTransient<ViewModels.WorkItemEditorViewModel>();
         builder.Services.AddTransient<Pages.WorkItemEditorPage>();
 
         builder.Services.AddSingleton<Services.ICurrentPageAccessor, Services.CurrentPageAccessor>();
         builder.Services.AddSingleton<Services.IDialogService, Services.DialogService>();
+
+        builder.Services.AddSingleton<IDbPathProvider, DbPathProvider>();
+        builder.Services.AddSingleton<IWorkItemRepository, SqliteWorkItemRepository>();
+
+#if DEBUG
+        builder.Services.AddSingleton<IWorkItemStore, InMemoryWorkItemStore>();
+#else
+        builder.Services.AddSingleton<IWorkItemStore, SqliteWorkItemStore>();
+#endif
 
 #if DEBUG
         builder.Logging.AddDebug();

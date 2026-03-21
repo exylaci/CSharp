@@ -9,7 +9,7 @@ namespace GITdemoMAUI.ViewModels;
 public class WorkItemsViewModel : BaseViewModel
 {
     private readonly INavigationService _navigation; //A későbbi navigáció tárolására
-    private readonly IWorkItemRepository _repository; //Az adatok tárolásához
+    private readonly IWorkItemStore store; //Az adatok tárolásához
     private readonly IDialogService _dialog;
 
     private WorkItem? _selectedItem;
@@ -51,15 +51,15 @@ public class WorkItemsViewModel : BaseViewModel
     }
 
 
-    public WorkItemsViewModel(INavigationService navigation, IWorkItemRepository repository, IDialogService dialogDialog)
+    public WorkItemsViewModel(INavigationService navigation, IWorkItemStore store, IDialogService dialogDialog)
         //Kostruktor paraméterében kapja meg a navigációt, és az adat tároló osztályra hivatkozást
     {
         _navigation = navigation; //későbbi navigációhoz kell letárolni a DI-ben fogadott navigációt
-        _repository = repository;
+        this.store = store;
         _dialog = dialogDialog;
 
 
-        Items = _repository.Items;
+        Items = this.store.Items;
 
         PageTitle = "Feladatok"; //Az oldal fejlécébe rakjuk majd be (jelenítjük meg), mint az oldal neve
 
@@ -82,7 +82,7 @@ public class WorkItemsViewModel : BaseViewModel
         try
         {
             IsRefreshing = true;
-            await Task.Delay(400);  //Csak szimuláljuk, mint ha várakozna egy távoli adatbázishoz csatlakoásra és időbe tellik mire megkapja onnan a lekérdezett adatot
+            await Task.Delay(400); //Csak szimuláljuk, mint ha várakozna egy távoli adatbázishoz csatlakoásra és időbe tellik mire megkapja onnan a lekérdezett adatot
         }
         finally
         {
@@ -94,31 +94,32 @@ public class WorkItemsViewModel : BaseViewModel
     {
         return _navigation.GoToAsync(nameof(Pages.WorkItemEditorPage), new Dictionary<string, object>
         {
-            { "Mode", "Edit" },         //szerkesztés üzemmódban akarjuk használni az EditorPage-et; ezt adjuk át a Mode attribútumnak
+            { "Mode", "Edit" }, //szerkesztés üzemmódban akarjuk használni az EditorPage-et; ezt adjuk át a Mode attribútumnak
             { "WorkItem", selected }
         });
     }
 
     private async Task DeleteItemAsync(WorkItem selected)
     {
-        if (!await _dialog.ShowConfirmationRequestAsync(//parameter:adat <--Ilyen formátumban is meg lehet adni az átadandó paramétereket, így nem keverednek össze.
+        if (!await _dialog.ShowConfirmationRequestAsync( //parameter:adat <--Ilyen formátumban is meg lehet adni az átadandó paramétereket, így nem keverednek össze.
                 title: "Feladat törlése a listából",
                 message: $"Biztosan törölni szeretné ezt?\n{selected.Title}",
-                accept: "Törlés") )
+                accept: "Törlés"))
         {
             return; //Ha mégsem akar törölni, kilépünk.
         }
 
-        await RunBusyAsync(() =>    //Ez kezeli helyettünk az IsBusy-t. Ami által nem tudja a felhasználó érdemben nyomogatni a gombot. (Előtte tekergeti a nyalókát.)
+        await RunBusyAsync(() => //Ez kezeli helyettünk az IsBusy-t. Ami által nem tudja a felhasználó érdemben nyomogatni a gombot. (Előtte tekergeti a nyalókát.)
             {
-                if (!_repository.RemoveById(selected.Id)) //elem törlése a kollekcióból
-                {   //Nem sikrült törölni.
+                if (!store.RemoveByIdAsync(selected.Id).Result) //elem törlése a kollekcióból
+                {
+                    //Nem sikrült törölni.
                     throw new InvalidOperationException("Nem található az elem, lehet már törölve lett.");
                 }
 
                 return Task.CompletedTask;
             },
-            ex => _dialog.ShowErrorAsync(ex.Message)    //Amit a sikertelen törlés esetén pl. feljebb dobtunk kivételt, azt ezzel a lambda kifejezéses névtelen metódussal kezeltetjük le a RunBusyAsync metódusban.  (De minden más egyéb esetlegesen bekövetkező hiba esetet is ez kezeli le.)
+            ex => _dialog.ShowErrorAsync(ex.Message) //Amit a sikertelen törlés esetén pl. feljebb dobtunk kivételt, azt ezzel a lambda kifejezéses névtelen metódussal kezeltetjük le a RunBusyAsync metódusban.  (De minden más egyéb esetlegesen bekövetkező hiba esetet is ez kezeli le.)
         );
         await _navigation.GoBackAsync(); //visszatérés az előző oldalra
     }
