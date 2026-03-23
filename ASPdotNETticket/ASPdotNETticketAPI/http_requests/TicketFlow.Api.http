@@ -1,0 +1,43 @@
+﻿## Teszteléshez írt scriptek
+
+# változó definiáűlása, később dupla kapcsoszárójelek között lehet hivatkozni rá {{baseUrl}} 
+@baseUrl = https://localhost:7210
+
+### Összes ticket lekérdezése.      // Ez a ### a komment, blokk jelzés és egyben fejléc is a megjelenítésében. 
+GET {{baseUrl}}/api/Tickets
+Accept: application/json
+
+###
+
+
+### Egy ticket lekérdezése:
+GET {{baseUrl}}/api/Tickets/1
+Accept: application/json
+
+###
+
+
+### Nemlétező lekérése
+GET {{baseUrl}}/api/Tickets/999
+Accept: application/json
+
+###
+
+
+### Új tiket létrehozása
+POST {{baseUrl}}/api/Tickets
+Content-Type: application/json
+Accept: application/json
+
+#A kiküldeni szánt json adat {} 
+{
+  "title": "Nyomtatási probléma",
+  "description": "Nem tud a user nyomtatni.",
+  "priority": 3
+}
+
+###
+
+
+
+
