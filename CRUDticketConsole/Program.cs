@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Text;
+using System.Text.Json;
 
 namespace CRUDticketConsole;
 
@@ -6,7 +7,7 @@ internal static class Program
 {
     const string Url = "https://localhost:7210/";
 
-    static async Task Main()
+    static void Main()
     {
         HttpClient client = new HttpClient(new HttpClientHandler()
         {
@@ -22,26 +23,27 @@ internal static class Program
                 case '1': GetAllTicket(client); break;
                 case '2': GetAllCategory(client); break;
                 case '3': GetOneTicket(client); break;
-                case '4': break;
-                case '5': break;
-                case '6': break;
-                case '7': break;
-                case '8': ManualRequest(client); break;
+                case '4': GetOneCategory(client); break;
+                case '5': NewTicket(client); break;
+                // case '6': ModyfyTicket(client); break;
+                // case '7': ModyfyTicketStatus(client); break;
+                // case '8': DeleteTicket(client); break;
+                case '9': ManualRequest(client); break;
             }
         } while (true);
     }
 
     public static char Menu()
     {
-        Console.WriteLine("----------------------------------------------");
         Console.WriteLine("1: Az összes Ticket lekérdezése");
         Console.WriteLine("2: Az összes Category lekérdezése");
         Console.WriteLine("3: Egy Ticket lekérdezése ID alapján");
         Console.WriteLine("4: Egy Category lekérdezése ID alapján");
-        Console.WriteLine("5: Egy Ticket módosítása");
-        Console.WriteLine("6: Egy Ticket státuszának módosítása");
-        Console.WriteLine("7: Egy Ticket törlése");
-        Console.WriteLine("8: Saját kézi lekérdezés");
+        Console.WriteLine("5: Új Ticket létrehozása");
+        Console.WriteLine("6: Egy Ticket módosítása");
+        Console.WriteLine("7: Egy Ticket státuszának módosítása");
+        Console.WriteLine("8: Egy Ticket törlése");
+        Console.WriteLine("9: Kézel megírt lekérdezés");
         Console.WriteLine("0: Kilépés");
         Console.WriteLine("----------------------------------------------");
         char choice;
@@ -53,9 +55,9 @@ internal static class Program
         return choice;
     }
 
-    private async static void GetAllTicket(HttpClient client)
+    private static void GetAllTicket(HttpClient client)
     {
-        HttpResponseMessage response = await client.GetAsync(Url + "api/Tickets");
+        HttpResponseMessage response = client.GetAsync(Url + "api/Tickets").Result;
         Console.WriteLine($"1: Tickets \tStátusz kód: {(int)response.StatusCode}, {response.StatusCode}");
         Console.WriteLine("----------------------------------------------");
         if (!response.IsSuccessStatusCode)
@@ -63,7 +65,7 @@ internal static class Program
             return;
         }
 
-        string responseBody = await response.Content.ReadAsStringAsync();
+        string responseBody = response.Content.ReadAsStringAsync().Result;
         JsonDocument tickets = JsonDocument.Parse(responseBody);
         foreach (JsonElement ticket in tickets.RootElement.EnumerateArray())
         {
@@ -76,9 +78,9 @@ internal static class Program
         }
     }
 
-    private async static void GetAllCategory(HttpClient client)
+    private static void GetAllCategory(HttpClient client)
     {
-        HttpResponseMessage response = await client.GetAsync(Url + "api/Category");
+        HttpResponseMessage response = client.GetAsync(Url + "api/Categories").Result;
         Console.WriteLine($"2: Categories\tStátusz kód: {(int)response.StatusCode}, {response.StatusCode}");
         Console.WriteLine("----------------------------------------------");
         if (!response.IsSuccessStatusCode)
@@ -86,7 +88,7 @@ internal static class Program
             return;
         }
 
-        string responseBody = await response.Content.ReadAsStringAsync();
+        string responseBody = response.Content.ReadAsStringAsync().Result;
         JsonDocument categories = JsonDocument.Parse(responseBody);
         foreach (JsonElement category in categories.RootElement.EnumerateArray())
         {
@@ -99,24 +101,29 @@ internal static class Program
         }
     }
 
-    private async static void GetOneTicket(HttpClient client)
+    private static void GetOneTicket(HttpClient client, string id = "")
     {
-        Console.Write("3: A lekérdezéshez add meg a Ticket ID-t: ");
-        string id = Console.ReadLine();
-        HttpResponseMessage response = await client.GetAsync(Url + "api/Tickets/" + id);
-        Console.WriteLine($"A(z) {id} azonosítójú Ticket \tStátusz kód: {(int)response.StatusCode}, {response.StatusCode}");
+        if (string.IsNullOrWhiteSpace(id))
+        {
+            Console.Write("3: A lekérdezéshez add meg a Ticket ID-t: ");
+            id = Console.ReadLine() ?? string.Empty;
+        }
+
+        HttpResponseMessage response = client.GetAsync(Url + "api/Tickets/" + id).Result;
+        Console.WriteLine($"A(z) ID={id} azonosítójú Ticket lekérdezése \tStátusz kód: {(int)response.StatusCode}, {response.StatusCode}");
         Console.WriteLine("----------------------------------------------");
         if (!response.IsSuccessStatusCode)
         {
+            Console.WriteLine("Nincs ilyen Ticket!!!\n----------------------------------------------");
             return;
         }
 
-        string responseBody = await response.Content.ReadAsStringAsync();
-        JsonDocument tickets = JsonDocument.Parse(responseBody);
-        JsonElement ticket = tickets.RootElement;
+        string responseBody = response.Content.ReadAsStringAsync().Result;
+        JsonElement ticket = JsonDocument.Parse(responseBody).RootElement;
         if (ticket.ValueKind == JsonValueKind.Array)
         {
             Console.WriteLine("Nem adtál meg ID-t ezért nem egyetlen Ticket adata jött a válaszban:\n" + responseBody);
+            Console.WriteLine("----------------------------------------------");
             return;
         }
 
@@ -128,9 +135,49 @@ internal static class Program
         Console.WriteLine("----------------------------------------------");
     }
 
+    private static void GetOneCategory(HttpClient client)
+    {
+        Console.Write("4: A lekérdezéshez add meg a Category ID-t: ");
+        string id = Console.ReadLine() ?? string.Empty;
+        HttpResponseMessage response = client.GetAsync(Url + "api/Categories/" + id).Result;
+        Console.WriteLine($"A(z) {id} azonosítójú Category \tStátusz kód: {(int)response.StatusCode}, {response.StatusCode}");
+        if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Nincs ilyen Category!!!\n----------------------------------------------");
+            return;
+        }
+
+        string responseBody = response.Content.ReadAsStringAsync().Result;
+        JsonElement category = JsonDocument.Parse(responseBody).RootElement;
+        if (category.ValueKind == JsonValueKind.Array)
+        {
+            Console.WriteLine("Nem adtál meg ID-t ezért nem egyetlen Category adata jött a válaszban:\n" + responseBody);
+            Console.WriteLine("----------------------------------------------");
+            return;
+        }
+
+        Console.WriteLine("----------------------------------------------");
+        foreach (JsonProperty tag in category.EnumerateObject())
+        {
+            Console.WriteLine($"{tag.Name,15} - {tag.Value}");
+        }
+
+        Console.WriteLine("----------------------------------------------");
+    }
+
+    private static void NewTicket(HttpClient client)
+    {
+        TicketDto ticket = new TicketDto();
+        ticket.EditTicket();
+        var content = new StringContent(JsonSerializer.Serialize(ticket), Encoding.UTF8, "application/json");
+        var response = client.PostAsync(Url + "api/Tickets", content).Result;
+        Console.WriteLine($"\n --> {response.StatusCode} \nEltárolt Ticket lekérdezésése:");
+        GetOneTicket(client, ticket.Id.ToString());
+    }
+
     private async static void ManualRequest(HttpClient client)
     {
-        Console.Write("8: Írd be a lekérdezést: ");
+        Console.Write("8: Írd be a kiküldendő lekérdezést: ");
         string request = Console.ReadLine();
         HttpResponseMessage response = await client.GetAsync(request);
         Console.WriteLine($" A lekérdezés eredménye \tStátusz kód: {(int)response.StatusCode}, {response.StatusCode}");
