@@ -27,7 +27,7 @@ internal static class Program
                 case '5': NewTicket(client); break;
                 // case '6': ModyfyTicket(client); break;
                 // case '7': ModyfyTicketStatus(client); break;
-                // case '8': DeleteTicket(client); break;
+                case '8': DeleteTicket(client); break;
                 case '9': ManualRequest(client); break;
             }
         } while (true);
@@ -173,6 +173,22 @@ internal static class Program
         var response = client.PostAsync(Url + "api/Tickets", content).Result;
         Console.WriteLine($"\n --> {response.StatusCode} \nEltárolt Ticket lekérdezésése:");
         GetOneTicket(client, ticket.Id.ToString());
+    }
+
+    private static void DeleteTicket(HttpClient client)
+    {
+        Console.Write("8: A törlendő Ticket ID-ja: ");
+        string id = Console.ReadLine() ?? string.Empty;
+
+        HttpResponseMessage response = client.DeleteAsync(Url + "api/Tickets/" + id).Result;
+        if (!response.IsSuccessStatusCode)
+        {
+            Console.WriteLine("Nem sikerűlt törölni!!!\n----------------------------------------------");
+            return;
+        }
+
+        Console.WriteLine($"\n --> {response.StatusCode} \nTörlés ellenőrzése a Ticket lekérdezésével:");
+        GetOneTicket(client, id);
     }
 
     private async static void ManualRequest(HttpClient client)
