@@ -24,12 +24,12 @@ Accept: application/json
 ###
 
 
-### Új tiket létrehozása
+### Új tiket létrehozása    
 POST {{baseUrl}}/api/Tickets
 Content-Type: application/json
 Accept: application/json
 
-#A kiküldeni szánt json adat {} 
+##// kiküldeni szánt json adat {} 
 {
   "title": "Nyomtatási probléma",
   "description": "Nem tud a user nyomtatni.",
@@ -37,7 +37,3 @@ Accept: application/json
 }
 
 ###
-
-
-
-

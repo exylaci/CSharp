@@ -1,15 +1,15 @@
 ﻿using ASPdotNETticketAPI.Enums;
 
-namespace ASPdotNETticketAPI.Dtos.Tickets;
+namespace ASPdotNETticketAPI.Entities;
 
-public class TicketDto
+public class Ticket
 {
     public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
     public string Description { get; set; } = string.Empty;
     public TicketStatus Status { get; set; } = TicketStatus.Open;
     public TicketPriority Priority { get; set; } = TicketPriority.Medium;
-    public DateTime CreatedAt { get; set; }
     public int CategoryId { get; set; } //Kibővítjük a programunkat kategóriákkal
-    public string CategoryName { get; set; } = string.Empty;
+    public DateTime CreatedAt { get; set; } = DateTime.Now;
+    public Category Category { get; set; } = null;
 }
