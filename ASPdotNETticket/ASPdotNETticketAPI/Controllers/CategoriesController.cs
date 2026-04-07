@@ -11,9 +11,9 @@ public class CategoriesController : ControllerBase  //Ahhoz hogy tudjuk milyen k
 {
     private readonly AppDbContext dbContext;
 
-    public CategoriesController(AppDbContext dbCcontext)
+    public CategoriesController(AppDbContext dbContext)
     {
-        this.dbContext = dbCcontext;
+        this.dbContext = dbContext;
     }
 
     [HttpGet]

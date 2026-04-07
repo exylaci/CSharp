@@ -2,7 +2,7 @@
 
 namespace ASPdotNETticketAPI.Dtos.Tickets;
 
-public class TicketDto
+public class TicketDto  //Ezt adjuk vissza egy GET request kérésre (Kimenő modell)
 {
     public int Id { get; set; }
     public string Title { get; set; } = string.Empty;
@@ -10,6 +10,6 @@ public class TicketDto
     public TicketStatus Status { get; set; } = TicketStatus.Open;
     public TicketPriority Priority { get; set; } = TicketPriority.Medium;
     public DateTime CreatedAt { get; set; }
-    public int CategoryId { get; set; } //Kibővítjük a programunkat kategóriákkal
+    public int CategoryId { get; set; }
     public string CategoryName { get; set; } = string.Empty;
 }
