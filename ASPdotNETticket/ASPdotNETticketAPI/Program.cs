@@ -1,4 +1,6 @@
 using ASPdotNETticketAPI.Data;
+using ASPdotNETticketAPI.Services.Interfaces;
+using ASPdotNETticketAPI.Services.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -31,6 +33,9 @@ builder.Services.AddDbContext<AppDbContext>(options => options // A database con
     .UseSeeding((context, _) => SeedData.Initialize((AppDbContext)context)) //A SeedData.cs-ben felvett kezdeti adatok betöltése
     .UseAsyncSeeding((context, _, cancellationToken) => SeedData.InitializeAsync((AppDbContext)context, cancellationToken)));
 
+
+builder.Services.AddScoped<ITicketService, TicketService>();
+builder.Services.AddScoped<ICategoryService, CategoryService>();
 
 var app = builder.Build();
 
