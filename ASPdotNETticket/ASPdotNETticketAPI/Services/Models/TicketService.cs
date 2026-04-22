@@ -1,4 +1,5 @@
 ﻿using ASPdotNETticketAPI.Data;
+using ASPdotNETticketAPI.Dtos.Common;
 using ASPdotNETticketAPI.Dtos.Tickets;
 using ASPdotNETticketAPI.Entities;
 using ASPdotNETticketAPI.Enums;
@@ -16,14 +17,99 @@ public class TicketService : ITicketService
         this.dbContext = dbContext;
     }
 
-    public async Task<List<TicketDto>> GetAllAsync()
+    public async Task<PagedResultDto<TicketDto>> GetAllAsync(GetTicketsQueryDto query)
     {
-        return dbContext
+        IQueryable<Ticket> ticketsQuery = dbContext
             .Tickets
-            .Include(t => t.Category)
-            .OrderByDescending(t => t.Id)
-            .Select(MapToTicketDto)
-            .ToList();
+            .AsNoTracking() //Csak olvasunk, nem akarjuk a betöltött adatokat módosítani
+            .Include(t => t.Category);
+
+        //1.Keresés
+        string normalizedSearchTerm = query.SearchTerm?.Trim();
+        if (!string.IsNullOrWhiteSpace(normalizedSearchTerm))
+        {
+            string? loweredSearchTerm = normalizedSearchTerm.ToLower();
+
+            ticketsQuery = ticketsQuery.Where(t => t.Title.ToLower().Contains(loweredSearchTerm) || //Címben 
+                                                   t.Description.ToLower().Contains(loweredSearchTerm)); //és leírásban is keresünk
+        }
+
+        //2.SZURES
+
+        if (query.Status.HasValue)
+        {
+            ticketsQuery = ticketsQuery.Where(t => t.Status == query.Status.Value);
+        }
+
+        if (query.Priority.HasValue)
+        {
+            ticketsQuery = ticketsQuery.Where(t => t.Priority == query.Priority.Value);
+        }
+
+        if (query.CategoryId.HasValue)
+        {
+            ticketsQuery = ticketsQuery.Where(t => t.CategoryId == query.CategoryId.Value);
+        }
+
+        //3. LAPOZAS
+        string normalizedSortBy = query.SortBy?.Trim().ToLowerInvariant() ?? "createdat"; //culture info alapján tudja az ékezetes karaktereket is kisbetűsre cserélni
+        string normalizedSortDirection = query.SortDirection?.Trim().ToLowerInvariant() ?? "desc";
+        bool isAscending = normalizedSortDirection == "asc";
+
+        ticketsQuery = (normalizedSortBy, isAscending) switch
+        {
+            ("title", true) => ticketsQuery.OrderBy(t => t.Title),
+            ("title", false) => ticketsQuery.OrderByDescending(t => t.Title),
+            ("priority", true) => ticketsQuery.OrderBy(t => t.Priority),
+            ("priority", false) => ticketsQuery.OrderByDescending(t => t.Priority),
+            ("status", true) => ticketsQuery.OrderBy(t => t.Status),
+            ("status", false) => ticketsQuery.OrderByDescending(t => t.Status),
+            ("category", true) => ticketsQuery.OrderBy(t => t.Category),
+            ("category", false) => ticketsQuery.OrderByDescending(t => t.Category),
+            ("createdat", true) => ticketsQuery.OrderBy(t => t.CreatedAt),
+            ("createdat", false) => ticketsQuery.OrderByDescending(t => t.CreatedAt),
+            _ => ticketsQuery.OrderByDescending(t => t.CreatedAt)
+        };
+
+        //4.találatszám
+        int totalCount = await ticketsQuery.CountAsync();
+
+
+        //5. Lapozas
+        //--page1 -> skip 0
+        //--page2 -> skip pagesize
+        //--page3 -> skip pagesize*2
+
+        int skip = (query.PageNumber - 1) * query.PageSize;
+
+        List<TicketDto> items = await ticketsQuery
+            .Skip(skip)
+            .Take(query.PageSize)
+            .Select(t => new TicketDto
+            {
+                Id = t.Id,
+                Title = t.Title,
+                Description = t.Description,
+                Priority = t.Priority,
+                CategoryId = t.CategoryId,
+                CategoryName = t.Category.Name,
+                CreatedAt = t.CreatedAt
+            })
+            .ToListAsync();
+
+        //6. METAADATOK
+        int totalPages = totalCount == 0 ? 0 : (int)Math.Ceiling(totalCount / (double)query.PageSize);
+
+        return new PagedResultDto<TicketDto>
+        {
+            Items = items,
+            PageNumber = query.PageNumber,
+            PageSize = query.PageSize,
+            TotalCount = totalCount,
+            TotalPages = totalPages
+            // HasPreviousPage = query.PageNumber > 1,
+            // HasNextPage = query.PageNumber < totalPages
+        };
     }
 
 

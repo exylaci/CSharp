@@ -1,38 +1,77 @@
-﻿## Teszteléshez írt scriptek
+﻿@baseUrl = https://localhost:7210
 
-# változó definiálása, később dupla kapcsoszárójelek között lehet hivatkozni rá {{baseUrl}} 
-@baseUrl = https://localhost:7210
-
-### Az összes Kategória lekérdezése:
-GET {{baseUrl}}/api/Categories
-Accept: application/json
-
-###
-
-### Az összes ticket lekérdezése:
+### Összes ticket lekérdezése.      // Ez a ### a komment, blokk jelzés és egyben fejléc is a megjelenítésében. 
 GET {{baseUrl}}/api/Tickets
 Accept: application/json
 
 ###
 
-### Egy ticket lekérdezése azonosító alapján:
+
+### Összes kategoria lekérdezése.    
+GET {{baseUrl}}/api/Categories
+Accept: application/json
+
+###
+
+### Egy ticket lekérdezése:
 GET {{baseUrl}}/api/Tickets/1
 Accept: application/json
 
 ###
 
-### Egy nemlétező ticket lekérése:
+### Keresés szövegre
+GET {{baseUrl}}/api/Tickets?searchTerm=bejelentkez
+Accept: application/json
+
+###
+
+### Szűrés státusz szerint
+GET {{baseUrl}}/api/Tickets?status=1
+Accept: application/json
+
+###
+
+### Szűrés prioritás szerint
+GET {{baseUrl}}/api/Tickets?priority=4
+Accept: application/json
+
+###
+
+### Rendezés cím szerint növekvőben
+GET {{baseUrl}}/api/Tickets?sortBy=title&sortDirection=asc
+Accept: application/json
+
+###
+
+### Lapozás elso oldal 2 elemmel
+GET {{baseUrl}}/api/Tickets?pageNumber=1&pageSize=2
+Accept: application/json
+
+###
+
+### Lapozás 2. oldal 2 elemmel
+GET {{baseUrl}}/api/Tickets?pageNumber=2&pageSize=2
+Accept: application/json
+
+###
+
+### Összetett query
+GET {{baseUrl}}/api/Tickets?searchTerm=a&status=1&sortBy=priority&sortDirection=desc&pageNumnber=1&pageSize=5
+Accept: application/json
+
+###
+
+### Nemlétező lekérése
 GET {{baseUrl}}/api/Tickets/999
 Accept: application/json
 
 ###
 
-### Új tiket létrehozása - hibásan
+### Új tiket létrehozása hibásan
 POST {{baseUrl}}/api/Tickets
 Content-Type: application/json
 Accept: application/json
 
-## //a kikiküldeni szánt json adatot {} közé kell tenni 
 {
   "title": "Nyomtatási probléma",
   "description": "Nem tud a user nyomtatni.",
@@ -41,47 +80,48 @@ Accept: application/json
 
 ###
 
-### Új tiket létrehozása - jól
+### Új tiket létrehozása jól
 POST {{baseUrl}}/api/Tickets
 Content-Type: application/json
 Accept: application/json
 
 {
   "title": "Nyomtatási probléma",
-  "description": "Nem tud a user nyomtatni, mert hibát dob közben a rendszer.",
+  "description": "Nem tud a user nyomtatni.",
   "priority": 3,
   "categoryId": 1
 }
 
 ###
 
-### Új tiket létrehozása - túl rövid cím
+### Új tiket létrehozása - tűl rövid leírás
 POST {{baseUrl}}/api/Tickets
 Content-Type: application/json
 Accept: application/json
 
 {
-  "title": "Ny",
-  "description": "d a user nyomtatni, mert hibát dob közben a rendszer.",
+  "title": "Nyomtatási probléma",
+  "description": "Nem",
   "priority": 4,
   "categoryId": 1
 }
 
 ###
 
-### Új tiket létrehozása - túl rövid leírás
+### Új tiket létrehozása - tűl rövid title
 POST {{baseUrl}}/api/Tickets
 Content-Type: application/json
 Accept: application/json
 
 {
-  "title": "Nyomtatási probléma (Rövid leírás)",
-  "description": "Nem tud a user nyomtatni, ",
+  "title": "s",
+  "description": "Nem tud a user nyomtatni.",
   "priority": 4,
   "categoryId": 1
 }
 
 ###
+
 
 ### Tiket módosítása
 PUT {{baseUrl}}/api/Tickets/4
@@ -89,16 +129,16 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "title": "Nyomtatási probléma - MÓDOSÍTVA",
-  "description": "Nem tud a user nyomtatni, mert hibát dob közben a rendszer.",
+  "title": "Nyomtatási probléma",
+  "description": "Nem tud a user nyomtatni.",
   "priority": 4,
   "categoryId": 1
 }
 
 ###
 
-### Tiket státusz módosítása
-PATCH {{baseUrl}}/api/Tickets/9/status
+### Tiket státusz módosítása jól
+PUT {{baseUrl}}/api/Tickets/1
 Content-Type: application/json
 Accept: application/json
 
@@ -108,8 +148,8 @@ Accept: application/json
 
 ###
 
-### Tiket státusz módosítása - Hibásan
-PATCH {{baseUrl}}/api/Tickets/9/status
+### Tiket státusz módosítása hibás
+PUT {{baseUrl}}/api/Tickets/1/Status
 Content-Type: application/json
 Accept: application/json
 
@@ -119,8 +159,13 @@ Accept: application/json
 
 ###
 
+
 ### Tiket törlése
-DELETE {{baseUrl}}/api/Tickets/4
+DELETE  {{baseUrl}}/api/Tickets/4
 Accept: application/json
 
 ###
+
+
+
+

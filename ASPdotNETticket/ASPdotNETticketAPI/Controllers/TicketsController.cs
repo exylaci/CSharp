@@ -1,4 +1,5 @@
 ﻿using ASPdotNETticketAPI.Data;
+using ASPdotNETticketAPI.Dtos.Common;
 using ASPdotNETticketAPI.Dtos.Tickets;
 using ASPdotNETticketAPI.Entities;
 using ASPdotNETticketAPI.Enums;
@@ -21,11 +22,11 @@ public class TicketsController : ControllerBase
     }
 
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<TicketDto>>> GetAll()
+    public async Task<ActionResult<PagedResultDto<TicketDto>>> GetAll([FromQuery] GetTicketsQueryDto query)
     {
-        List<TicketDto> result = await ticketService.GetAllAsync();
+        PagedResultDto<TicketDto> result = await ticketService.GetAllAsync(query);
 
-        return Ok(result); //OK: 200 státuszkód. Fontos, mert a másik fél a státuszkód alapján folytatja a működését, kezdi el feldolgozni (vagy sem) a kapott adatokat.
+        return Ok(result); //OK: 200 státuszkód
     }
 
     [HttpGet("{id:int}")]
