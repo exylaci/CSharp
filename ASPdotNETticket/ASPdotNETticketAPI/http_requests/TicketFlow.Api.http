@@ -1,4 +1,41 @@
 ﻿@baseUrl = https://localhost:7210
+@token = valami
+
+### Regisztráció - új user
+POST {{baseUrl}}/api/auth/register
+Content-Type: application/json
+Accept: application/json
+
+{
+  "fullName": "Minta Mókus",
+  "email": "minta@pelda.hu",
+  "password": "Pelda123!"
+}
+
+###
+
+
+### Login - seedelt admin user
+POST {{baseUrl}}/api/Auth/login
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "admin@pelda.hu",
+  "password": "Admin123"
+}
+
+###
+
+
+### Saját user adatai - token kell
+GET {{baseUrl}}/api/Auth/me
+Authorization: Bearer {{token}}
+Accept: application/json
+
+###
+
+
 
 ### Összes ticket lekérdezése.      // Ez a ### a komment, blokk jelzés és egyben fejléc is a megjelenítésében. 
 GET {{baseUrl}}/api/Tickets
@@ -20,43 +57,58 @@ Accept: application/json
 ###
 
 ### Keresés szövegre
-GET {{baseUrl}}/api/Tickets?searchTerm=bejelentkez
+GET {{baseUrl}}/api/Tickets?
+    searchTerm=bejelentkez
 Accept: application/json
 
 ###
 
 ### Szűrés státusz szerint
-GET {{baseUrl}}/api/Tickets?status=1
+GET {{baseUrl}}/api/Tickets?
+    status=1
 Accept: application/json
 
 ###
 
 ### Szűrés prioritás szerint
-GET {{baseUrl}}/api/Tickets?priority=4
+GET {{baseUrl}}/api/Tickets?
+    priority=4
 Accept: application/json
 
 ###
 
 ### Rendezés cím szerint növekvőben
-GET {{baseUrl}}/api/Tickets?sortBy=title&sortDirection=asc
+GET {{baseUrl}}/api/Tickets?
+    sortBy=title&
+    sortDirection=asc
 Accept: application/json
 
 ###
 
 ### Lapozás elso oldal 2 elemmel
-GET {{baseUrl}}/api/Tickets?pageNumber=1&pageSize=2
+GET {{baseUrl}}/api/Tickets?
+    pageNumber=1&
+    pageSize=2
 Accept: application/json
 
 ###
 
 ### Lapozás 2. oldal 2 elemmel
-GET {{baseUrl}}/api/Tickets?pageNumber=2&pageSize=2
+GET {{baseUrl}}/api/Tickets?
+    pageNumber=2&
+    pageSize=2
 Accept: application/json
 
 ###
 
 ### Összetett query
-GET {{baseUrl}}/api/Tickets?searchTerm=a&status=1&sortBy=priority&sortDirection=desc&pageNumnber=1&pageSize=5
+GET {{baseUrl}}/api/Tickets?
+    searchTerm=a&
+    status=1&
+    sortBy=priority&
+    sortDirection=desc&
+    pageNumnber=1&
+    pageSize=5
 Accept: application/json
 
 ###
@@ -82,6 +134,7 @@ Accept: application/json
 
 ### Új tiket létrehozása jól
 POST {{baseUrl}}/api/Tickets
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Accept: application/json
 

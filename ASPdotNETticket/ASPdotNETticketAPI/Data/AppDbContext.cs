@@ -7,6 +7,7 @@ public class AppDbContext : DbContext
 {
     public DbSet<Ticket> Tickets => Set<Ticket>();
     public DbSet<Category> Categories => Set<Category>();
+    public DbSet<AppUser> Users => Set<AppUser>();
 
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
@@ -34,5 +35,24 @@ public class AppDbContext : DbContext
             .WithMany(c => c.Tickets)
             .HasForeignKey(t => t.CategoryId)
             .OnDelete(DeleteBehavior.Restrict); //1db Category-ája van, de egy Category-ának lehet több Ticket-e is. Az idegen kulcs a CategoryID. Törlésre a megkötés: Cascade, Restrict="Nem törlőlhető, amíg van külső függősége."
+        
+        modelBuilder.Entity<AppUser>()
+            .HasIndex(u => u.Email)
+            .IsUnique();
+        modelBuilder.Entity<AppUser>()
+            .Property(u => u.FullName)
+            .IsRequired()
+            .HasMaxLength(100);
+        modelBuilder.Entity<AppUser>()
+            .Property(u => u.Email)
+            .IsRequired()
+            .HasMaxLength(150);
+        modelBuilder.Entity<AppUser>()
+            .Property(u => u.PasswordHash)
+            .IsRequired();
+        modelBuilder.Entity<AppUser>()
+            .Property(u => u.Role)
+            .IsRequired()
+            .HasMaxLength(30);
     }
 }

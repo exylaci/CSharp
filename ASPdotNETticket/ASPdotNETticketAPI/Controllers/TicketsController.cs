@@ -5,6 +5,7 @@ using ASPdotNETticketAPI.Entities;
 using ASPdotNETticketAPI.Enums;
 using ASPdotNETticketAPI.Services.Interfaces;
 using ASPdotNETticketAPI.Services.Models;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 
@@ -41,6 +42,7 @@ public class TicketsController : ControllerBase
         return Ok(result.Data); //OK: 200 státuszkód. Ráérünk csak akkor konvertálni, ha van ilyen. Felesleges ezzel terhelni a processzort még a viszgálat előtt.
     }
 
+    [Authorize]
     [HttpPost]
     public async Task<ActionResult<TicketDto>> Create([FromBody] CreateTicketDto dto) //[FromBody]: A request path-jából kiszedi és a dto változóba beteszi a értékeket
     {
@@ -53,6 +55,7 @@ public class TicketsController : ControllerBase
         return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data); //Ha eljutott eddig, akoor biztos h nem null a result.Data
     }
 
+    [Authorize]
     [HttpPut("{id:int}")]
     public async Task<ActionResult<TicketDto>> Update(int id, [FromBody] UpdateTicketDto dto) //Csak módosításra használjuk
     {
@@ -66,6 +69,7 @@ public class TicketsController : ControllerBase
         return Ok(result.Data);
     }
 
+    [Authorize]
     [HttpPatch("{id:int}/status")]
     public async Task<ActionResult<TicketDto>> UpdateStatus(int id, [FromBody] UpdateTicketStatusDto dto)
     {
@@ -78,6 +82,7 @@ public class TicketsController : ControllerBase
         return Ok(result.Data);
     }
 
+    [Authorize]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<TicketDto>> Delete(int id)
     {
