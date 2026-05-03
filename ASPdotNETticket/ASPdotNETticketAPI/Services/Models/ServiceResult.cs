@@ -1,6 +1,6 @@
 ﻿namespace ASPdotNETticketAPI.Services.Models;
 
-public class ServiceResult //Csak arra használjuk, hogy sikerűlt-e a művelet, vagy sem. Nem konkrét adat visszaadására. Pl DELETE
+public class ServiceResult //Csak arra használjuk, hogy sikerűlt-e a művelet, vagy sem (pl: DELETE). Nem konkrét adat visszaadására. 
 {
     public bool IsSuccess { get; private init; } //private init: csak osztályon belül és csak egyszer állíthatók be az értékek
     public bool IsNotFound { get; private init; }

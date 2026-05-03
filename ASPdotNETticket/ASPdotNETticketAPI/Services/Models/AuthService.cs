@@ -11,7 +11,7 @@ namespace ASPdotNETticketAPI.Services.Models;
 public class AuthService : IAuthService
 {
     private readonly AppDbContext dbContext;
-    private readonly IPasswordHasher<AppUser> passwordHasher; //A beépített hashert használjuk, ez annyirra nem biztonságos, de beépített egyszerű használni
+    private readonly IPasswordHasher<AppUser> passwordHasher; //A beépített hashert használjuk, ez annyira nem biztonságos, de beépített, egyszerű használni
     private readonly IJwtTokenService jwtTokenService;
 
     public AuthService(AppDbContext dbContext, IPasswordHasher<AppUser> passwordHasher, IJwtTokenService jwtTokenService)
@@ -43,31 +43,31 @@ public class AuthService : IAuthService
             IsActive = true
         };
 
-        user.PasswordHash = passwordHasher.HashPassword(user, dto.Password);
-        dbContext.Users.Add(user);
-        await dbContext.SaveChangesAsync();
+        user.PasswordHash = passwordHasher.HashPassword(user, dto.Password);        //Hogy ne magát a jelszót tároljuk el.
+        dbContext.Users.Add(user);                                              //Hozzáadjuk a létrehozott usert
+        await dbContext.SaveChangesAsync();                                         //elmentetjük az adatbázisba
         return ServiceResult<AuthResponseDto>.Success(CreateAuthResponse(user));
     }
 
     public async Task<ServiceResult<AuthResponseDto>> LoginAsync(LoginRequestDto dto)
     {
-        string normailzedEmai = dto.Email.Trim().ToLowerInvariant();
-        AppUser? user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == normailzedEmai);
+        string normailzedEmail = dto.Email.Trim().ToLowerInvariant();
+        AppUser? user = await dbContext.Users.FirstOrDefaultAsync(u => u.Email == normailzedEmail);
 
-        if (user == null)
+        if (user is null)
         {
-            return ServiceResult<AuthResponseDto>.Validation("creditials", "Hibás email cím, vgy jelszó!");
+            return ServiceResult<AuthResponseDto>.Validation("credentials", "Hibás email cím, vgy jelszó!");
         }
 
         if (!user.IsActive)
         {
-            return ServiceResult<AuthResponseDto>.Validation("creditials", "A user jelenleg inaktív");
+            return ServiceResult<AuthResponseDto>.Validation("credentials", "A user jelenleg inaktív");
         }
 
         PasswordVerificationResult verificationResult = passwordHasher.VerifyHashedPassword(user, user.PasswordHash, dto.Password);
         if (verificationResult == PasswordVerificationResult.Failed)
         {
-            return ServiceResult<AuthResponseDto>.Validation("creditials", "Hibás jelszó!");
+            return ServiceResult<AuthResponseDto>.Validation("credentials", "Hibás jelszó!");
         }
 
         if (verificationResult == PasswordVerificationResult.SuccessRehashNeeded)
@@ -83,9 +83,9 @@ public class AuthService : IAuthService
     {
         AppUser? user = await dbContext.Users.AsNoTracking().FirstOrDefaultAsync(u => u.Id == userId);
 
-        if (user == null)
+        if (user is null)
         {
-            return ServiceResult<CurrentUserDto>.NotFound("A felhasználó nem telálható!");
+            return ServiceResult<CurrentUserDto>.NotFound("A felhasználó nem található!");
         }
 
         CurrentUserDto dto = new CurrentUserDto
@@ -110,7 +110,7 @@ public class AuthService : IAuthService
             Email = user.Email,
             Role = RoleNames.User,
             Token = tokenResult.token,
-            ExpiresAtUtc = tokenResult.ExpiresAtUtc
+            ExpiresAtUtc = tokenResult.ExpiresAtUtc.AddMinutes(120)
         };
     }
 }

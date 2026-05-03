@@ -1,4 +1,5 @@
-﻿using ASPdotNETticketAPI.Data;
+﻿using ASPdotNETticketAPI.Constants;
+using ASPdotNETticketAPI.Data;
 using ASPdotNETticketAPI.Dtos.Common;
 using ASPdotNETticketAPI.Dtos.Tickets;
 using ASPdotNETticketAPI.Entities;
@@ -22,6 +23,7 @@ public class TicketsController : ControllerBase
         this.ticketService = ticketService; //dependency Injection: a kontruktorban az adatbázis "elérése"
     }
 
+    [Authorize(Roles = RoleNames.Admin + "," + RoleNames.Agent)]
     [HttpGet]
     public async Task<ActionResult<PagedResultDto<TicketDto>>> GetAll([FromQuery] GetTicketsQueryDto query)
     {
@@ -33,33 +35,33 @@ public class TicketsController : ControllerBase
     [HttpGet("{id:int}")]
     public async Task<ActionResult<TicketDto>> GetById(int id) //Nem kell vizsgálni a paramétert, mert csakis és kizárólag int típusú paraméter esetén hívódik meg ez a függvény
     {
-        ServiceResult<TicketDto>? result = await ticketService.GetByIdAsync(id);
+        ServiceResult<TicketDto>? result = await ticketService.GetByIdAsync(id, 0, "");
         if (result.IsNotFound)
         {
-            return NotFound(new { message = $"A {id} azonosítóju tiket nem található." });
+            return NotFound(new { message = $"A {id} azonosítójú tiket nem található." });
         }
 
         return Ok(result.Data); //OK: 200 státuszkód. Ráérünk csak akkor konvertálni, ha van ilyen. Felesleges ezzel terhelni a processzort még a viszgálat előtt.
     }
 
-    [Authorize]
+    [Authorize] //Ha nincs érvényes token, akkor az endpoint nem jut el a kontroller kódjára. (Védett a Create.)
     [HttpPost]
     public async Task<ActionResult<TicketDto>> Create([FromBody] CreateTicketDto dto) //[FromBody]: A request path-jából kiszedi és a dto változóba beteszi a értékeket
     {
-        ServiceResult<TicketDto>? result = await ticketService.CreateAsync(dto);
+        ServiceResult<TicketDto>? result = await ticketService.CreateAsync(dto, 0);
         if (!result.IsSuccess)
         {
             return CreateActionResultFromServiceResult(result);
         }
 
-        return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data); //Ha eljutott eddig, akoor biztos h nem null a result.Data
+        return CreatedAtAction(nameof(GetById), new { id = result.Data!.Id }, result.Data); //Ha eljutott eddig, akkor biztos h nem null a result.Data
     }
 
     [Authorize]
     [HttpPut("{id:int}")]
     public async Task<ActionResult<TicketDto>> Update(int id, [FromBody] UpdateTicketDto dto) //Csak módosításra használjuk
     {
-        ServiceResult<TicketDto>? result = await ticketService.UpdateAsync(id, dto);
+        ServiceResult<TicketDto>? result = await ticketService.UpdateAsync(id, dto, 0, "");
 
         if (!result.IsSuccess)
         {
@@ -73,7 +75,7 @@ public class TicketsController : ControllerBase
     [HttpPatch("{id:int}/status")]
     public async Task<ActionResult<TicketDto>> UpdateStatus(int id, [FromBody] UpdateTicketStatusDto dto)
     {
-        ServiceResult<TicketDto>? result = await ticketService.UpdateStatusAsync(id, dto);
+        ServiceResult<TicketDto>? result = await ticketService.UpdateStatusAsync(id, dto, 0, "");
         if (!result.IsSuccess)
         {
             return CreateActionResultFromServiceResult(result);

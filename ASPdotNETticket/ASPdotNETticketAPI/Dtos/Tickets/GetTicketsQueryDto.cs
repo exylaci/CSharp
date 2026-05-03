@@ -4,8 +4,9 @@ using ASPdotNETticketAPI.Enums;
 namespace ASPdotNETticketAPI.Dtos.Tickets;
 
 public class GetTicketsQueryDto
+//A DTO mindig tiszta kell legyen, nem lehet benne business logika, csak validátor, vagy default érték megadás
 {
-    public string? SearchTerm { get; set; }
+    public string? SearchTerm { get; set; } //Kereső kifejezésnek 
     public TicketStatus? Status { get; set; }
     public TicketPriority? Priority { get; set; }
 

@@ -18,7 +18,7 @@ public class AuthController : ControllerBase
         this.authService = authService;
     }
 
-    [AllowAnonymous] //Jelezi, hogy ehhez nem kell authentikáció
+    [AllowAnonymous] //Jelezi, hogy ehhez NEM kell authentikáció
     [HttpPost("register")]
     public async Task<ActionResult<AuthResponseDto>> Register([FromBody] RegisterRequestDto dto)
     {
@@ -26,13 +26,13 @@ public class AuthController : ControllerBase
 
         if (!result.IsSuccess)
         {
-            return CreateAtActionResultFromServiceResult(result);
+            return CreateActionResultFromServiceResult(result);
         }
 
         return Ok(result.Data);
     }
 
-    [AllowAnonymous] //Jelezi, hogy ehhez nem kell authentikáció
+    [AllowAnonymous] //Jelezi, hogy ehhez NEM kell authentikáció
     [HttpPost("login")]
     public async Task<ActionResult<AuthResponseDto>> Login([FromBody] LoginRequestDto dto)
     {
@@ -40,16 +40,16 @@ public class AuthController : ControllerBase
 
         if (!result.IsSuccess)
         {
-            return CreateAtActionResultFromServiceResult(result);
+            return CreateActionResultFromServiceResult(result);
         }
 
         return Ok(result.Data);
     }
 
-    [Authorize] //Jelezi, hogy ehhez nem kell authentikáció
+    [Authorize] //Jelezi, hogy ehhez KELL authentikáció
     [HttpGet("me")]
-    public async Task<ActionResult<CurrentUserDto>> Me([FromBody] LoginRequestDto dto)
-    // Authentikálva van, tehát a kliens a jason web tokent vissza kell nekünk adja, és az abban tárolt információkból kinyerhető a name identifier  clameből ki tudjuk szedni a user azonosítóját, ha megvan az ID-ja, akkor a user entity segítségével meg tudjuk keresni
+    public async Task<ActionResult<CurrentUserDto>> Me()
+        // Authentikálva van, tehát a kliens a jason web tokent vissza kell nekünk adja, és az abban tárolt információkból kinyerhető a name identifier clameből ki tudjuk szedni a user azonosítóját, ha megvan az ID-ja, akkor a user entity segítségével meg tudjuk keresni
     {
         string? userIdClam = User.FindFirstValue(ClaimTypes.NameIdentifier);
         if (!int.TryParse(userIdClam, out int userId))
@@ -66,11 +66,11 @@ public class AuthController : ControllerBase
 
         return Ok(result.Data);
     }
-    
-    
-    private ActionResult<AuthResponseDto> CreateAtActionResultFromServiceResult<T>(ServiceResult<T> result)
+
+
+    private ActionResult CreateActionResultFromServiceResult<T>(ServiceResult<T> result)
     {
-        if (result.IsSuccess)
+        if (result.IsNotFound)
         {
             return NotFound(new { message = result.Message });
         }

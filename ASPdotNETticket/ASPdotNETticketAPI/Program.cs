@@ -34,17 +34,17 @@ builder.Services.AddControllers()
 //A connection stringet az appsettings.jason-ből olvassuk ki
 string connectionString = builder.Configuration.GetConnectionString("DefaultConnection") ?? throw new InvalidOperationException("A default connection string nincs beállítva."); //Ha nem tudjuk beolvasni az végzetes hiba.
 
-builder.Services.AddDbContext<AppDbContext>(options => options // A database context berakása a dependency konténerbe
-    .UseSqlite(connectionString) // UseSqLite - sql providert akarunk használni
-    .UseSeeding((context, _) => SeedData.Initialize((AppDbContext)context)) //A SeedData.cs-ben felvett kezdeti adatok betöltése
-    .UseAsyncSeeding((context, _, cancellationToken) => SeedData.InitializeAsync((AppDbContext)context, cancellationToken)));
+builder.Services.AddDbContext<AppDbContext>(options => // A database context berakása a dependency konténerbe
+    options.UseSqlite(connectionString) // UseSqLite - sql providert akarunk használni
+        .UseSeeding((context, _) => SeedData.Initialize((AppDbContext)context)) //A SeedData.cs-ben felvett kezdeti adatok betöltése
+        .UseAsyncSeeding((context, _, cancellationToken) => SeedData.InitializeAsync((AppDbContext)context, cancellationToken)));
 
 
 builder.Services.Configure<JwtSettings>(builder.Configuration.GetSection(JwtSettings.SectionName));
-//Be kell kötni a JasonWebTokenbe az autentikációt és a default sémát is ugyanúgy beállítani hogy az autorize dekorátorral működhessen:  Ehhez viszont kell a jason webtoken teljes settings, le kell tujuk kérni
+//Be kell kötni a JasonWebTokenbe az autentikációt és a default sémát is ugyanúgy beállítani hogy az autorize dekorátorral működhessen:  Ehhez viszont kell a jason webtoken teljes settings, vagyis le kell tujuk kérni
 JwtSettings jwtSettings = builder.Configuration.GetSection(JwtSettings.SectionName).Get<JwtSettings>()
                           ?? throw new InvalidOperationException("A jwt settings szekvencia nincs megfelelően beállítva!"); //Ha nem létezik az objektum, security okból, kötelező elszállnia a programnak.
-if (string.IsNullOrEmpty(jwtSettings.Key))
+if (string.IsNullOrWhiteSpace(jwtSettings.Key))
 {
     throw new InvalidOperationException("A jwt settings szekvencia nincs megfelelően beállítva!"); //Ha üres adattal tér vissza, akkor is szálljon el
 }
@@ -62,7 +62,7 @@ builder.Services
             ValidateIssuerSigningKey = true,
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(jwtSettings.Key)),
             ValidateLifetime = true,
-            ClockSkew = TimeSpan.Zero
+            ClockSkew = TimeSpan.Zero //Türelmi idő nullázása
         };
     });
 builder.Services.AddAuthorization();
@@ -70,10 +70,9 @@ builder.Services.AddScoped<IPasswordHasher<AppUser>, PasswordHasher<AppUser>>();
 builder.Services.AddScoped<IJwtTokenService, JwtTokenService>();
 builder.Services.AddScoped<IAuthService, AuthService>();
 
-
-
 builder.Services.AddScoped<ITicketService, TicketService>();
 builder.Services.AddScoped<ICategoryService, CategoryService>();
+builder.Services.AddScoped<IUserService, UserService>();
 
 var app = builder.Build();
 

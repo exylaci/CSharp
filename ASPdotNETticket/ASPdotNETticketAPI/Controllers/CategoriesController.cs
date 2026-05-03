@@ -10,7 +10,7 @@ namespace ASPdotNETticketAPI.Controllers;
 [Route("api/[controller]")]
 public class CategoriesController : ControllerBase //Ahhoz hogy tudjuk milyen kategóriák vannak egyáltalán, le kell kérdezni őket az adatbázisból
 {
-    //A kontrollerben semmi keresnivalója nincs az adatbázisnak. Ez csak a HTTP szintel foglalkozik, ezt kezeli. Az Adatbázist a Szervíz réteg kezeli.
+    //A kontrollerben semmi keresnivalója nincs az adatbázisnak. Ez csak a HTTP szintel foglalkozik, ezt kezeli. Az Adatbázist és a business logic-ot a Szervíz réteg kezeli, valósítja meg.
 
     private readonly ICategoryService categoryService;
 

@@ -1,5 +1,5 @@
 ﻿@baseUrl = https://localhost:7210
-@token = valami
+@token = eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1laWRlbnRpZmllciI6IjEiLCJodHRwOi8vc2NoZW1hcy54bWxzb2FwLm9yZy93cy8yMDA1LzA1L2lkZW50aXR5L2NsYWltcy9uYW1lIjoiUmVuZHN6ZXJnYXpkYSIsImh0dHA6Ly9zY2hlbWFzLnhtbHNvYXAub3JnL3dzLzIwMDUvMDUvaWRlbnRpdHkvY2xhaW1zL2VtYWlsYWRkcmVzcyI6ImFkbWluQHBlbGRhLmh1IiwiaHR0cDovL3NjaGVtYXMubWljcm9zb2Z0LmNvbS93cy8yMDA4LzA2L2lkZW50aXR5L2NsYWltcy9yb2xlIjoiQWRtaW4iLCJzdWIiOiIxIiwianRpIjoiYzljN2Y3N2QtZDcwMy00MjcxLWFhMjYtYzI5MTRkMmM2M2Q5IiwibmJmIjoxNzc3NzgzOTE4LCJleHAiOjE3Nzc3OTExMTgsImlzcyI6IkFTUGRvdE5FVHRpY2tldEFQSSIsImF1ZCI6IkFTUGRvdE5FVHRpY2tldEFQSSJ9.pUG92sjTpb8D3gwnfFCChjXijyG4Kzc9AgaPfJ34vfw
 
 ### Regisztráció - új user
 POST {{baseUrl}}/api/auth/register
@@ -9,7 +9,7 @@ Accept: application/json
 {
   "fullName": "Minta Mókus",
   "email": "minta@pelda.hu",
-  "password": "Pelda123!"
+  "password": "Minta123!"
 }
 
 ###
@@ -22,14 +22,14 @@ Accept: application/json
 
 {
   "email": "admin@pelda.hu",
-  "password": "Admin123"
+  "password": "Admin123!"
 }
 
 ###
 
 
 ### Saját user adatai - token kell
-GET {{baseUrl}}/api/Auth/me
+GET {{baseUrl}}/api/auth/me
 Authorization: Bearer {{token}}
 Accept: application/json
 
@@ -39,6 +39,7 @@ Accept: application/json
 
 ### Összes ticket lekérdezése.      // Ez a ### a komment, blokk jelzés és egyben fejléc is a megjelenítésében. 
 GET {{baseUrl}}/api/Tickets
+Authorization: Bearer {{token}}
 Accept: application/json
 
 ###
@@ -46,19 +47,24 @@ Accept: application/json
 
 ### Összes kategoria lekérdezése.    
 GET {{baseUrl}}/api/Categories
+Authorization: Bearer {{token}}
 Accept: application/json
 
 ###
 
 ### Egy ticket lekérdezése:
 GET {{baseUrl}}/api/Tickets/1
+Authorization: Bearer {{token}}
 Accept: application/json
 
 ###
 
+
+
 ### Keresés szövegre
 GET {{baseUrl}}/api/Tickets?
     searchTerm=bejelentkez
+Authorization: Bearer {{token}}
 Accept: application/json
 
 ###
@@ -66,6 +72,7 @@ Accept: application/json
 ### Szűrés státusz szerint
 GET {{baseUrl}}/api/Tickets?
     status=1
+Authorization: Bearer {{token}}
 Accept: application/json
 
 ###
@@ -73,6 +80,7 @@ Accept: application/json
 ### Szűrés prioritás szerint
 GET {{baseUrl}}/api/Tickets?
     priority=4
+Authorization: Bearer {{token}}
 Accept: application/json
 
 ###
@@ -81,6 +89,7 @@ Accept: application/json
 GET {{baseUrl}}/api/Tickets?
     sortBy=title&
     sortDirection=asc
+Authorization: Bearer {{token}}
 Accept: application/json
 
 ###
@@ -89,6 +98,7 @@ Accept: application/json
 GET {{baseUrl}}/api/Tickets?
     pageNumber=1&
     pageSize=2
+Authorization: Bearer {{token}}
 Accept: application/json
 
 ###
@@ -97,6 +107,7 @@ Accept: application/json
 GET {{baseUrl}}/api/Tickets?
     pageNumber=2&
     pageSize=2
+Authorization: Bearer {{token}}
 Accept: application/json
 
 ###
@@ -109,9 +120,13 @@ GET {{baseUrl}}/api/Tickets?
     sortDirection=desc&
     pageNumnber=1&
     pageSize=5
+Authorization: Bearer {{token}}
 Accept: application/json
 
 ###
+
+
+
 
 ### Nemlétező lekérése
 GET {{baseUrl}}/api/Tickets/999
@@ -121,6 +136,7 @@ Accept: application/json
 
 ### Új tiket létrehozása hibásan
 POST {{baseUrl}}/api/Tickets
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Accept: application/json
 
@@ -139,8 +155,8 @@ Content-Type: application/json
 Accept: application/json
 
 {
-  "title": "Nyomtatási probléma",
-  "description": "Nem tud a user nyomtatni.",
+  "title": "Nyomtatási probléma - újabb",
+  "description": "Nem tud a user nyomtatni. - újabb",
   "priority": 3,
   "categoryId": 1
 }
@@ -149,6 +165,7 @@ Accept: application/json
 
 ### Új tiket létrehozása - tűl rövid leírás
 POST {{baseUrl}}/api/Tickets
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Accept: application/json
 
@@ -163,6 +180,7 @@ Accept: application/json
 
 ### Új tiket létrehozása - tűl rövid title
 POST {{baseUrl}}/api/Tickets
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Accept: application/json
 
@@ -178,12 +196,13 @@ Accept: application/json
 
 ### Tiket módosítása
 PUT {{baseUrl}}/api/Tickets/4
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Accept: application/json
 
 {
   "title": "Nyomtatási probléma",
-  "description": "Nem tud a user nyomtatni.",
+  "description": "Nem tud a user nyomtatni sem.",
   "priority": 4,
   "categoryId": 1
 }
@@ -192,6 +211,7 @@ Accept: application/json
 
 ### Tiket státusz módosítása jól
 PUT {{baseUrl}}/api/Tickets/1
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Accept: application/json
 
@@ -203,6 +223,7 @@ Accept: application/json
 
 ### Tiket státusz módosítása hibás
 PUT {{baseUrl}}/api/Tickets/1/Status
+Authorization: Bearer {{token}}
 Content-Type: application/json
 Accept: application/json
 
@@ -214,7 +235,8 @@ Accept: application/json
 
 
 ### Tiket törlése
-DELETE  {{baseUrl}}/api/Tickets/4
+DELETE  {{baseUrl}}/api/Tickets/9
+Authorization: Bearer {{token}}
 Accept: application/json
 
 ###

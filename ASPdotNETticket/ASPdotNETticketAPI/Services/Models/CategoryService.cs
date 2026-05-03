@@ -7,9 +7,9 @@ namespace ASPdotNETticketAPI.Services.Models;
 
 public class CategoryService : ICategoryService
 {
-    private readonly AppDbContext dbContext;    //A koontroller réteg nem közvetlenül az adatbázissal dolgozik, hanem pl ezen a szervizen keresztűl éri el
+    private readonly AppDbContext dbContext; //A koontroller réteg nem közvetlenül az adatbázissal dolgozik, hanem pl ezen a szervizen keresztűl éri el
 
-    public CategoryService(AppDbContext dbContext)
+    public CategoryService(AppDbContext dbContext) //konstruktorban kapja meg függőségként az adatbázis eléréshez a kapcsolatot
     {
         this.dbContext = dbContext;
     }

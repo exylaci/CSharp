@@ -14,15 +14,15 @@ public static class SeedData
     public static void Initialize(AppDbContext context) //Az AppDbContext-en keresztűl végezzük el az adatbázishoz hozzáadaás műveleteket. 
     {
         SeedCategories(context);
-        SeedTickets(context);
         SeedUsers(context);
+        SeedTickets(context);
     }
 
     public static async Task InitializeAsync(AppDbContext context, CancellationToken cancellationToken = default) //Kell belőle egy async is, mert mi van, ha fut belőle mégegy példány? Akkor aszinkron kell megközelíeni a dolgot. Akkor ennek az init függvénynek már nem is kell futnia. Ehhez kell egy cancellation token, ami jelzni, hogy folyik-e kategóriával, jeggyel kapcsolatos művelet. 
     {
         await SeedCategoriesAsync(context, cancellationToken);
-        await SeedTicketsAsync(context, cancellationToken);
         await SeedUsersAsync(context, cancellationToken);
+        await SeedTicketsAsync(context, cancellationToken);
     }
 
     private static void SeedCategories(AppDbContext context)
@@ -89,15 +89,22 @@ public static class SeedData
         int featureCategoryId = context.Categories.First(c => c.Name == "Feature Request").Id;
         int supportCategoryId = context.Categories.First(c => c.Name == "Support").Id;
 
+        int adminId = context.Users.First(u => u.Email == "admin@pelda.hu").Id;
+        int agentId = context.Users.First(u => u.Email == "agent@pelda.hu").Id;
+        int userId = context.Users.First(u => u.Email == "user@pelda.hu").Id;
+
+
         context.Tickets.AddRange( //A minta jegy adat példányosítása és hozzádaása a data contexthez mehet egylépésben is.
             new Ticket
             {
                 Title = "Nem tud bejelentkezni a felhasználó",
                 Description = "A felhasználó helyes jeszóval sem tud bejelentkezni",
                 Status = TicketStatus.Open,
-                Priority = TicketPriority.Low,
+                Priority = TicketPriority.High,
                 CategoryId = bugCategoryId,
-                CreatedAt = DateTime.Now.AddHours(-5)
+                CreatedAt = DateTime.Now.AddHours(-5),
+                CreatedByUserId = userId,
+                AssignedToUserId = null
             },
             new Ticket
             {
@@ -106,7 +113,9 @@ public static class SeedData
                 Status = TicketStatus.Open,
                 Priority = TicketPriority.Medium,
                 CategoryId = featureCategoryId,
-                CreatedAt = DateTime.Now.AddHours(-3)
+                CreatedAt = DateTime.Now.AddHours(-3),
+                CreatedByUserId = userId,
+                AssignedToUserId = agentId
             },
             new Ticket
             {
@@ -115,7 +124,9 @@ public static class SeedData
                 Status = TicketStatus.InProgress,
                 Priority = TicketPriority.Low,
                 CategoryId = supportCategoryId,
-                CreatedAt = DateTime.Now.AddHours(-1)
+                CreatedAt = DateTime.Now.AddHours(-1),
+                CreatedByUserId = adminId,
+                AssignedToUserId = agentId
             }
         );
         context.SaveChanges();
@@ -132,15 +143,21 @@ public static class SeedData
         int featureCategoryId = context.Categories.First(c => c.Name == "Feature Request").Id;
         int supportCategoryId = context.Categories.First(c => c.Name == "Support").Id;
 
+        int adminId = context.Users.First(u => u.Email == "admin@pelda.hu").Id;
+        int agentId = context.Users.First(u => u.Email == "agent@pelda.hu").Id;
+        int userId = context.Users.First(u => u.Email == "user@pelda.hu").Id;
+
         context.Tickets.AddRange( //A minta jegy adat példányosítása és hozzádaása a data contexthez mehet egylépésben is.
             new Ticket
             {
                 Title = "Nem tud bejelentkezni a felhasználó",
                 Description = "A felhasználó helyes jeszóval sem tud bejelentkezni",
                 Status = TicketStatus.Open,
-                Priority = TicketPriority.Low,
+                Priority = TicketPriority.High,
                 CategoryId = bugCategoryId,
-                CreatedAt = DateTime.Now.AddHours(-5)
+                CreatedAt = DateTime.Now.AddHours(-5),
+                CreatedByUserId = userId,
+                AssignedToUserId = null
             },
             new Ticket
             {
@@ -149,7 +166,9 @@ public static class SeedData
                 Status = TicketStatus.Open,
                 Priority = TicketPriority.Medium,
                 CategoryId = featureCategoryId,
-                CreatedAt = DateTime.Now.AddHours(-3)
+                CreatedAt = DateTime.Now.AddHours(-3),
+                CreatedByUserId = userId,
+                AssignedToUserId = agentId
             },
             new Ticket
             {
@@ -158,7 +177,9 @@ public static class SeedData
                 Status = TicketStatus.InProgress,
                 Priority = TicketPriority.Low,
                 CategoryId = supportCategoryId,
-                CreatedAt = DateTime.Now.AddHours(-1)
+                CreatedAt = DateTime.Now.AddHours(-1),
+                CreatedByUserId = adminId,
+                AssignedToUserId = agentId
             }
         );
         await context.SaveChangesAsync(cancellationToken);
@@ -172,9 +193,9 @@ public static class SeedData
         }
 
         context.Users.AddRange(
-            CreateSeedUser("Rendszergazda", "admin@pelda.hu", RoleNames.Admin, "Admin123"),
-            CreateSeedUser("Agent Jakab", "agent@pelda.hu", RoleNames.Agent, "Agent123"),
-            CreateSeedUser("Teszt Elek", "user@pelda.hu", RoleNames.User, "User123"));
+            CreateSeedUser("Rendszergazda", "admin@pelda.hu", RoleNames.Admin, "Admin123!"),
+            CreateSeedUser("Agent Smith", "agent@pelda.hu", RoleNames.Agent, "Agent123!"),
+            CreateSeedUser("Teszt Elek", "user@pelda.hu", RoleNames.User, "User123!"));
         context.SaveChanges();
     }
 
@@ -186,20 +207,19 @@ public static class SeedData
         }
 
         context.Users.AddRange(
-            CreateSeedUser("Rendszergazda", "admin@pelda.hu", RoleNames.Admin, "Admin123"),
-            CreateSeedUser("Agent Jakab", "agent@pelda.hu", RoleNames.Agent, "Agent123"),
-            CreateSeedUser("Teszt Elek", "user@pelda.hu", RoleNames.User, "User123"));
+            CreateSeedUser("Rendszergazda", "admin@pelda.hu", RoleNames.Admin, "Admin123!"),
+            CreateSeedUser("Agent Smith", "agent@pelda.hu", RoleNames.Agent, "Agent123!"),
+            CreateSeedUser("Teszt Elek", "user@pelda.hu", RoleNames.User, "User123!"));
         await context.SaveChangesAsync(cancellationToken);
     }
 
     private static AppUser CreateSeedUser(string fullname, string email, string role, string password)
     {
-        string normalizedEmail = email.ToUpper();
-        string normalizedUserName = fullname.ToUpper();
+        string normalizedEmail = email.Trim().ToLowerInvariant();
 
         AppUser user = new AppUser
         {
-            FullName = fullname,
+            FullName = fullname.Trim(),
             Email = normalizedEmail,
             Role = role,
             IsActive = true,
@@ -209,4 +229,4 @@ public static class SeedData
         user.PasswordHash = passwordHasher.HashPassword(user, password);
         return user;
     }
-  }
+}

@@ -1,6 +1,6 @@
 ﻿namespace ASPdotNETticketAPI.Constants;
 
-public class RoleNames
+public static class RoleNames
 {
     public const string Admin = "Admin";
     public const string Agent = "Agent";

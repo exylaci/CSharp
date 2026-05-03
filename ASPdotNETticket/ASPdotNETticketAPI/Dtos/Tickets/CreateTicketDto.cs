@@ -3,7 +3,7 @@ using ASPdotNETticketAPI.Enums;
 
 namespace ASPdotNETticketAPI.Dtos.Tickets;
 
-public class CreateTicketDto   //Bejövő modell
+public class CreateTicketDto //Bejövő modell
 {
     [Required(ErrorMessage = "A cím megadása kötelező")] //Kötelezőn megadandó adatra
     [StringLength(200, MinimumLength = 5, ErrorMessage = "A cím legalább 5 karakter hosszú kell legyen, de nem lehet több 200-nál.")]

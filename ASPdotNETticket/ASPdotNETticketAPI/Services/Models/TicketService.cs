@@ -1,9 +1,11 @@
-﻿using ASPdotNETticketAPI.Data;
+﻿using ASPdotNETticketAPI.Constants;
+using ASPdotNETticketAPI.Data;
 using ASPdotNETticketAPI.Dtos.Common;
 using ASPdotNETticketAPI.Dtos.Tickets;
 using ASPdotNETticketAPI.Entities;
 using ASPdotNETticketAPI.Enums;
 using ASPdotNETticketAPI.Services.Interfaces;
+using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace ASPdotNETticketAPI.Services.Models;
@@ -19,118 +21,53 @@ public class TicketService : ITicketService
 
     public async Task<PagedResultDto<TicketDto>> GetAllAsync(GetTicketsQueryDto query)
     {
-        IQueryable<Ticket> ticketsQuery = dbContext
-            .Tickets
-            .AsNoTracking() //Csak olvasunk, nem akarjuk a betöltött adatokat módosítani
-            .Include(t => t.Category);
-
-        //1.Keresés
-        string normalizedSearchTerm = query.SearchTerm?.Trim();
-        if (!string.IsNullOrWhiteSpace(normalizedSearchTerm))
-        {
-            string? loweredSearchTerm = normalizedSearchTerm.ToLower();
-
-            ticketsQuery = ticketsQuery.Where(t => t.Title.ToLower().Contains(loweredSearchTerm) || //Címben 
-                                                   t.Description.ToLower().Contains(loweredSearchTerm)); //és leírásban is keresünk
-        }
-
-        //2.SZURES
-
-        if (query.Status.HasValue)
-        {
-            ticketsQuery = ticketsQuery.Where(t => t.Status == query.Status.Value);
-        }
-
-        if (query.Priority.HasValue)
-        {
-            ticketsQuery = ticketsQuery.Where(t => t.Priority == query.Priority.Value);
-        }
-
-        if (query.CategoryId.HasValue)
-        {
-            ticketsQuery = ticketsQuery.Where(t => t.CategoryId == query.CategoryId.Value);
-        }
-
-        //3. LAPOZAS
-        string normalizedSortBy = query.SortBy?.Trim().ToLowerInvariant() ?? "createdat"; //culture info alapján tudja az ékezetes karaktereket is kisbetűsre cserélni
-        string normalizedSortDirection = query.SortDirection?.Trim().ToLowerInvariant() ?? "desc";
-        bool isAscending = normalizedSortDirection == "asc";
-
-        ticketsQuery = (normalizedSortBy, isAscending) switch
-        {
-            ("title", true) => ticketsQuery.OrderBy(t => t.Title),
-            ("title", false) => ticketsQuery.OrderByDescending(t => t.Title),
-            ("priority", true) => ticketsQuery.OrderBy(t => t.Priority),
-            ("priority", false) => ticketsQuery.OrderByDescending(t => t.Priority),
-            ("status", true) => ticketsQuery.OrderBy(t => t.Status),
-            ("status", false) => ticketsQuery.OrderByDescending(t => t.Status),
-            ("category", true) => ticketsQuery.OrderBy(t => t.Category),
-            ("category", false) => ticketsQuery.OrderByDescending(t => t.Category),
-            ("createdat", true) => ticketsQuery.OrderBy(t => t.CreatedAt),
-            ("createdat", false) => ticketsQuery.OrderByDescending(t => t.CreatedAt),
-            _ => ticketsQuery.OrderByDescending(t => t.CreatedAt)
-        };
-
-        //4.találatszám
-        int totalCount = await ticketsQuery.CountAsync();
-
-
-        //5. Lapozas
-        //--page1 -> skip 0
-        //--page2 -> skip pagesize
-        //--page3 -> skip pagesize*2
-
-        int skip = (query.PageNumber - 1) * query.PageSize;
-
-        List<TicketDto> items = await ticketsQuery
-            .Skip(skip)
-            .Take(query.PageSize)
-            .Select(t => new TicketDto
-            {
-                Id = t.Id,
-                Title = t.Title,
-                Description = t.Description,
-                Priority = t.Priority,
-                CategoryId = t.CategoryId,
-                CategoryName = t.Category.Name,
-                CreatedAt = t.CreatedAt
-            })
-            .ToListAsync();
-
-        //6. METAADATOK
-        int totalPages = totalCount == 0 ? 0 : (int)Math.Ceiling(totalCount / (double)query.PageSize);
-
-        return new PagedResultDto<TicketDto>
-        {
-            Items = items,
-            PageNumber = query.PageNumber,
-            PageSize = query.PageSize,
-            TotalCount = totalCount,
-            TotalPages = totalPages
-            // HasPreviousPage = query.PageNumber > 1,
-            // HasNextPage = query.PageNumber < totalPages
-        };
+        IQueryable<Ticket> ticketsQuery = BuildBaseTicketQuery();
+        return await CreatePagedResultAsync(ticketsQuery, query);
     }
 
-
-    public async Task<ServiceResult<TicketDto>> GetByIdAsync(int id)
+    public async Task<PagedResultDto<TicketDto>> GetMyCreatedAsync(int currentUserId, GetTicketsQueryDto query)
     {
-        Ticket? ticket = await dbContext
-            .Tickets
-            .Include(t => t.Category)
-            .FirstOrDefaultAsync(t => t.Id == id);
+        IQueryable<Ticket> ticketsQuery = BuildBaseTicketQuery()
+            .Where(t => t.CreatedByUserId == currentUserId);
+        return await CreatePagedResultAsync(ticketsQuery, query);
+    }
+
+    public async Task<PagedResultDto<TicketDto>> GetMyAssignedAsync(int id, int currentUserId, GetTicketsQueryDto query)
+    {
+        IQueryable<Ticket> ticketsQuery = BuildBaseTicketQuery()
+            .Where(t => t.AssignedToUserId == currentUserId);
+        return await CreatePagedResultAsync(ticketsQuery, query);
+    }
+
+    public async Task<ServiceResult<TicketDto>> GetByIdAsync(int id, int currentUserId, string currentUserRole)
+    {
+        Ticket? ticket = await LoadTrackedTicketWithRelationsAsync(id);
         if (ticket is null)
         {
-            return ServiceResult<TicketDto>.NotFound($"A {id} azonosítóju tiket nem található.");
+            return ServiceResult<TicketDto>.NotFound($"A {id} azonosítójú tiket nem található.");
+        }
+
+        if (currentUserRole == RoleNames.User && ticket.CreatedByUserId != currentUserId)
+        {
+            return ServiceResult<TicketDto>.NotFound($"A {id} azonosítójú tiket nem található.");
         }
 
         return ServiceResult<TicketDto>.Success(MapToTicketDto(ticket));
     }
 
-    public async Task<ServiceResult<TicketDto>> CreateAsync(CreateTicketDto dto)
+    public async Task<ServiceResult<TicketDto>> CreateAsync(CreateTicketDto dto, int currentUserId)
     {
         string normalizedTitle = dto.Title.Trim();
         string normalizedDescription = dto.Description.Trim();
+
+        AppUser? creator = await dbContext.Users
+            .AsNoTracking()
+            .FirstOrDefaultAsync(u => u.Id == currentUserId && u.IsActive);
+        if (creator is null)
+        {
+            return ServiceResult<TicketDto>.Validation("user", "A bejelentkezett felhasználó nem található, vagy inaktív!");
+        }
+
 
         Category? category = await dbContext.Categories.FirstOrDefaultAsync(c => c.Id == dto.CategoryId);
         if (category is null)
@@ -160,20 +97,20 @@ public class TicketService : ITicketService
             Priority = dto.Priority,
             CreatedAt = DateTime.UtcNow,
             CategoryId = category.Id,
-            Category = category
+            Category = category,
+            CreatedByUserId = currentUserId,
+            AssignedToUser = null
         };
         dbContext.Tickets.Add(newTicket);
         await dbContext.SaveChangesAsync();
 
-        return ServiceResult<TicketDto>.Success(MapToTicketDto(newTicket));
+        Ticket? createdTicket = await LoadTrackedTicketWithRelationsAsync(newTicket.Id);
+        return ServiceResult<TicketDto>.Success(MapToTicketDto(createdTicket));
     }
 
-    public async Task<ServiceResult<TicketDto>> UpdateAsync(int id, UpdateTicketDto dto)
+    public async Task<ServiceResult<TicketDto>> UpdateAsync(int id, UpdateTicketDto dto, int currentUserId, string currentUserRole)
     {
-        Ticket? ticket = await dbContext
-            .Tickets
-            .Include(t => t.Category)
-            .FirstOrDefaultAsync(t => t.Id == id);
+        Ticket? ticket = await LoadTrackedTicketWithRelationsAsync(id);
         if (ticket is null)
         {
             return ServiceResult<TicketDto>.NotFound($"A {id} azonosítójú ticket nem található!");
@@ -183,6 +120,22 @@ public class TicketService : ITicketService
         {
             return ServiceResult<TicketDto>.Validation(nameof(Ticket.Status), "Lezárt jegy nem módosítható!");
         }
+
+        if (currentUserRole == RoleNames.User && ticket.CreatedByUserId != currentUserId)
+        {
+            return ServiceResult<TicketDto>.NotFound($"A {id} azonosítójú ticket nem található!");
+        }
+
+        if (currentUserRole == RoleNames.User && ticket.Status != TicketStatus.Open)
+        {
+            return ServiceResult<TicketDto>.Validation(nameof(ticket.Status), "Felhasználó csak open állapotú saját ticketet múdosíthat.");
+        }
+
+        if (currentUserRole == RoleNames.User && ticket.Status == TicketStatus.Closed)
+        {
+            return ServiceResult<TicketDto>.Validation(nameof(ticket.Status), "Lezárt jegy adatai nem módosíthatók.");
+        }
+
 
         string normalizedTitle = dto.Title.Trim();
         string normalizedDescription = dto.Description.Trim();
@@ -213,15 +166,13 @@ public class TicketService : ITicketService
 
         await dbContext.SaveChangesAsync();
 
-        return ServiceResult<TicketDto>.Success(MapToTicketDto(ticket));
+        Ticket? updatedTicket = await LoadTrackedTicketWithRelationsAsync(ticket.Id);
+        return ServiceResult<TicketDto>.Success(MapToTicketDto(updatedTicket));
     }
 
-    public async Task<ServiceResult<TicketDto>> UpdateStatusAsync(int id, UpdateTicketStatusDto dto)
+    public async Task<ServiceResult<TicketDto>> UpdateStatusAsync(int id, UpdateTicketStatusDto dto, int currentUserId, string currentUserRole)
     {
-        Ticket? ticket = await dbContext
-            .Tickets
-            .Include(t => t.Category)
-            .FirstOrDefaultAsync(t => t.Id == id);
+        Ticket? ticket = await LoadTrackedTicketWithRelationsAsync(id);
         if (ticket is null)
         {
             return ServiceResult<TicketDto>.NotFound($"A {id} azonosítójú ticket nem található!");
@@ -230,6 +181,12 @@ public class TicketService : ITicketService
         if (ticket.Status == dto.Status)
         {
             return ServiceResult<TicketDto>.Validation(nameof(dto.Status), "A tiketnek már eleve ez a státusza.");
+        }
+
+
+        if (currentUserRole == RoleNames.Agent && ticket.AssignedToUserId != currentUserId)
+        {
+            return ServiceResult<TicketDto>.Validation(nameof(dto.Status), "Agentként csak a hozzád rendelt ticket státuszát módosíthatod.");
         }
 
         if (ticket.Status == TicketStatus.Open && dto.Status == TicketStatus.Closed)
@@ -249,7 +206,45 @@ public class TicketService : ITicketService
 
         ticket.Status = dto.Status;
         await dbContext.SaveChangesAsync();
-        return ServiceResult<TicketDto>.Success(MapToTicketDto(ticket));
+
+        Ticket? updatedTicket = await LoadTrackedTicketWithRelationsAsync(ticket.Id);
+        return ServiceResult<TicketDto>.Success(MapToTicketDto(updatedTicket));
+    }
+
+
+    public async Task<ServiceResult<TicketDto>> AssignAsync(int id, AssignTicketDto dto, int currentUserId, string currentUserRole)
+    {
+        Ticket? ticket = await LoadTrackedTicketWithRelationsAsync(id);
+        if (ticket is null)
+        {
+            return ServiceResult<TicketDto>.NotFound($"A {id} azonosítójú ticket nem található");
+        }
+
+        if (ticket.Status == TicketStatus.Closed)
+        {
+            return ServiceResult<TicketDto>.Validation(nameof(ticket.Status), "Lezárt ticket nem rendelhető hozzá agenthez.");
+        }
+
+        AppUser? targetUser = await dbContext.Users
+            .FirstOrDefaultAsync(u =>
+                u.Id == dto.AssignedToUserId
+                && u.IsActive
+                && u.Role == RoleNames.Agent);
+
+        if (targetUser is null)
+        {
+            return ServiceResult<TicketDto>.Validation(nameof(dto.AssignedToUserId), "A megadott user nem létezik, vagy inaktív agent.");
+        }
+
+        if (currentUserRole == RoleNames.Agent && dto.AssignedToUserId != currentUserId)
+        {
+            return ServiceResult<TicketDto>.Validation(nameof(dto.AssignedToUserId), "Agentként csak saját magadhoz rendelhetsz ticketet.");
+        }
+
+        ticket.AssignedToUserId = targetUser.Id;
+        await dbContext.SaveChangesAsync();
+        Ticket? updatedTicket = await LoadTrackedTicketWithRelationsAsync(ticket.Id);
+        return ServiceResult<TicketDto>.Success(MapToTicketDto(updatedTicket));
     }
 
     public async Task<ServiceResult> DeleteAsync(int id)
@@ -283,7 +278,132 @@ public class TicketService : ITicketService
             Priority = ticket.Priority,
             CategoryId = ticket.CategoryId,
             CategoryName = ticket.Category.Name,
+            CreatedByUserId = ticket.CreatedByUserId,
+            CreatedByUserName = ticket.CreatedByUser?.FullName ?? string.Empty,
+            AssignedToUserId = ticket.AssignedToUserId,
+            AssignedToUserName = ticket.AssignedToUser?.FullName ?? string.Empty,
             CreatedAt = ticket.CreatedAt
         };
+    }
+
+    private IQueryable<Ticket> BuildBaseTicketQuery()
+    {
+        return dbContext.Tickets
+            .AsNoTracking()
+            .Include(t => t.Category)
+            .Include(t => t.CreatedByUser)
+            .Include(t => t.AssignedToUser);
+    }
+
+    private async Task<PagedResultDto<TicketDto>> CreatePagedResultAsync(IQueryable<Ticket> ticketsQuery, GetTicketsQueryDto query)
+    {
+        //1.Keresés
+        string normalizedSearchTerm = query.SearchTerm?.Trim();
+        if (!string.IsNullOrWhiteSpace(normalizedSearchTerm))
+        {
+            string? loweredSearchTerm = normalizedSearchTerm.ToLower();
+
+            ticketsQuery = ticketsQuery.Where(t => t.Title.ToLower().Contains(loweredSearchTerm) || //Címben 
+                                                   t.Description.ToLower().Contains(loweredSearchTerm)); //és leírásban is keresünk
+        }
+
+        //2.SZURES
+        if (query.Status.HasValue)
+        {
+            ticketsQuery = ticketsQuery.Where(t => t.Status == query.Status.Value);
+        }
+
+        if (query.Priority.HasValue)
+        {
+            ticketsQuery = ticketsQuery.Where(t => t.Priority == query.Priority.Value);
+        }
+
+        if (query.CategoryId.HasValue)
+        {
+            ticketsQuery = ticketsQuery.Where(t => t.CategoryId == query.CategoryId.Value);
+        }
+
+        //3. LAPOZAS
+        string normalizedSortBy = query.SortBy?.Trim().ToLowerInvariant() ?? "createdat"; //culture info alapján tudja az ékezetes karaktereket is kisbetűsre cserélni
+        string normalizedSortDirection = query.SortDirection?.Trim().ToLowerInvariant() ?? "desc";
+        bool isAscending = normalizedSortDirection == "asc";
+
+        ticketsQuery = (normalizedSortBy, isAscending) switch
+        {
+            ("title", true) => ticketsQuery.OrderBy(t => t.Title),
+            ("title", false) => ticketsQuery.OrderByDescending(t => t.Title),
+
+            ("priority", true) => ticketsQuery.OrderBy(t => t.Priority),
+            ("priority", false) => ticketsQuery.OrderByDescending(t => t.Priority),
+
+            ("status", true) => ticketsQuery.OrderBy(t => t.Status),
+            ("status", false) => ticketsQuery.OrderByDescending(t => t.Status),
+
+            ("category", true) => ticketsQuery.OrderBy(t => t.Category),
+            ("category", false) => ticketsQuery.OrderByDescending(t => t.Category),
+
+            ("createdby", true) => ticketsQuery.OrderBy(t => t.CreatedByUser != null ? t.CreatedByUser.FullName : string.Empty),
+            ("createdby", false) => ticketsQuery.OrderByDescending(t => t.CreatedByUser != null ? t.CreatedByUser.FullName : string.Empty),
+
+            ("assignedto", true) => ticketsQuery.OrderBy(t => t.AssignedToUser != null ? t.AssignedToUser.FullName : string.Empty),
+            ("assignedto", false) => ticketsQuery.OrderByDescending(t => t.AssignedToUser != null ? t.AssignedToUser.FullName : string.Empty),
+
+            ("createdat", true) => ticketsQuery.OrderBy(t => t.CreatedAt),
+            ("createdat", false) => ticketsQuery.OrderByDescending(t => t.CreatedAt),
+            _ => ticketsQuery.OrderByDescending(t => t.CreatedAt)
+        };
+
+        //4.találatszám
+        int totalCount = await ticketsQuery.CountAsync();
+
+
+        //5. Lapozas
+        //--page1 -> skip 0
+        //--page2 -> skip pagesize
+        //--page3 -> skip pagesize*2
+
+        int skip = (query.PageNumber - 1) * query.PageSize;
+
+        List<TicketDto> items = await ticketsQuery
+            .Skip(skip)
+            .Take(query.PageSize)
+            .Select(t => new TicketDto
+            {
+                Id = t.Id,
+                Title = t.Title,
+                Description = t.Description,
+                Priority = t.Priority,
+                CategoryId = t.CategoryId,
+                CategoryName = t.Category.Name,
+                CreatedByUserId = t.CreatedByUserId,
+                CreatedByUserName = t.CreatedByUser != null ? t.CreatedByUser.FullName : string.Empty,
+                AssignedToUserId = t.AssignedToUserId,
+                AssignedToUserName = t.AssignedToUser != null ? t.AssignedToUser.FullName : string.Empty,
+                CreatedAt = t.CreatedAt
+            })
+            .ToListAsync();
+
+        //6. METAADATOK
+        int totalPages = totalCount == 0 ? 0 : (int)Math.Ceiling(totalCount / (double)query.PageSize);
+
+        return new PagedResultDto<TicketDto>
+        {
+            Items = items,
+            PageNumber = query.PageNumber,
+            PageSize = query.PageSize,
+            TotalCount = totalCount,
+            TotalPages = totalPages
+            // HasPreviousPage = query.PageNumber > 1,
+            // HasNextPage = query.PageNumber < totalPages
+        };
+    }
+
+    private async Task<Ticket?> LoadTrackedTicketWithRelationsAsync(int id)
+    {
+        return await dbContext.Tickets
+            .Include(t => t.Category)
+            .Include(t => t.CreatedByUser)
+            .Include(t => t.AssignedToUser)
+            .FirstOrDefaultAsync(t => t.Id == id);
     }
 }
