@@ -1,4 +1,5 @@
-﻿using ASPdotNETticketAPI.Constants;
+﻿using System.Security.Claims;
+using ASPdotNETticketAPI.Constants;
 using ASPdotNETticketAPI.Data;
 using ASPdotNETticketAPI.Dtos.Common;
 using ASPdotNETticketAPI.Dtos.Tickets;
@@ -32,13 +33,63 @@ public class TicketsController : ControllerBase
         return Ok(result); //OK: 200 státuszkód
     }
 
+
+    [Authorize]
+    [HttpGet("my-created")]
+    public async Task<ActionResult<PagedResultDto<TicketDto>>> GetMyCreated([FromQuery] GetTicketsQueryDto query)
+    {
+        if (!TryGetCurrentUserId(out int currentUserId))
+        {
+            return Unauthorized(new
+            {
+                message = "A token nem tartalmaz érvényes felhasználót!"
+            });
+        }
+
+        PagedResultDto<TicketDto> result = await ticketService.GetMyCreatedAsync(currentUserId, query);
+        return Ok(result);
+    }
+
+    [Authorize(Roles = RoleNames.Admin + "," + RoleNames.Agent)]
+    [HttpGet("my-assigned")]
+    public async Task<ActionResult<PagedResultDto<TicketDto>>> GetMyAssigned([FromQuery] GetTicketsQueryDto query)
+    {
+        if (!TryGetCurrentUserId(out int currentUserId))
+        {
+            return Unauthorized(new
+            {
+                message = "A token nem tartalmaz érvényes felhasználót!"
+            });
+        }
+
+
+        PagedResultDto<TicketDto> result = await ticketService.GetMyAssignedAsync(currentUserId, query);
+        return Ok(result);
+    }
+
+    [Authorize]
     [HttpGet("{id:int}")]
     public async Task<ActionResult<TicketDto>> GetById(int id) //Nem kell vizsgálni a paramétert, mert csakis és kizárólag int típusú paraméter esetén hívódik meg ez a függvény
     {
-        ServiceResult<TicketDto>? result = await ticketService.GetByIdAsync(id, 0, "");
+        if (!TryGetCurrentUserId(out int currentUserId))
+        {
+            return Unauthorized(new
+            {
+                message = "A token nem tartalmaz érvényes felhasználót!"
+            });
+        }
+
+        string? currentUserRole = GetCurrentUserRole();
+        if (string.IsNullOrWhiteSpace(currentUserRole))
+        {
+            return Unauthorized(new { message = $"A token nem tartalmaz érvényes szerepkört." });
+        }
+
+        ServiceResult<TicketDto> result = await ticketService.GetByIdAsync(id, currentUserId, currentUserRole);
+
         if (result.IsNotFound)
         {
-            return NotFound(new { message = $"A {id} azonosítójú tiket nem található." });
+            return Unauthorized(new { message = result.Message });
         }
 
         return Ok(result.Data); //OK: 200 státuszkód. Ráérünk csak akkor konvertálni, ha van ilyen. Felesleges ezzel terhelni a processzort még a viszgálat előtt.
@@ -48,7 +99,15 @@ public class TicketsController : ControllerBase
     [HttpPost]
     public async Task<ActionResult<TicketDto>> Create([FromBody] CreateTicketDto dto) //[FromBody]: A request path-jából kiszedi és a dto változóba beteszi a értékeket
     {
-        ServiceResult<TicketDto>? result = await ticketService.CreateAsync(dto, 0);
+        if (!TryGetCurrentUserId(out int currentUserId))
+        {
+            return Unauthorized(new
+            {
+                message = "A token nem tartalmaz érvényes felhasználót!"
+            });
+        }
+
+        ServiceResult<TicketDto> result = await ticketService.CreateAsync(dto, currentUserId);
         if (!result.IsSuccess)
         {
             return CreateActionResultFromServiceResult(result);
@@ -61,7 +120,21 @@ public class TicketsController : ControllerBase
     [HttpPut("{id:int}")]
     public async Task<ActionResult<TicketDto>> Update(int id, [FromBody] UpdateTicketDto dto) //Csak módosításra használjuk
     {
-        ServiceResult<TicketDto>? result = await ticketService.UpdateAsync(id, dto, 0, "");
+        if (!TryGetCurrentUserId(out int currentUserId))
+        {
+            return Unauthorized(new
+            {
+                message = "A token nem tartalmaz érvényes felhasználót!"
+            });
+        }
+
+        string? currentUserRole = GetCurrentUserRole();
+        if (string.IsNullOrWhiteSpace(currentUserRole))
+        {
+            return Unauthorized(new { message = $"A token nem tartalmaz érvényes szerepkört." });
+        }
+
+        ServiceResult<TicketDto>? result = await ticketService.UpdateAsync(id, dto, currentUserId, currentUserRole);
 
         if (!result.IsSuccess)
         {
@@ -71,11 +144,25 @@ public class TicketsController : ControllerBase
         return Ok(result.Data);
     }
 
-    [Authorize]
+    [Authorize(Roles = RoleNames.Admin + "," + RoleNames.Agent)]
     [HttpPatch("{id:int}/status")]
     public async Task<ActionResult<TicketDto>> UpdateStatus(int id, [FromBody] UpdateTicketStatusDto dto)
     {
-        ServiceResult<TicketDto>? result = await ticketService.UpdateStatusAsync(id, dto, 0, "");
+        if (!TryGetCurrentUserId(out int currentUserId))
+        {
+            return Unauthorized(new
+            {
+                message = "A token nem tartalmaz érvényes felhasználót!"
+            });
+        }
+
+        string? currentUserRole = GetCurrentUserRole();
+        if (string.IsNullOrWhiteSpace(currentUserRole))
+        {
+            return Unauthorized(new { message = $"A token nem tartalmaz érvényes szerepkört." });
+        }
+
+        ServiceResult<TicketDto>? result = await ticketService.UpdateStatusAsync(id, dto, currentUserId, currentUserRole);
         if (!result.IsSuccess)
         {
             return CreateActionResultFromServiceResult(result);
@@ -84,7 +171,34 @@ public class TicketsController : ControllerBase
         return Ok(result.Data);
     }
 
-    [Authorize]
+    [Authorize(Roles = RoleNames.Admin + "," + RoleNames.Agent)]
+    [HttpPost("{id:int}/assign")]
+    public async Task<ActionResult<TicketDto>> Assign(int id, [FromBody] AssignTicketDto dto)
+    {
+        if (!TryGetCurrentUserId(out int currentUserId))
+        {
+            return Unauthorized(new
+            {
+                message = "A token nem tartalmaz érvényes felhasználót!"
+            });
+        }
+
+        string? currentUserRole = GetCurrentUserRole();
+        if (string.IsNullOrWhiteSpace(currentUserRole))
+        {
+            return Unauthorized(new { message = $"A token nem tartalmaz érvényes szerepkört." });
+        }
+
+        ServiceResult<TicketDto>? result = await ticketService.AssignAsync(id, dto, currentUserId, currentUserRole);
+        if (!result.IsSuccess)
+        {
+            return CreateActionResultFromServiceResult(result);
+        }
+
+        return Ok(result.Data);
+    }
+
+    [Authorize(Roles = RoleNames.Admin)]
     [HttpDelete("{id:int}")]
     public async Task<ActionResult<TicketDto>> Delete(int id)
     {
@@ -115,5 +229,16 @@ public class TicketsController : ControllerBase
         }
 
         return ValidationProblem(new ValidationProblemDetails(result.Errors));
+    }
+
+    private bool TryGetCurrentUserId(out int userId)
+    {
+        string userIdClaim = User.FindFirstValue(ClaimTypes.NameIdentifier); //A json web tokenből a name identifier clame-et olvassuk ki és ezzel a name identifier json webtokennel olvassuk ki az adatbázisból a usert
+        return int.TryParse(userIdClaim, out userId);
+    }
+
+    private string? GetCurrentUserRole()
+    {
+        return User.FindFirstValue(ClaimTypes.Role);
     }
 }

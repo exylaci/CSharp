@@ -12,7 +12,7 @@ public class TicketDto //Ezt adjuk vissza egy GET request kérésre (Kimenő mod
     public DateTime CreatedAt { get; set; }
     public int CategoryId { get; set; }
     public string CategoryName { get; set; } = string.Empty;
-    public int? CreatedByUserId { get; set; }
+    public int? CreatedByUserId { get; set; }       //Át is kell tudni adni a Ticketben tárolt további adatokat
     public string CreatedByUserName { get; set; } = string.Empty;
     public int? AssignedToUserId { get; set; }
     public string AssignedToUserName { get; set; } = string.Empty;

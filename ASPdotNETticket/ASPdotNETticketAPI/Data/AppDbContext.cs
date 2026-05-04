@@ -23,19 +23,18 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Category>()
             .Property(c => c.Description).IsRequired()
             .HasMaxLength(500);
+        
         modelBuilder.Entity<Ticket>()
             .Property(t => t.Title).IsRequired()
             .HasMaxLength(200);
         modelBuilder.Entity<Ticket>()
             .Property(t => t.Description)
             .HasMaxLength(500);
-
         modelBuilder.Entity<Ticket>()
             .HasOne(t => t.Category)
             .WithMany(c => c.Tickets)
             .HasForeignKey(t => t.CategoryId)
             .OnDelete(DeleteBehavior.Restrict); //1db Category-ája van, de egy Category-ának lehet több Ticket-e is. Az idegen kulcs a CategoryID. Törlésre a megkötés: Cascade, Restrict="Nem törlőlhető, amíg van külső függősége."
-
         modelBuilder.Entity<Ticket>()
             .HasOne(t => t.CreatedByUser)
             .WithMany(u => u.CreatedTickets)

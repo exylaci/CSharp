@@ -19,7 +19,7 @@ public class UserService : IUserService
     {
         return await dbContext.Users
             .AsNoTracking()
-            .Where(u => u.IsActive && u.Role == RoleNames.Agent)
+            .Where(u => u.IsActive && u.Role == RoleNames.Agent)    //logika: csak aktív Agent-hez lehet rendelni
             .OrderBy(u => u.FullName)
             .Select(u => new UserListItemDto
             {

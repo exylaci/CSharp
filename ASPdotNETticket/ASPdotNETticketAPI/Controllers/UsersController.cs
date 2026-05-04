@@ -8,7 +8,7 @@ namespace ASPdotNETticketAPI.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UsersController : Controller
+public class UsersController : ControllerBase
 {
     private readonly IUserService userService;
 
@@ -19,7 +19,7 @@ public class UsersController : Controller
 
     [Authorize(Roles = RoleNames.Admin + "," + RoleNames.Agent)]
     [HttpGet("agents")]
-    public async Task<ActionResult<IEnumerable<UserListItemDto>>> GetAgents()
+    public async Task<ActionResult<IEnumerable<UserListItemDto>>> GetAgents() //Azért IEnumerable és nem List a típusa, hogy más nyelven írt frontenddel is kompatibilis legyen 
     {
         List<UserListItemDto> agents = await userService.GetActiveAgentsAsync();
         return Ok(agents);

@@ -2,7 +2,7 @@
 
 namespace ASPdotNETticketAPI.Services.Interfaces;
 
-public interface IUserService
+public interface IUserService //hogy lehessen tudni, konkrétan kihez rendeli hozzá
 {
     Task<List<UserListItemDto>> GetActiveAgentsAsync();
 }

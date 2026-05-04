@@ -1,6 +1,6 @@
 ﻿namespace ASPdotNETticketAPI.Dtos.Users;
 
-public class UserListItemDto
+public class UserListItemDto //Hogy az Admin tudja milyen user-ek vannak
 {
     public int Id { get; set; }
     public string FullName { get; set; } = string.Empty;

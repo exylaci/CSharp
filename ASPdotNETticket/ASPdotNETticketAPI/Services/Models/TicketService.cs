@@ -32,7 +32,7 @@ public class TicketService : ITicketService
         return await CreatePagedResultAsync(ticketsQuery, query);
     }
 
-    public async Task<PagedResultDto<TicketDto>> GetMyAssignedAsync(int id, int currentUserId, GetTicketsQueryDto query)
+    public async Task<PagedResultDto<TicketDto>> GetMyAssignedAsync(int currentUserId, GetTicketsQueryDto query)
     {
         IQueryable<Ticket> ticketsQuery = BuildBaseTicketQuery()
             .Where(t => t.AssignedToUserId == currentUserId);
@@ -116,11 +116,6 @@ public class TicketService : ITicketService
             return ServiceResult<TicketDto>.NotFound($"A {id} azonosítójú ticket nem található!");
         }
 
-        if (ticket.Status == TicketStatus.Closed)
-        {
-            return ServiceResult<TicketDto>.Validation(nameof(Ticket.Status), "Lezárt jegy nem módosítható!");
-        }
-
         if (currentUserRole == RoleNames.User && ticket.CreatedByUserId != currentUserId)
         {
             return ServiceResult<TicketDto>.NotFound($"A {id} azonosítójú ticket nem található!");
@@ -133,9 +128,8 @@ public class TicketService : ITicketService
 
         if (currentUserRole == RoleNames.User && ticket.Status == TicketStatus.Closed)
         {
-            return ServiceResult<TicketDto>.Validation(nameof(ticket.Status), "Lezárt jegy adatai nem módosíthatók.");
+            return ServiceResult<TicketDto>.Validation(nameof(Ticket.Status), "Lezárt jegy nem módosítható!");
         }
-
 
         string normalizedTitle = dto.Title.Trim();
         string normalizedDescription = dto.Description.Trim();
@@ -249,9 +243,7 @@ public class TicketService : ITicketService
 
     public async Task<ServiceResult> DeleteAsync(int id)
     {
-        Ticket? ticket = await dbContext.Tickets
-            .Include(t => t.Category)
-            .FirstOrDefaultAsync(t => t.Id == id);
+        Ticket? ticket = await LoadTrackedTicketWithRelationsAsync(id);
         if (ticket is null)
         {
             return ServiceResult.NotFound($"A {id} azonosítóju tiket nem található.");
@@ -298,10 +290,10 @@ public class TicketService : ITicketService
     private async Task<PagedResultDto<TicketDto>> CreatePagedResultAsync(IQueryable<Ticket> ticketsQuery, GetTicketsQueryDto query)
     {
         //1.Keresés
-        string normalizedSearchTerm = query.SearchTerm?.Trim();
+        string? normalizedSearchTerm = query.SearchTerm?.Trim();
         if (!string.IsNullOrWhiteSpace(normalizedSearchTerm))
         {
-            string? loweredSearchTerm = normalizedSearchTerm.ToLower();
+            string loweredSearchTerm = normalizedSearchTerm.ToLower();
 
             ticketsQuery = ticketsQuery.Where(t => t.Title.ToLower().Contains(loweredSearchTerm) || //Címben 
                                                    t.Description.ToLower().Contains(loweredSearchTerm)); //és leírásban is keresünk
@@ -392,9 +384,9 @@ public class TicketService : ITicketService
             PageNumber = query.PageNumber,
             PageSize = query.PageSize,
             TotalCount = totalCount,
-            TotalPages = totalPages
-            // HasPreviousPage = query.PageNumber > 1,
-            // HasNextPage = query.PageNumber < totalPages
+            TotalPages = totalPages,
+            HasPreviousPage = query.PageNumber > 1,
+            HasNextPage = query.PageNumber < totalPages
         };
     }
 
