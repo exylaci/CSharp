@@ -16,13 +16,93 @@ public static class SeedData
         SeedCategories(context);
         SeedUsers(context);
         SeedTickets(context);
+        SeedComments(context);
     }
+
 
     public static async Task InitializeAsync(AppDbContext context, CancellationToken cancellationToken = default) //Kell belőle egy async is, mert mi van, ha fut belőle mégegy példány? Akkor aszinkron kell megközelíeni a dolgot. Akkor ennek az init függvénynek már nem is kell futnia. Ehhez kell egy cancellation token, ami jelzni, hogy folyik-e kategóriával, jeggyel kapcsolatos művelet. 
     {
         await SeedCategoriesAsync(context, cancellationToken);
         await SeedUsersAsync(context, cancellationToken);
         await SeedTicketsAsync(context, cancellationToken);
+        await SeedCommentsAsync(context, cancellationToken);
+    }
+
+    private static void SeedComments(AppDbContext context)
+    {
+        if (context.TicketComments.Any()) //Ha már van kezdő adatunk ne adja hozzá még egyszer.
+        {
+            return;
+        }
+
+        int adminId = context.Users.First(u => u.Email == "admin@pelda.hu").Id;
+        int agentId = context.Users.First(u => u.Email == "agent@pelda.hu").Id;
+        int userId = context.Users.First(u => u.Email == "user@pelda.hu").Id;
+
+        int loginTicketId = context.Tickets.First(t => t.Title == "Nem tud bejelentkezni a felhasználó").Id;
+        int darkModeTicketId = context.Tickets.First(t => t.Title == "Dark mód igénylése").Id;
+
+        context.TicketComments.AddRange(
+            new TicketComment
+            {
+                TicketId = loginTicketId,
+                UserId = userId,
+                Content = "1. A hibát ma reggel tapasztaltam, mindig visszadob a login oldalra.",
+                CreatedAt = DateTime.Now.AddHours(-4)
+            },
+            new TicketComment
+            {
+                TicketId = loginTicketId,
+                UserId = agentId,
+                Content = "2. Átnéztem a logokat, és úgy tűnik, hogy a section környékén van a hiba.",
+                CreatedAt = DateTime.Now.AddHours(-3)
+            },
+            new TicketComment
+            {
+                TicketId = darkModeTicketId,
+                UserId = adminId,
+                Content = "3. Az igény rögzítve, ez majd külön feature lesz. ",
+                CreatedAt = DateTime.Now.AddHours(-2)
+            });
+        context.SaveChanges();
+    }
+
+    private static async Task SeedCommentsAsync(AppDbContext context, CancellationToken cancellationToken)
+    {
+        if (await context.TicketComments.AnyAsync())
+        {
+            return;
+        }
+
+        int adminId = (await context.Users.FirstAsync(u => u.Email == "admin@pelda.hu")).Id;
+        int agentId = (await context.Users.FirstAsync(u => u.Email == "agent@pelda.hu")).Id;
+        int userId = (await context.Users.FirstAsync(u => u.Email == "user@pelda.hu")).Id;
+
+        int loginTicketId = (await context.Tickets.FirstAsync(t => t.Title == "Nem tud bejelentkezni a felhasználó")).Id;
+        int darkModeTicketId =(await context.Tickets.FirstAsync(t => t.Title == "Dark mód igénylése")).Id;
+        context.TicketComments.AddRange(
+            new TicketComment
+            {
+                TicketId = loginTicketId,
+                UserId = userId,
+                Content = "1. A hibát ma reggel tapasztaltam, mindig visszadob a login oldalra.",
+                CreatedAt = DateTime.Now.AddHours(-4)
+            },
+            new TicketComment
+            {
+                TicketId = loginTicketId,
+                UserId = agentId,
+                Content = "2. Átnéztem a logokat, és úgy tűnik, hogy a section környékén van a hiba.",
+                CreatedAt = DateTime.Now.AddHours(-3)
+            },
+            new TicketComment
+            {
+                TicketId = darkModeTicketId,
+                UserId = adminId,
+                Content = "3. Az igény rögzítve, ez majd külön feature lesz. ",
+                CreatedAt = DateTime.Now.AddHours(-2)
+            });
+        await context.SaveChangesAsync(cancellationToken);
     }
 
     private static void SeedCategories(AppDbContext context)

@@ -69,7 +69,7 @@ public class TicketsController : ControllerBase
 
     [Authorize]
     [HttpGet("{id:int}")]
-    public async Task<ActionResult<TicketDto>> GetById(int id) //Nem kell vizsgálni a paramétert, mert csakis és kizárólag int típusú paraméter esetén hívódik meg ez a függvény
+    public async Task<ActionResult<TicketDetailDto>> GetById(int id) //Nem kell vizsgálni a paramétert, mert csakis és kizárólag int típusú paraméter esetén hívódik meg ez a függvény
     {
         if (!TryGetCurrentUserId(out int currentUserId))
         {
@@ -85,7 +85,7 @@ public class TicketsController : ControllerBase
             return Unauthorized(new { message = $"A token nem tartalmaz érvényes szerepkört." });
         }
 
-        ServiceResult<TicketDto> result = await ticketService.GetByIdAsync(id, currentUserId, currentUserRole);
+        ServiceResult<TicketDetailDto> result = await ticketService.GetByIdAsync(id, currentUserId, currentUserRole);
 
         if (result.IsNotFound)
         {

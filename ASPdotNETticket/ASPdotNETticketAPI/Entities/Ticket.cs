@@ -16,4 +16,5 @@ public class Ticket
     public Category Category { get; set; } = null;
     public AppUser? CreatedByUser { get; set; }
     public AppUser? AssignedToUser { get; set; }
+    public ICollection<TicketComment> Comments { get; set; } = new List<TicketComment>(); //A user által létrehozott kommentek
 }

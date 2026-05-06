@@ -13,4 +13,5 @@ public class AppUser
     public bool IsActive { get; set; } = true;
     public ICollection<Ticket> CreatedTickets { get; set; } = new List<Ticket>();   //Milyen Ticket-eket hozott ő létre
     public ICollection<Ticket> AssignedTickets { get; set; } = new List<Ticket>();  //Milyen Ticketek vannak hozzárendelve
+    public ICollection<TicketComment> Comments { get; set; } = new List<TicketComment>(); //A user által létrehozott kommentek
 }

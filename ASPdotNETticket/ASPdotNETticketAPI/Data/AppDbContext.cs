@@ -8,7 +8,7 @@ public class AppDbContext : DbContext
     public DbSet<Ticket> Tickets => Set<Ticket>();
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<AppUser> Users => Set<AppUser>();
-
+    public DbSet<TicketComment> TicketComments => Set<TicketComment>();
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
@@ -23,7 +23,7 @@ public class AppDbContext : DbContext
         modelBuilder.Entity<Category>()
             .Property(c => c.Description).IsRequired()
             .HasMaxLength(500);
-        
+
         modelBuilder.Entity<Ticket>()
             .Property(t => t.Title).IsRequired()
             .HasMaxLength(200);
@@ -64,5 +64,20 @@ public class AppDbContext : DbContext
             .Property(u => u.Role)
             .IsRequired()
             .HasMaxLength(30);
+
+        modelBuilder.Entity<TicketComment>()
+            .Property(c => c.Content)
+            .IsRequired()
+            .HasMaxLength(1000);
+        modelBuilder.Entity<TicketComment>()
+            .HasOne(c => c.Ticket) //Egy Comment egy konkrét Ticket-hez tartozik
+            .WithMany(t => t.Comments) //Egy Ticket-hez tartozhat több Comment is.
+            .HasForeignKey(t => t.TicketId)
+            .OnDelete(DeleteBehavior.Cascade); //Ticket törlése esetén törli a Komment-eket is.
+        modelBuilder.Entity<TicketComment>()
+            .HasOne(c => c.User) //Egy Comment egy konkrét User-hez tartozik
+            .WithMany(u => u.Comments) //Egy User-nek több Comment-je is lehet.
+            .HasForeignKey(c => c.UserId)
+            .OnDelete(DeleteBehavior.Restrict);
     }
 }

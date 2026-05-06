@@ -1,5 +1,6 @@
 ﻿using ASPdotNETticketAPI.Constants;
 using ASPdotNETticketAPI.Data;
+using ASPdotNETticketAPI.Dtos.Comments;
 using ASPdotNETticketAPI.Dtos.Common;
 using ASPdotNETticketAPI.Dtos.Tickets;
 using ASPdotNETticketAPI.Entities;
@@ -39,20 +40,20 @@ public class TicketService : ITicketService
         return await CreatePagedResultAsync(ticketsQuery, query);
     }
 
-    public async Task<ServiceResult<TicketDto>> GetByIdAsync(int id, int currentUserId, string currentUserRole)
+    public async Task<ServiceResult<TicketDetailDto>> GetByIdAsync(int id, int currentUserId, string currentUserRole)
     {
         Ticket? ticket = await LoadTrackedTicketWithRelationsAsync(id);
         if (ticket is null)
         {
-            return ServiceResult<TicketDto>.NotFound($"A {id} azonosítójú tiket nem található.");
+            return ServiceResult<TicketDetailDto>.NotFound($"A {id} azonosítójú tiket nem található.");
         }
 
-        if (currentUserRole == RoleNames.User && ticket.CreatedByUserId != currentUserId)
+        if (!CanAccessTicket(ticket, currentUserId, currentUserRole))
         {
-            return ServiceResult<TicketDto>.NotFound($"A {id} azonosítójú tiket nem található.");
+            return ServiceResult<TicketDetailDto>.NotFound($"A {id} azonosítójú tiket nem található.");
         }
 
-        return ServiceResult<TicketDto>.Success(MapToTicketDto(ticket));
+        return ServiceResult<TicketDetailDto>.Success(MapToTicketDetailDto(ticket));
     }
 
     public async Task<ServiceResult<TicketDto>> CreateAsync(CreateTicketDto dto, int currentUserId)
@@ -278,6 +279,48 @@ public class TicketService : ITicketService
         };
     }
 
+    private static TicketDetailDto MapToTicketDetailDto(Ticket ticket)
+    {
+        return new TicketDetailDto
+        {
+            Id = ticket.Id,
+            Title = ticket.Title,
+            Description = ticket.Description,
+            Status = ticket.Status,
+            Priority = ticket.Priority,
+            CategoryId = ticket.CategoryId,
+            CategoryName = ticket.Category.Name,
+            CreatedByUserId = ticket.CreatedByUserId,
+            CreatedByUserName = ticket.CreatedByUser?.FullName ?? string.Empty,
+            AssignedToUserId = ticket.AssignedToUserId,
+            AssignedToUserName = ticket.AssignedToUser?.FullName ?? string.Empty,
+            CreatedAt = ticket.CreatedAt,
+            Comments = ticket.Comments
+                .OrderBy(c => c.CreatedAt)
+                .Select(c => new CommentDto
+                {
+                    Id = c.Id,
+                    TicketId = c.TicketId,
+                    UserId = c.UserId,
+                    UserRole = c.User.Role,
+                    Content = c.Content,
+                    CreatedAt = c.CreatedAt
+                })
+                .ToList()
+        };
+    }
+
+    private bool CanAccessTicket(Ticket ticket, int currentUserId, string currentUserRole)
+    {
+        if (currentUserRole == RoleNames.Admin || currentUserRole == RoleNames.Agent)
+        {
+            return true;
+        }
+
+        return ticket.CreatedByUserId == currentUserId;
+    }
+
+
     private IQueryable<Ticket> BuildBaseTicketQuery()
     {
         return dbContext.Tickets
@@ -396,6 +439,8 @@ public class TicketService : ITicketService
             .Include(t => t.Category)
             .Include(t => t.CreatedByUser)
             .Include(t => t.AssignedToUser)
+            .Include(t => t.Comments)
+            .ThenInclude(c => c.User)
             .FirstOrDefaultAsync(t => t.Id == id);
     }
 }
