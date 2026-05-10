@@ -79,8 +79,8 @@ public static class SeedData
         int userId = (await context.Users.FirstAsync(u => u.Email == "user@pelda.hu")).Id;
 
         int loginTicketId = (await context.Tickets.FirstAsync(t => t.Title == "Nem tud bejelentkezni a felhasználó")).Id;
-        int darkModeTicketId =(await context.Tickets.FirstAsync(t => t.Title == "Dark mód igénylése")).Id;
-        context.TicketComments.AddRange(
+        int darkModeTicketId = (await context.Tickets.FirstAsync(t => t.Title == "Dark mód igénylése")).Id;
+        await context.TicketComments.AddRangeAsync(
             new TicketComment
             {
                 TicketId = loginTicketId,

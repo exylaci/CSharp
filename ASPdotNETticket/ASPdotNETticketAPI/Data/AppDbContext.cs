@@ -9,6 +9,7 @@ public class AppDbContext : DbContext
     public DbSet<Category> Categories => Set<Category>();
     public DbSet<AppUser> Users => Set<AppUser>();
     public DbSet<TicketComment> TicketComments => Set<TicketComment>();
+
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }

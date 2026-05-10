@@ -11,10 +11,14 @@ public interface ITicketService
     Task<PagedResultDto<TicketDto>> GetAllAsync(GetTicketsQueryDto query);
     Task<PagedResultDto<TicketDto>> GetMyCreatedAsync(int currentUserId, GetTicketsQueryDto query); //Hogy a user tudja listázni az általka létrehozott Ticketeket
     Task<PagedResultDto<TicketDto>> GetMyAssignedAsync(int currentUserId, GetTicketsQueryDto query); //Hogy a user tudja listázni a rátestált Ticketeket
-    Task<ServiceResult<TicketDetailDto>> GetByIdAsync(int id, int currentUserId, string currentUserRole);   //Amikor egy konkrét Ticketet kérünk le,, annak minden adata részletesen kell.
+    Task<ServiceResult<TicketDetailDto>> GetByIdAsync(int id, int currentUserId, string currentUserRole); //Amikor egy konkrét Ticketet kérünk le,, annak minden adata részletesen kell.
     Task<ServiceResult<TicketDto>> CreateAsync(CreateTicketDto dto, int currentUserId);
     Task<ServiceResult<TicketDto>> UpdateAsync(int id, UpdateTicketDto dto, int currentUserId, string currentUserRole);
     Task<ServiceResult<TicketDto>> UpdateStatusAsync(int id, UpdateTicketStatusDto dto, int currentUserId, string currentUserRole);
     Task<ServiceResult<TicketDto>> AssignAsync(int id, AssignTicketDto dto, int currentUserId, string currentUserRole);
-    Task<ServiceResult> DeleteAsync(int id);    //Magát a függvényt eleve csak admin tudja meghívni, itt már nem kell a user elelnőrzéséhez adatot átadni 
+    Task<ServiceResult<TicketDto>> TakeAsync(int id, int currentUserId, string currentUserRole);
+    Task<ServiceResult<TicketDto>> ResolveAsync(int id, int currentUserId, string currentUserRole, WorkflowActionDto dto);
+    Task<ServiceResult<TicketDto>> CloseAsync(int id, int currentUserId, string currentUserRole, WorkflowActionDto dto);
+    Task<ServiceResult<TicketDto>> ReopenAsync(int id, int currentUserId, string currentUserRole, WorkflowActionDto dto);
+    Task<ServiceResult> DeleteAsync(int id); //Magát a függvényt eleve csak admin tudja meghívni, itt már nem kell a user elelnőrzéséhez adatot átadni 
 }

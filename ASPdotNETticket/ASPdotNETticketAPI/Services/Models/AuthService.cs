@@ -43,9 +43,9 @@ public class AuthService : IAuthService
             IsActive = true
         };
 
-        user.PasswordHash = passwordHasher.HashPassword(user, dto.Password);        //Hogy ne magát a jelszót tároljuk el.
-        dbContext.Users.Add(user);                                              //Hozzáadjuk a létrehozott usert
-        await dbContext.SaveChangesAsync();                                         //elmentetjük az adatbázisba
+        user.PasswordHash = passwordHasher.HashPassword(user, dto.Password); //Hogy ne magát a jelszót tároljuk el.
+        dbContext.Users.Add(user); //Hozzáadjuk a létrehozott usert
+        await dbContext.SaveChangesAsync(); //elmentetjük az adatbázisba
         return ServiceResult<AuthResponseDto>.Success(CreateAuthResponse(user));
     }
 

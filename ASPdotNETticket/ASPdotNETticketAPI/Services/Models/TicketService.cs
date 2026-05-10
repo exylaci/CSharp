@@ -6,7 +6,6 @@ using ASPdotNETticketAPI.Dtos.Tickets;
 using ASPdotNETticketAPI.Entities;
 using ASPdotNETticketAPI.Enums;
 using ASPdotNETticketAPI.Services.Interfaces;
-using Microsoft.AspNetCore.Http.HttpResults;
 using Microsoft.EntityFrameworkCore;
 
 namespace ASPdotNETticketAPI.Services.Models;
@@ -100,7 +99,10 @@ public class TicketService : ITicketService
             CategoryId = category.Id,
             Category = category,
             CreatedByUserId = currentUserId,
-            AssignedToUser = null
+            AssignedToUser = null,
+            UpdatedAt = null,
+            ResolvedAt = null,
+            ClosedAt = null
         };
         dbContext.Tickets.Add(newTicket);
         await dbContext.SaveChangesAsync();
@@ -200,10 +202,27 @@ public class TicketService : ITicketService
         }
 
         ticket.Status = dto.Status;
-        await dbContext.SaveChangesAsync();
+        ticket.UpdatedAt = DateTime.UtcNow;
+        if (dto.Status == TicketStatus.Resolved)
+        {
+            ticket.ResolvedAt = DateTime.UtcNow;
+            ticket.ClosedAt = null;
+        }
 
+        if (dto.Status == TicketStatus.Closed)
+        {
+            ticket.ClosedAt = DateTime.UtcNow;
+        }
+
+        if (dto.Status == TicketStatus.Open || dto.Status == TicketStatus.InProgress)
+        {
+            ticket.ResolvedAt = null;
+            ticket.ClosedAt = null;
+        }
+
+        await dbContext.SaveChangesAsync();
         Ticket? updatedTicket = await LoadTrackedTicketWithRelationsAsync(ticket.Id);
-        return ServiceResult<TicketDto>.Success(MapToTicketDto(updatedTicket));
+        return ServiceResult<TicketDto>.Success(MapToTicketDto(updatedTicket!));
     }
 
 
@@ -237,9 +256,144 @@ public class TicketService : ITicketService
         }
 
         ticket.AssignedToUserId = targetUser.Id;
+        ticket.UpdatedAt = DateTime.UtcNow;
         await dbContext.SaveChangesAsync();
         Ticket? updatedTicket = await LoadTrackedTicketWithRelationsAsync(ticket.Id);
         return ServiceResult<TicketDto>.Success(MapToTicketDto(updatedTicket));
+    }
+
+    public async Task<ServiceResult<TicketDto>> TakeAsync(int id, int currentUserId, string currentUserRole)
+    {
+        Ticket? ticket = await LoadTrackedTicketWithRelationsAsync(id);
+        if (ticket is null)
+        {
+            return ServiceResult<TicketDto>.NotFound($"A {id} azonosítójú ticket nem található");
+        }
+
+        if (ticket.Status == TicketStatus.Closed)
+        {
+            return ServiceResult<TicketDto>.Validation(nameof(ticket.Status), "Lezárt ticket nem vehető fel.");
+        }
+
+        AppUser? currentUser = await dbContext.Users
+            .FirstOrDefaultAsync(u => u.Id == currentUserId && u.IsActive);
+
+        if (currentUser is null)
+        {
+            return ServiceResult<TicketDto>.Validation("user", "A user nem található, vagy inaktív");
+        }
+
+        if (currentUserRole != RoleNames.Admin && currentUserRole != RoleNames.Agent)
+        {
+            return ServiceResult<TicketDto>.Validation("user", "Tiketet csak Admin vagy Agent vehet fel.");
+        }
+
+        if (ticket.AssignedToUserId.HasValue && ticket.AssignedToUserId.Value != currentUserId)
+        {
+            return ServiceResult<TicketDto>.Validation(nameof(ticket.AssignedToUserId), "A tiket már egy másik userhez hozzá lett rendelve");
+        }
+
+        ticket.AssignedToUserId = currentUserId;
+        if (ticket.Status == TicketStatus.Open)
+        {
+            ticket.Status = TicketStatus.InProgress;
+        }
+
+        ticket.UpdatedAt = DateTime.UtcNow;
+        await dbContext.SaveChangesAsync();
+        Ticket? updatedTicket = await LoadTrackedTicketWithRelationsAsync(ticket.Id);
+        return ServiceResult<TicketDto>.Success(MapToTicketDto(updatedTicket!));
+    }
+
+    public async Task<ServiceResult<TicketDto>> ResolveAsync(int id, int currentUserId, string currentUserRole, WorkflowActionDto dto)
+    {
+        Ticket? ticket = await LoadTrackedTicketWithRelationsAsync(id);
+        if (ticket is null)
+        {
+            return ServiceResult<TicketDto>.NotFound($"A {id} azonosítójú ticket nem található!");
+        }
+
+        if (currentUserRole == RoleNames.Agent && ticket.AssignedToUserId != currentUserId)
+        {
+            return ServiceResult<TicketDto>.Validation(nameof(ticket.AssignedToUserId), $"Agentként csak a hozzárendelt ticketek státusza változtatható");
+        }
+
+        if (ticket.Status != TicketStatus.InProgress)
+        {
+            return ServiceResult<TicketDto>.Validation(nameof(ticket.Status), $"Csak folyamatban lévő ticketet lehet megoldott állapotúra állítani.");
+        }
+
+        ticket.Status = TicketStatus.Resolved;
+        ticket.ResolvedAt = DateTime.UtcNow;
+        ticket.ClosedAt = null;
+        ticket.UpdatedAt = DateTime.UtcNow;
+
+        await dbContext.SaveChangesAsync();
+        Ticket? updatedTicket = await LoadTrackedTicketWithRelationsAsync(ticket.Id);
+        return ServiceResult<TicketDto>.Success(MapToTicketDto(updatedTicket!));
+    }
+
+    public async Task<ServiceResult<TicketDto>> CloseAsync(int id, int currentUserId, string currentUserRole, WorkflowActionDto dto)
+    {
+        Ticket? ticket = await LoadTrackedTicketWithRelationsAsync(id);
+        if (ticket is null)
+        {
+            return ServiceResult<TicketDto>.NotFound($"A {id} azonosítójú ticket nem található!");
+        }
+
+        if (currentUserRole == RoleNames.User && ticket.AssignedToUserId != currentUserId)
+        {
+            return ServiceResult<TicketDto>.NotFound($"A {id} azonosítójú ticket nem található!"); //Mivel ez másik user tickete, ezért számára nem található
+        }
+
+        if (currentUserRole == RoleNames.Agent)
+        {
+            return ServiceResult<TicketDto>.Validation("role", $"Agentként nem zárhat le ticketet");
+        }
+
+        if (ticket.Status != TicketStatus.Resolved)
+        {
+            return ServiceResult<TicketDto>.Validation(nameof(ticket.Status), $"Csak megoldott ticketet lehet lezárni.");
+        }
+
+        ticket.Status = TicketStatus.Closed;
+        ticket.ClosedAt = DateTime.UtcNow;
+        ticket.UpdatedAt = DateTime.UtcNow;
+        await dbContext.SaveChangesAsync();
+        Ticket? updatedTicket = await LoadTrackedTicketWithRelationsAsync(ticket.Id);
+        return ServiceResult<TicketDto>.Success(MapToTicketDto(updatedTicket!));
+    }
+
+    public async Task<ServiceResult<TicketDto>> ReopenAsync(int id, int currentUserId, string currentUserRole, WorkflowActionDto dto)
+    {
+        Ticket? ticket = await LoadTrackedTicketWithRelationsAsync(id);
+        if (ticket is null)
+        {
+            return ServiceResult<TicketDto>.NotFound($"A {id} azonosítójú ticket nem található!");
+        }
+
+        if (currentUserRole == RoleNames.User && ticket.AssignedToUserId != currentUserId)
+        {
+            return ServiceResult<TicketDto>.NotFound($"A {id} azonosítójú ticket nem található!");
+        }
+
+        if (currentUserRole == RoleNames.Agent)
+        {
+            return ServiceResult<TicketDto>.Validation("role", $"Agentként nem nyithat vissza ticketet");
+        }
+
+        if (ticket.Status != TicketStatus.Resolved && ticket.Status != TicketStatus.Closed)
+        {
+            return ServiceResult<TicketDto>.Validation(nameof(ticket.Status), $"Csak megoldott vagy lezárt ticketet lehet visszanyitni.");
+        }
+
+        ticket.Status = ticket.AssignedToUserId.HasValue ? TicketStatus.InProgress : TicketStatus.Open;
+        ticket.ResolvedAt = null;
+        ticket.ClosedAt = null;
+        ticket.UpdatedAt = DateTime.UtcNow;
+        await dbContext.SaveChangesAsync();
+        Ticket? updatedTicket = await LoadTrackedTicketWithRelationsAsync(ticket.Id);
+        return ServiceResult<TicketDto>.Success(MapToTicketDto(updatedTicket!));
     }
 
     public async Task<ServiceResult> DeleteAsync(int id)
@@ -275,7 +429,10 @@ public class TicketService : ITicketService
             CreatedByUserName = ticket.CreatedByUser?.FullName ?? string.Empty,
             AssignedToUserId = ticket.AssignedToUserId,
             AssignedToUserName = ticket.AssignedToUser?.FullName ?? string.Empty,
-            CreatedAt = ticket.CreatedAt
+            CreatedAt = ticket.CreatedAt,
+            UpdatedAt = ticket.UpdatedAt,
+            ResolvedAt =  ticket.ResolvedAt,
+            ClosedAt = ticket.ClosedAt
         };
     }
 
@@ -295,6 +452,9 @@ public class TicketService : ITicketService
             AssignedToUserId = ticket.AssignedToUserId,
             AssignedToUserName = ticket.AssignedToUser?.FullName ?? string.Empty,
             CreatedAt = ticket.CreatedAt,
+            UpdatedAt = ticket.UpdatedAt,
+            ResolvedAt =  ticket.ResolvedAt,
+            ClosedAt = ticket.ClosedAt,
             Comments = ticket.Comments
                 .OrderBy(c => c.CreatedAt)
                 .Select(c => new CommentDto
@@ -407,6 +567,7 @@ public class TicketService : ITicketService
                 Id = t.Id,
                 Title = t.Title,
                 Description = t.Description,
+                Status = t.Status,
                 Priority = t.Priority,
                 CategoryId = t.CategoryId,
                 CategoryName = t.Category.Name,
@@ -414,7 +575,10 @@ public class TicketService : ITicketService
                 CreatedByUserName = t.CreatedByUser != null ? t.CreatedByUser.FullName : string.Empty,
                 AssignedToUserId = t.AssignedToUserId,
                 AssignedToUserName = t.AssignedToUser != null ? t.AssignedToUser.FullName : string.Empty,
-                CreatedAt = t.CreatedAt
+                CreatedAt = t.CreatedAt,
+                UpdatedAt = t.UpdatedAt,
+                ResolvedAt = t.ResolvedAt,
+                ClosedAt = t.ClosedAt
             })
             .ToListAsync();
 

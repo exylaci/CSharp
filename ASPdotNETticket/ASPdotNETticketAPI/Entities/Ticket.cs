@@ -13,6 +13,9 @@ public class Ticket
     public int? CreatedByUserId { get; set; } //Ki hozta létre (nullable: Mert a korábban létrehozott ticketeknél nincs ilyen adat. Ha egyből az elején felvettünk volna ilyen paramétert is, akkor nem kellene nullable-nek lennie.)
     public int? AssignedToUserId { get; set; } //Kihez van rendelve
     public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+    public DateTime? UpdatedAt { get; set; }
+    public DateTime? ResolvedAt { get; set; }
+    public DateTime? ClosedAt { get; set; }
     public Category Category { get; set; } = null;
     public AppUser? CreatedByUser { get; set; }
     public AppUser? AssignedToUser { get; set; }

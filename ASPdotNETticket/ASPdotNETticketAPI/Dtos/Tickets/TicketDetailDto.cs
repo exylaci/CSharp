@@ -20,5 +20,5 @@ public class TicketDetailDto //Ezt adjuk vissza a jegyről egy részletes GET re
     public string CreatedByUserName { get; set; } = string.Empty;
     public int? AssignedToUserId { get; set; }
     public string AssignedToUserName { get; set; } = string.Empty;
-    public List<CommentDto> Comments { get; set; } = [];    //Mivel több komment is tartozhat hozzá, ezért a komment(ek) mindnig egy collectióban van(nak).
+    public List<CommentDto> Comments { get; set; } = []; //Mivel több komment is tartozhat hozzá, ezért a komment(ek) mindnig egy collectióban van(nak).
 }

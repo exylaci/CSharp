@@ -20,7 +20,7 @@ public class CommentService : ICommentService
     public async Task<ServiceResult<List<CommentDto>>> GetByTicketIdAsync(int ticketId, int currentUserId, string currentUserRole)
     {
         Ticket? ticket = await dbContext.Tickets
-            .AsNoTracking()                             //csak olvassuk
+            .AsNoTracking() //csak olvassuk
             .Include(t => t.CreatedByUser)
             .Include(t => t.AssignedToUser)
             .FirstOrDefaultAsync(t => t.Id == ticketId);
@@ -76,7 +76,7 @@ public class CommentService : ICommentService
         {
             return ServiceResult<CommentDto>.Validation(nameof(ticket.Status), "Lezárt ticket nem lehet új kommentet felvenni");
         }
-        
+
         AppUser? user = await dbContext.Users
             .FirstOrDefaultAsync(u => u.Id == currentUserId && u.IsActive);
         if (user is null)

@@ -83,7 +83,12 @@ if (app.Environment.IsDevelopment())
     app.MapOpenApi();
 }
 
-app.UseHttpsRedirection();
+
+if (!app.Environment.IsDevelopment()) //Ahhoz, hogy fejlesztés közben sima http-ben (nem https) tudjuk futtatni
+{
+    app.UseHttpsRedirection();
+}
+
 app.UseAuthentication(); //Előbb a felhasználó ellenőrzése aztámn a jogosultság megadása 
 app.UseAuthorization(); //Jogosultság kezeléshez kell
 app.MapControllers(); //A végpontok eléréséhez kell a map kontroller
