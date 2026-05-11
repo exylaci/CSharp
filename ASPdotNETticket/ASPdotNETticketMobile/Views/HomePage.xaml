@@ -1,0 +1,32 @@
+﻿<?xml
+    version="1.0"
+    encoding="utf-8"?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ASPdotNETticketMobile.Views.HomePage">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="25"
+            Spacing="16">
+            <Label
+                FontAttributes="Bold"
+                FontSize="25"
+                Text="{Binding WelcomeText}" />
+
+            <Label
+                FontSize="16"
+                Text="{Binding RoleText}" />
+
+            <Label
+                FontSize="14"
+                Text="Ide még jöhetne valami a backend-től. Pl egy ticket lista, vagy ilyesmi." />
+
+            <Button
+                Command="{Binding LogoutCommand}"
+                Text="Kijelentkezés" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>

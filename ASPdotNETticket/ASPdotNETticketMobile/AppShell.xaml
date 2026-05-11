@@ -1,0 +1,28 @@
+<?xml
+    version="1.0"
+    encoding="UTF-8"?>
+
+<Shell
+    x:Class="ASPdotNETticketMobile.AppShell"
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    xmlns:views="clr-namespace:ASPdotNETticketMobile.Views"
+    Title="ASPdotNETticketMobile">
+    <!-- xmlns:views="clr-namespace:ASPdotNETticketMobile.Views" : Az oldalakat leíró xaml fájlok könyvtára-->
+
+
+    <!-- A project/views/ -ban az egyes lapokat leíró xaml fájlok felsorolása api útvonallal és az oldalak neveivel.-->
+    <ShellContent
+        Route="login"
+        Title="Login"
+        ContentTemplate="{DataTemplate views:LoginPage}" />
+    <!-- Route=           : útvonala -->
+    <!-- Title=           : a lap "címsora" a szöveg -->
+    <!-- ContentTemplate= : melyik Views/....Page.xaml fájl írja le az ablak kinézetét/tartalmát -->
+
+    <ShellContent
+        Route="home"
+        Title="Home"
+        ContentTemplate="{DataTemplate views:HomePage}" />
+
+</Shell>

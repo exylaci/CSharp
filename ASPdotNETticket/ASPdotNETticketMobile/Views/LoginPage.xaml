@@ -1,0 +1,52 @@
+﻿<?xml
+    version="1.0"
+    encoding="utf-8"?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ASPdotNETticketMobile.Views.LoginPage">
+
+    <ScrollView>
+        <!-- nagyon egyszerű design, mindent csak bedobálunk egy scroll view-ba, azon belül egy Vertica Stack Layout-ba -->
+        <VerticalStackLayout
+            Padding="25"
+            Spacing="15">
+            <Label
+                FontAttributes="Bold"
+                FontSize="30"
+                Text="DEMO ASP Application Mobile" />
+
+            <Label
+                FontSize="16"
+                Text="Bejelentkezés a backend API használatához" />
+
+            <Entry
+                Keyboard="Email"
+                Placeholder="E-mail cím"
+                Text="{Binding Email}" />
+            <!-- Keyboard="Email"    : A virtuális billentyűzeten legyen @ karakter -->
+            <!-- Placeholder="Email" : halvánnyal kezdő példa szöveg -->
+            <!-- {Binding Email}     : Az Email változóhoz köti, abba tárolja bele az ide neírt értéket  -->
+
+            <Entry
+                IsPassword="True"
+                Placeholder="Jelszó"
+                Text="{Binding Password}" />
+            <!-- IsPassword="True" : csillagokat ír a begépelt karakterek helyett -->
+
+            <Button
+                Text="Bejelentkezés"
+                Command="{Binding LoginCommand}" />
+
+            <ActivityIndicator
+                IsRunning="{Binding IsBusy}"
+                IsVisible="{Binding IsBusy}" />
+            <!-- jelzi, hogy foglalt, de akkor is látható maradjon -->
+
+            <Label
+                Text="{Binding ErrorMessage}"
+                TextColor="Red" />
+        </VerticalStackLayout>
+    </ScrollView>
+</ContentPage>
