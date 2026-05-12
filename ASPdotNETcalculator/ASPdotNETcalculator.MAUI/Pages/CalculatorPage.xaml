@@ -1,0 +1,90 @@
+﻿<?xml
+    version="1.0"
+    encoding="utf-8"?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="ASPdotNETcalculator.MAUI.Pages.CalculatorPage"
+    Title="{Binding PageTitle}">
+
+    <ScrollView>
+        <VerticalStackLayout
+            Padding="20"
+            Spacing="15">
+
+            <!-- A Number -->
+            <Entry
+                Placeholder="Egyik szám"
+                Keyboard="Numeric"
+                Text="{Binding A}" />
+
+            <!-- B Number -->
+            <Entry
+                Placeholder="Másik szám"
+                Keyboard="Numeric"
+                Text="{Binding B}" />
+
+            <!-- Result -->
+            <Entry
+                Placeholder="Eredmény"
+                IsReadOnly="True"
+                Text="{Binding Result}" />
+
+            <!-- Math Operations -->
+            <Grid
+                ColumnDefinitions="*,*,*,*"
+                RowDefinitions="Auto"
+                ColumnSpacing="10">
+
+                <Button
+                    Grid.Column="0"
+                    Text="+"
+                    Command="{Binding AdditionCommand}" />
+
+                <Button
+                    Grid.Column="1"
+                    Text="-"
+                    Command="{Binding SubstractionCommand}" />
+
+                <Button
+                    Grid.Column="2"
+                    Text="*"
+                    Command="{Binding MultiplicationCommand}" />
+
+                <Button
+                    Grid.Column="3"
+                    Text="/"
+                    Command="{Binding DivisionCommand}" />
+            </Grid>
+
+            <!-- Memory Operations -->
+            <Grid
+                ColumnDefinitions="*,*,*"
+                RowDefinitions="Auto"
+                ColumnSpacing="10">
+
+                <Button
+                    Grid.Column="0"
+                    Text="M"
+                    Command="{Binding MemoryStoreCommand}" />
+
+                <Button
+                    Grid.Column="1"
+                    Text="MR"
+                    Command="{Binding MemoryRecallCommand}" />
+
+                <Button
+                    Grid.Column="2"
+                    Text="MC"
+                    Command="{Binding MemoryClearCommand}" />
+            </Grid>
+            <!-- Message -->
+            <Label
+                Text="{Binding ErrorMessage}"
+                TextColor="Red" />
+
+        </VerticalStackLayout>
+    </ScrollView>
+
+</ContentPage>
