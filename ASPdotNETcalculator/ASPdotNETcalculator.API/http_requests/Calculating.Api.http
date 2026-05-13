@@ -1,0 +1,84 @@
+@baseUrl = http://localhost:5210
+
+### eltárolt szám lekérdezése.    
+GET {{baseUrl}}/calculator/memoryread
+Accept: application/json
+
+###
+
+### szám eltárolása    
+POST {{baseUrl}}/calculator/memorystore
+Content-Type: application/json
+Accept: application/json
+
+{
+    "A": 2342.55
+}
+
+###
+
+### eltárolt szám törlése.    
+DELETE {{baseUrl}}/calculator/memoryclear
+Accept: application/json
+
+###
+
+### 2 szám összeadása    
+GET {{baseUrl}}/calculator/add
+Content-Type: application/json
+Accept: application/json
+
+{
+  "A": 2342.55,
+  "B": 1111.44
+}
+
+###
+
+### 2 szám kivonása    
+GET {{baseUrl}}/calculator/subs
+Content-Type: application/json
+Accept: application/json
+
+{
+  "A": 2342.55,
+  "B": 1111.44
+}
+
+###
+
+### 2 szám szorzása    
+GET {{baseUrl}}/calculator/mult
+Content-Type: application/json
+Accept: application/json
+
+{
+  "A": 2342.55,
+  "B": 1111.44
+}
+
+###
+
+### 2 szám osztása    
+GET {{baseUrl}}/calculator/div
+Content-Type: application/json
+Accept: application/json
+
+{
+  "A": 2342.55,
+  "B": 1111.44
+}
+
+###
+
+### 2 szám osztása nullával! 
+GET {{baseUrl}}/calculator/div
+Content-Type: application/json
+Accept: application/json
+
+{
+  "A": 2342.55,
+  "B": 0
+}
+
+###
