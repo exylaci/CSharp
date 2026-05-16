@@ -1,0 +1,22 @@
+@baseUrl = http://localhost:5210
+
+
+### Osszes email cím lekérése
+GET {{baseUrl}}/api/EmailSubscriptions
+Content-Type: application/json
+Accept: application/json
+
+###
+
+
+
+### Uj email felvétele
+POST {{baseUrl}}/api/EmailSubscriptions
+Content-Type: application/json
+Accept: application/json
+
+{
+  "Email": "proba2@pelda.hu"
+}
+
+###

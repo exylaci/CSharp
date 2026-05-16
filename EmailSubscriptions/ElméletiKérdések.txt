@@ -1,0 +1,9 @@
+1. A Controller fogadja a HTTP kéréseket és visszaadja a válaszokat, a Service tartalmazza az üzleti logikát, a Repository pedig az adatbázis-kezelésért felel. A rétegek szétválasztása átláthatóbbá és könnyebben bővíthetővé/karbantarthatóvá teszi a programunkat. 
+
+2. A Dependency Injection egy olyan megoldás, ahol az osztályok a függőségeket kívülről kapják pl.: a konstruktorban és nem maguk hozzák létre őket. Ez lazább csatolást, könnyebb tesztelhetőséget és egyszerűbb bővíthetőséget biztosít.
+
+3. A GET metódust az API-tól adat kérésre használjuk, (tipikusan) nem módosít adatot a szerveren (már, ha "szépen" akarunk dolgozni). A POST metódust új adatok küldésére vagy létrehozására használjuk, és az adatokat a kérés törzsében küldjük el.
+
+4. A DTO (Data Transfer Object) egy olyan objektum, amelyet adat cserénél használunk a kliens és a szerver között. Nem feltétlenül/mindig egy teljes rekordot küldjük vissza, mert nem feltétlenül tartozik belőle minden a kérdezőre, vagy  nagymennyiségű is lehet, illetve lehetnek számára felesleges adatok is benne. Ezért küldünk DTO-kat, mert így jobban összeállítható a válasz (és a kérdés is).
+
+5. A MAUI alkalmazás HTTP kérésekkel kommunikál az ASP.NET Core backend-del, általában Http kliens segítségével. Az adatokat többnyire JSON formátumban küldjük/fogadjuk REST API végpontokon keresztül.
