@@ -1,0 +1,41 @@
+﻿<?xml
+    version="1.0"
+    encoding="utf-8"?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Mobil.Pages.EmailsPage"
+    Title="Email registration">
+
+    <VerticalStackLayout
+        Padding="20"
+        Spacing="15">
+
+        <Entry
+            Placeholder="Enter email"
+            Text="{Binding Email}" />
+
+        <Button
+            Command="{Binding SaveEmailCommand}"
+            Text="Save Email" />
+
+        <Button
+            Command="{Binding LoadEmailsCommand}"
+            Text="Refresh List" />
+
+        <CollectionView ItemsSource="{Binding Emails}">
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+                    <Frame Padding="10">
+
+                        <Label
+                            FontSize="18"
+                            Text="{Binding Email}" />
+
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>
