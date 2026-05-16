@@ -21,7 +21,7 @@
             Text="Save Email" />
 
         <Button
-            Command="{Binding LoadEmailsCommand}"
+            Command="{Binding RefreshEmailListCommand}"
             Text="Refresh List" />
 
         <CollectionView ItemsSource="{Binding Emails}">

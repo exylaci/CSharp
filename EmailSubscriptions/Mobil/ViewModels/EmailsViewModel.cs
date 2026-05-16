@@ -19,14 +19,14 @@ public class EmailsViewModel : BaseViewModel
 
     public ObservableCollection<EmailAddressDto> Emails { get; } = [];
     public ICommand SaveEmailCommand { get; }
-    public ICommand RefreshCommand { get; }
+    public ICommand RefreshEmailListCommand { get; }
 
 
     public EmailsViewModel(IRegistrationApiService service)
     {
         _service = service;
         SaveEmailCommand = new Command(async () => await SaveEmailAsync());
-        RefreshCommand = new Command(async () => await LoadEmailsAsync());
+        RefreshEmailListCommand = new Command(async () => await LoadEmailsAsync());
         Task.Run(LoadEmailsAsync);
     }
 
