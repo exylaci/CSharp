@@ -1,0 +1,42 @@
+﻿@baseUrl = http://localhost:5210
+
+
+### Minden Customer lekérdezése
+GET {{baseUrl}}/api/Customer
+Content-Type: application/json
+Accept: application/json
+
+###
+
+### új customer hozzáadása
+POST {{baseUrl}}/api/Customer
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "uj@pelda.hu"
+}
+
+###
+
+### customer módosítása
+PUT {{baseUrl}}/api/Customer/uj@pelda.hu
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "modositott@pelda.hu"
+}
+
+###
+
+
+### customer törlése
+DELETE  {{baseUrl}}/api/Customer/modositott@pelda.hu
+Accept: application/json
+
+###
+
+
+
+
