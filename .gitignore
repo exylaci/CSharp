@@ -99,8 +99,7 @@ ClientBin/
 ![Ss]tyle[Cc]op.targets
 ~$*
 *~
-*.dbmdl
-*.db
+*.db*
 *.[Pp]ublish.xml
 *.publishsettings
 
