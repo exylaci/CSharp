@@ -17,7 +17,7 @@ public class CustomersViewModel : BaseViewModel
     public ICommand ModifyCustomerCommand { get; set; }
     public ICommand DeleteCustomerCommand { get; set; }
 
-    public string Email
+    public string Email //Riderrel legeneráltatható: kijelölt attribútumokon / Generate Code... / Properties / X Attributumokat / Notify on Property changes: Use method 'SetField(ref, T, T, string?)'
     {
         get => _email;
         set => SetField(ref _email, value);

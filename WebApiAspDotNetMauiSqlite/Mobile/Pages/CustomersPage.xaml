@@ -48,15 +48,22 @@
             <CollectionView.ItemTemplate>
                 <DataTemplate>
 
-                    <Frame
+                    <Border
                         Padding="10"
-                        Margin="0,5">
+                        Margin="0,5"
+                        StrokeThickness="1"
+                        Stroke="#CCCCCC">
+
+                        <Border.StrokeShape>
+                            <RoundRectangle
+                                CornerRadius="10" />
+                        </Border.StrokeShape>
 
                         <Label
                             Text="{Binding Email}"
                             FontSize="16" />
 
-                    </Frame>
+                    </Border>
                 </DataTemplate>
             </CollectionView.ItemTemplate>
         </CollectionView>

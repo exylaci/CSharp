@@ -22,7 +22,7 @@ public class CustomerController : ControllerBase
     }
 
     [HttpGet("{email}")]
-    public async Task<ActionResult<CustomerDto>> GetCustomerByEmail(string email) //csak akkor ugrik ide, ha a paraméter string típusú
+    public async Task<ActionResult<CustomerDto>> GetCustomerByEmail(string email) //csak akkor ugrik ide, ha a paraméter illeszkedik (string típusú)
     {
         CustomerDto? customer = await _service.GetCustomerByEmailAsync(email);
         if (customer is null)
