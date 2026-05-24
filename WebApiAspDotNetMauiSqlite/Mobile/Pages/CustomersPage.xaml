@@ -1,0 +1,64 @@
+﻿<?xml
+    version="1.0"
+    encoding="utf-8"?>
+
+<ContentPage
+    xmlns="http://schemas.microsoft.com/dotnet/2021/maui"
+    xmlns:x="http://schemas.microsoft.com/winfx/2009/xaml"
+    x:Class="Mobile.Pages.CustomersPage"
+    Title="Ügyfél adatok">
+
+    <VerticalStackLayout
+        Padding="20"
+        Spacing="15">
+
+        <Entry
+            Placeholder="Email cím"
+            Text="{Binding Email}" />
+
+        <HorizontalStackLayout
+            Spacing="10">
+
+            <Button
+                Text="Keresés"
+                Command="{Binding FindCustomerCommand}"
+                HorizontalOptions="FillAndExpand" />
+            <Button
+                Text="Mentés"
+                Command="{Binding CreateCustomerCommand}"
+                HorizontalOptions="FillAndExpand" />
+            <Button
+                Text="Módosítás"
+                Command="{Binding ModifyCustomerCommand}"
+                HorizontalOptions="FillAndExpand" />
+            <Button
+                Text="Törlés"
+                Command="{Binding DeleteCustomerCommand}"
+                HorizontalOptions="FillAndExpand" />
+
+        </HorizontalStackLayout>
+
+        <Button
+            Text="Lista frissítése"
+            Command="{Binding RefreshCustomerListCommand}" />
+
+        <CollectionView
+            ItemsSource="{Binding Customers}">
+
+            <CollectionView.ItemTemplate>
+                <DataTemplate>
+
+                    <Frame
+                        Padding="10"
+                        Margin="0,5">
+
+                        <Label
+                            Text="{Binding Email}"
+                            FontSize="16" />
+
+                    </Frame>
+                </DataTemplate>
+            </CollectionView.ItemTemplate>
+        </CollectionView>
+    </VerticalStackLayout>
+</ContentPage>
