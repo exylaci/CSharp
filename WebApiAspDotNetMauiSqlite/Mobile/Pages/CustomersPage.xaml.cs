@@ -14,5 +14,6 @@ public partial class CustomersPage : ContentPage
         InitializeComponent();
         BindingContext = viewModel;
         viewModel.OnError += async (message) => await DisplayAlert("Hiba!", message, "OK"); //A DisplayAlert(Title,message,button) felugró ablak hozzásaása az OnErrror eseménylitájához
+        viewModel.OnConfirm += async (title, message) => { return await DisplayAlert(title, message, "Igen", "Nem"); };
     }
 }

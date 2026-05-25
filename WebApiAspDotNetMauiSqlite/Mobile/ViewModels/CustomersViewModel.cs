@@ -17,6 +17,7 @@ public class CustomersViewModel : BaseViewModel
     public ICommand ModifyCustomerCommand { get; set; }
     public ICommand DeleteCustomerCommand { get; set; }
     public event Action<string>? OnError;
+    public event Func<string, string, Task<bool>>? OnConfirm;
 
     public string Email //Riderrel legeneráltatható: kijelölt attribútumokon / Generate Code... / Properties / X Attributumokat / Notify on Property changes: Use method 'SetField(ref, T, T, string?)'
     {
@@ -112,6 +113,12 @@ public class CustomersViewModel : BaseViewModel
         {
             OnError?.Invoke("Az e-mail cím megadása kötelező.");
             return; //Nem adott meg e-mail címet.
+        }
+
+        bool confirmed = await (OnConfirm?.Invoke("Törlés megerősítése", $"Biztos, hogy töröljük a {Email} ügyfelet?") ?? Task.FromResult(false));
+        if (!confirmed)
+        {
+            return; //Nem hagyta jóvá a törlést
         }
 
         bool success = await _customerApiService.DeleteCustomerAsync(Email);
