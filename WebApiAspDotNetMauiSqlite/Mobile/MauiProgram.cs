@@ -19,9 +19,11 @@ public static class MauiProgram
                 fonts.AddFont("OpenSans-Semibold.ttf", "OpenSansSemibold");
             });
 
-        builder.Services.AddScoped(sp => new HttpClient { BaseAddress = new Uri(AppSettings.BaseApiUrl) });
-        builder.Services.AddSingleton<ICustomerApiService, CustomerApiService>();
-        builder.Services.AddSingleton<CustomersViewModel>();
+        builder.Services.AddHttpClient<ICustomerApiService, CustomerApiService>(client =>
+        {
+            client.BaseAddress = new Uri(AppSettings.BaseApiUrl);
+            client.Timeout = TimeSpan.FromSeconds(3);
+        });
         builder.Services.AddSingleton<CustomersViewModel>();
         builder.Services.AddSingleton<AppShell>();
 

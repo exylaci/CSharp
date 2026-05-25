@@ -16,6 +16,7 @@ public class CustomersViewModel : BaseViewModel
     public ICommand CreateCustomerCommand { get; set; }
     public ICommand ModifyCustomerCommand { get; set; }
     public ICommand DeleteCustomerCommand { get; set; }
+    public event Action<string>? OnError;
 
     public string Email //Riderrel legeneráltatható: kijelölt attribútumokon / Generate Code... / Properties / X Attributumokat / Notify on Property changes: Use method 'SetField(ref, T, T, string?)'
     {
@@ -38,6 +39,7 @@ public class CustomersViewModel : BaseViewModel
         List<CustomerDto>? dtoCustomers = await _customerApiService.GetAllCustomerAsync();
         if (dtoCustomers is null)
         {
+            OnError?.Invoke("Nem sikerült elérni az adabázist.");
             return;
         }
 
@@ -52,12 +54,14 @@ public class CustomersViewModel : BaseViewModel
     {
         if (string.IsNullOrWhiteSpace(Email))
         {
+            OnError?.Invoke("Az e-mail cím megadása kötelező.");
             return; //Nem adott meg e-mail címet.
         }
 
         CustomerDto? customerDto = await _customerApiService.GetCustomerByEmailAsync(Email);
         if (customerDto is null)
         {
+            OnError?.Invoke($"Nem található a {Email} e-mail cím.");
             return; //Nincs találat a megadott Email címre
         }
 
@@ -68,12 +72,14 @@ public class CustomersViewModel : BaseViewModel
     {
         if (string.IsNullOrWhiteSpace(Email))
         {
+            OnError?.Invoke("Az e-mail cím megadása kötelező.");
             return; //Nem adott meg e-mail címet.
         }
 
         bool success = await _customerApiService.CreateCustomerAsync(new CustomerDto { Email = Email });
         if (!success)
         {
+            OnError?.Invoke($"Nem sikerült elmenteni.");
             return; //Nem sikerült a megadott e-mail címmel létrehozni.
         }
 
@@ -85,12 +91,14 @@ public class CustomersViewModel : BaseViewModel
     {
         if (string.IsNullOrWhiteSpace(Email))
         {
+            OnError?.Invoke("Az e-mail cím megadása kötelező.");
             return; //Nem adott meg e-mail címet.
         }
 
-        CustomerDto? modifiedCustomer = await _customerApiService.ModifyCustomerAsync(Email, new CustomerDto { Email = Email });
+        CustomerDto? modifiedCustomer = await _customerApiService.ModifyCustomerAsync(Email, new CustomerDto { Email = "updated_" + Email });
         if (modifiedCustomer is null)
         {
+            OnError?.Invoke($"Nem sikerült a változtatásokat elmenteni.");
             return; //Nem sikerült a megadott e-mail címűt módosítani!";
         }
 
@@ -102,13 +110,15 @@ public class CustomersViewModel : BaseViewModel
     {
         if (string.IsNullOrWhiteSpace(Email))
         {
+            OnError?.Invoke("Az e-mail cím megadása kötelező.");
             return; //Nem adott meg e-mail címet.
         }
 
         bool success = await _customerApiService.DeleteCustomerAsync(Email);
         if (!success)
         {
-            return; //Nem sikerült a megadott e-mail címűt módosítani!";
+            OnError?.Invoke($"Nem sikerült törölni.");
+            return; //Nem sikerült a megadott e-mail címűt törölni!";
         }
 
         Email = string.Empty;
