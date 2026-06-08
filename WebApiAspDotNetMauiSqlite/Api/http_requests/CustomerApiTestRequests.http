@@ -30,13 +30,52 @@ Accept: application/json
 
 ###
 
-
 ### customer törlése
 DELETE  {{baseUrl}}/api/Customer/modositott@pelda.hu
 Accept: application/json
 
 ###
 
+### már létező e-mail című customer hozzáadása
+POST {{baseUrl}}/api/Customer
+Content-Type: application/json
+Accept: application/json
 
+{
+  "email": "a@b.cd"
+}
 
+###
 
+### hibás e-mail című customer hozzáadása 1
+POST {{baseUrl}}/api/Customer
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "Hibás e-mail cím formátum"
+}
+
+###
+
+### hibás e-mail című customer hozzáadása 2
+POST {{baseUrl}}/api/Customer
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "Az_e-mail_cím_maximum_50_karakter_hosszu_lehet@pelda.hu"
+}
+
+###
+
+### hibás e-mail című customer hozzáadása 3
+POST {{baseUrl}}/api/Customer
+Content-Type: application/json
+Accept: application/json
+
+{
+  "email": "Az_e-mail_cím_maximum_50_karakter_hosszu_lehet_es_meg_rossz_is"
+}
+
+###

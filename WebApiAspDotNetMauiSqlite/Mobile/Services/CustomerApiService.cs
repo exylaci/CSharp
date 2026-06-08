@@ -1,5 +1,6 @@
 ﻿using System.Net.Http.Json;
 using Mobile.Dtos;
+using Mobile.Dtos.Errors;
 using Mobile.Services.Interfaces;
 
 namespace Mobile.Services;
@@ -49,15 +50,22 @@ public class CustomerApiService : ICustomerApiService
         }
     }
 
-    public async Task<bool> CreateCustomerAsync(CustomerDto customerDto)
+    public async Task<string?> CreateCustomerAsync(CustomerDto customerDto)
     {
         try
         {
-            return (await _httpClient.PostAsJsonAsync("api/Customer", customerDto)).IsSuccessStatusCode;
+            HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/Customer", customerDto);
+            if (response.IsSuccessStatusCode)
+            {
+                return null; //nincs hiba visszatérhetünk null-lal
+            }
+
+            ValidationProblemDetailsDto? error = await response.Content.ReadFromJsonAsync<ValidationProblemDetailsDto>(); //A backend validációs szöveg megkapásához, a 400-as válasz tartalmát ki kell olvasni.
+            return string.Join("\n", error?.Errors?.SelectMany(message => message.Value) ?? ["Nem sikerült eltárolni"]);
         }
-        catch (Exception)
+        catch (Exception ex)
         {
-            return false;
+            return ex.Message; //Visszaadja az elkapott kivétel szövegét, ha már egyszer szöveggel térhet vissza.
         }
     }
 

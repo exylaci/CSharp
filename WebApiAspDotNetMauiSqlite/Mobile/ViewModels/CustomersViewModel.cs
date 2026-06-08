@@ -1,4 +1,5 @@
 ﻿using System.Collections.ObjectModel;
+using System.ComponentModel.DataAnnotations;
 using System.Windows.Input;
 using Mobile.Dtos;
 using Mobile.Models;
@@ -53,10 +54,9 @@ public class CustomersViewModel : BaseViewModel
 
     private async Task FindCustomerByEmailAsync()
     {
-        if (string.IsNullOrWhiteSpace(Email))
+        if (!ValidateCustomerModel())
         {
-            OnError?.Invoke("Az e-mail cím megadása kötelező.");
-            return; //Nem adott meg e-mail címet.
+            return; //Nem teljesült valamelyik validációs annotácós feltétel. Pl: nem adott meg e-mail címet. 
         }
 
         CustomerDto? customerDto = await _customerApiService.GetCustomerByEmailAsync(Email);
@@ -69,31 +69,30 @@ public class CustomersViewModel : BaseViewModel
         Email = customerDto.Email;
     }
 
-    private async Task CreateCustomerAsync()
+    private async Task CreateCustomerAsync() //http hívás miatt async kell legyen
     {
-        if (string.IsNullOrWhiteSpace(Email))
+        if (!ValidateCustomerModel()) //a CustomerModelre akasztott Annotációk ellenőrzése, (saját függvénybe kiszervezve, a boiler plate elkerülésére) 
         {
-            OnError?.Invoke("Az e-mail cím megadása kötelező.");
-            return; //Nem adott meg e-mail címet.
+            return; //Nem teljesült valamelyik validációs annotácós feltétel. Pl: nem adott meg e-mail címet. 
         }
 
-        bool success = await _customerApiService.CreateCustomerAsync(new CustomerDto { Email = Email });
-        if (!success)
+        string? error = await _customerApiService.CreateCustomerAsync(new CustomerDto { Email = Email }); //Frontend Model konvertálása backendnek átadandó Dto-ba. És Backend Api meghívatása a DI-ben kapott CustomerApiService-zel.
+        if (error is not null) //Valamin elhasalt a backend elérése, vagy az ottani műveletek egyike
         {
-            OnError?.Invoke($"Nem sikerült elmenteni.");
+            OnError?.Invoke(error); //Hibaüzeneteket kiíró ablak feldobatása a Page-dzsel, a Page event-jének aktiválásával, a hibaüzenet szövege vagy a frontend Servicétől, vagy a backendtől jön.
+
             return; //Nem sikerült a megadott e-mail címmel létrehozni.
         }
 
-        Email = string.Empty;
-        OnPropertyChanged(nameof(Email));
+        Email = string.Empty; //Sikeres mentés után a CustomerModel attribútumainak kiürítése
+        OnPropertyChanged(nameof(Email)); //Értesítés a MAUI Binding rendszernek, hogy a mezők mögötti (Model) attribútumok értéke megváltozott, ezért frisítse/rajzolja újra ennek a page-nek a megjelenítését.
     }
 
     private async Task ModifyCustomerAsync()
     {
-        if (string.IsNullOrWhiteSpace(Email))
+        if (!ValidateCustomerModel()) //a CustomerModelre akasztott Annotációk ellenőrzése, (saját függvénybe kiszervezve, a boiler plate elkerülésére) 
         {
-            OnError?.Invoke("Az e-mail cím megadása kötelező.");
-            return; //Nem adott meg e-mail címet.
+            return; //Nem teljesült valamelyik validációs annotácós feltétel. Pl: nem adott meg e-mail címet. 
         }
 
         CustomerDto? modifiedCustomer = await _customerApiService.ModifyCustomerAsync(Email, new CustomerDto { Email = "updated_" + Email });
@@ -109,10 +108,9 @@ public class CustomersViewModel : BaseViewModel
 
     private async Task DeleteCustomerAsync()
     {
-        if (string.IsNullOrWhiteSpace(Email))
+        if (!ValidateCustomerModel()) //a CustomerModelre akasztott Annotációk ellenőrzése, (saját függvénybe kiszervezve, a boiler plate elkerülésére) 
         {
-            OnError?.Invoke("Az e-mail cím megadása kötelező.");
-            return; //Nem adott meg e-mail címet.
+            return; //Nem teljesült valamelyik validációs annotácós feltétel. Pl: nem adott meg e-mail címet. 
         }
 
         bool confirmed = await (OnConfirm?.Invoke("Törlés megerősítése", $"Biztos, hogy töröljük a {Email} ügyfelet?") ?? Task.FromResult(false));
@@ -131,5 +129,20 @@ public class CustomersViewModel : BaseViewModel
         Email = string.Empty;
         OnPropertyChanged(nameof(Email));
         await RefreshCustomerListAsync();
+    }
+
+    private bool ValidateCustomerModel()
+    {
+        CustomerModel customerModel = new() { Email = Email }; //CustomerModel.Email = this.Email
+        ValidationContext validationContext = new(customerModel); //CustomerModel validáléséra használható context (környezet) -et készít
+        List<ValidationResult> validationResults = new(); //Lista a validáció során esetlegesen létrejövő hibajelzések számára
+        bool isValid = Validator.TryValidateObject(customerModel, validationContext, validationResults, true); //Itt fut le az összes a CustomerModelre akasztott Annotáció ellenőrzése 
+        if (!isValid) //Nem teljesült valamelyik validációs annotácós feltétel. Pl: nem adott meg e-mail címet. 
+        {
+            string errorMessage = string.Join("\n", validationResults.Select(v => v.ErrorMessage));
+            OnError?.Invoke(errorMessage); //Hibaüzeneteket kiíró ablak feldobatása a Page-dzsel, a Page event-jének aktiválásával
+        }
+
+        return isValid;
     }
 }
