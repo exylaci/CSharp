@@ -1,4 +1,5 @@
 ﻿using Api.Dtos;
+using Api.Dtos.Results;
 using Api.Entities;
 using Api.Repositories.Interfaces;
 using Api.Services.Interfaces;
@@ -35,21 +36,40 @@ public class CustomerService : ICustomerService
         return new CustomerDto { Email = entity.Email };
     }
 
-    public async Task<CustomerDto?> CreateCustomerAsync(CustomerDto customerDto)
+    public async Task<ServiceResult<CustomerDto>> CreateCustomerAsync(CustomerDto customerDto)
     {
-        CustomerEntity? entity = await _repository.GetCustomerByEmailAsync(customerDto.Email);
-        if (entity != null)
+        CustomerEntity? storedEntity = await _repository.GetCustomerByEmailAsync(customerDto.Email);
+        if (storedEntity != null) //Már van ilyen, nem menti el 2 példányban
         {
-            return null; //Már van ilyen, nem menti el 2 példányban
+            return new ServiceResult<CustomerDto>
+            {
+                Success = false,
+                ServiceErrorCode = ServiceErrorCode.AlreadyExists,
+                ErrorMessage = "Már van ilyen email cím"
+            };
         }
 
-        CustomerEntity? newEntity = await _repository.CreateCustomerAsync(new CustomerEntity { Email = customerDto.Email });
-        if (newEntity is null)
+        RepositoryResult<CustomerEntity> repositoryResult = await _repository.CreateCustomerAsync(new CustomerEntity { Email = customerDto.Email });
+        if (!repositoryResult.Success) //nem sikerült elmenteni
         {
-            return null; //nem sikerült elmenteni
+            return new ServiceResult<CustomerDto>
+            {
+                Success = false,
+                ServiceErrorCode = repositoryResult.ErrorCode switch
+                {
+                    RepositoryErrorCode.DuplicateKey => ServiceErrorCode.AlreadyExists,
+                    RepositoryErrorCode.DatabaseError => ServiceErrorCode.DatabaseError,
+                    _ => ServiceErrorCode.UnknownError
+                },
+                ErrorMessage = repositoryResult.ErrorMessage
+            };
         }
 
-        return new CustomerDto { Email = newEntity.Email };
+        return new ServiceResult<CustomerDto>
+        {
+            Success = true,
+            Data = new CustomerDto { Email = repositoryResult.Data!.Email }
+        };
     }
 
     public async Task<CustomerDto?> UpdateCustomerAsync(string email, CustomerDto customerDto)

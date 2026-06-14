@@ -1,4 +1,5 @@
 ﻿using Api.Data;
+using Api.Dtos.Results;
 using Api.Entities;
 using Api.Repositories.Interfaces;
 using Microsoft.EntityFrameworkCore;
@@ -25,12 +26,43 @@ public class CustomerRepository : ICustomerRepository
         return entity;
     }
 
-    public async Task<CustomerEntity?> CreateCustomerAsync(CustomerEntity customerEntity)
+    public async Task<RepositoryResult<CustomerEntity>> CreateCustomerAsync(CustomerEntity customerEntity)
     {
-        await _context.Customers.AddAsync(customerEntity);
-        _context.SaveChanges();
-        CustomerEntity? entity = await _context.Customers.FirstOrDefaultAsync(c => c.Email == customerEntity.Email);
-        return entity; //async miatt a return értékét automatikusan becsomagolja Task<> -ba
+        try
+        {
+            _context.Customers.Add(customerEntity);
+            int rows = await _context.SaveChangesAsync();
+            if (rows == 0)
+            {
+                return new RepositoryResult<CustomerEntity>
+                {
+                    Success = false,
+                    ErrorCode = RepositoryErrorCode.DatabaseError,
+                    ErrorMessage = "Az adatbázisba Nem került be."
+                };
+            }
+
+            CustomerEntity? entity = await _context.Customers.FirstOrDefaultAsync(c => c.Email == customerEntity.Email);
+            return new RepositoryResult<CustomerEntity>() { Success = true, Data = entity }; //async miatt a return értékét automatikusan becsomagolja Task<> -ba
+        }
+        catch (DbUpdateException ex) //Ez hogyan következok a duplikált kulcs hibából?
+        {
+            return new RepositoryResult<CustomerEntity>
+            {
+                Success = false,
+                ErrorCode = RepositoryErrorCode.DatabaseError,
+                ErrorMessage = ex.Message
+            };
+        }
+        catch (Exception ex)
+        {
+            return new RepositoryResult<CustomerEntity>
+            {
+                Success = false,
+                ErrorCode = RepositoryErrorCode.UnknownError,
+                ErrorMessage = ex.Message
+            };
+        }
     }
 
     public async Task<CustomerEntity?> UpdateCustomerAsync(string email, CustomerEntity customerEntity)

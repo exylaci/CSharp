@@ -1,4 +1,5 @@
 ﻿using Api.Dtos;
+using Api.Dtos.Results;
 using Api.Services.Interfaces;
 using Microsoft.AspNetCore.Mvc;
 
@@ -36,13 +37,18 @@ public class CustomerController : ControllerBase
     [HttpPost]
     public async Task<IActionResult> CreateCustomer([FromBody] CustomerDto customerDto)
     {
-        CustomerDto? newCustomer = await _service.CreateCustomerAsync(customerDto);
-        if (newCustomer is null)
+        ServiceResult<CustomerDto>? newCustomerResult = await _service.CreateCustomerAsync(customerDto);
+        if (!newCustomerResult.Success)
         {
-            return BadRequest();
+            return newCustomerResult.ServiceErrorCode switch
+            {
+                ServiceErrorCode.AlreadyExists => Conflict(newCustomerResult),
+                ServiceErrorCode.ValidationError => BadRequest(newCustomerResult),
+                ServiceErrorCode.DatabaseError => StatusCode(500, newCustomerResult),
+                _ => StatusCode(500, newCustomerResult)
+            };
         }
-
-        return Ok(newCustomer);
+        return Ok(newCustomerResult);
     }
 
     [HttpPut("{email}")]

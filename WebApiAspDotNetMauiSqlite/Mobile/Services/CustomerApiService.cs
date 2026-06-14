@@ -1,6 +1,7 @@
 ﻿using System.Net.Http.Json;
 using Mobile.Dtos;
 using Mobile.Dtos.Errors;
+using Mobile.Dtos.Results;
 using Mobile.Services.Interfaces;
 
 namespace Mobile.Services;
@@ -50,22 +51,40 @@ public class CustomerApiService : ICustomerApiService
         }
     }
 
-    public async Task<string?> CreateCustomerAsync(CustomerDto customerDto)
+    public async Task<ServiceResult<CustomerDto>> CreateCustomerAsync(CustomerDto customerDto)
     {
         try
         {
             HttpResponseMessage response = await _httpClient.PostAsJsonAsync("api/Customer", customerDto);
-            if (response.IsSuccessStatusCode)
+            ServiceResult<CustomerDto>? result = await response.Content.ReadFromJsonAsync<ServiceResult<CustomerDto>>();
+            if (result is null)
             {
-                return null; //nincs hiba visszatérhetünk null-lal
+                return new ServiceResult<CustomerDto>
+                {
+                    Success = false,
+                    ServiceErrorCode = ServiceErrorCode.UnknownError,
+                    ErrorMessage = "Érvénytelen váélasz érkezett a szervertől."
+                };
             }
 
-            ValidationProblemDetailsDto? error = await response.Content.ReadFromJsonAsync<ValidationProblemDetailsDto>(); //A backend validációs szöveg megkapásához, a 400-as válasz tartalmát ki kell olvasni.
-            return string.Join("\n", error?.Errors?.SelectMany(message => message.Value) ?? ["Nem sikerült eltárolni"]);
+            return result;
+
+            // if (response.IsSuccessStatusCode)
+            // {
+            //     return null; //nincs hiba visszatérhetünk null-lal
+            // }
+            //
+            // ValidationProblemDetailsDto? error = await response.Content.ReadFromJsonAsync<ValidationProblemDetailsDto>(); //A backend validációs szöveg megkapásához, a 400-as válasz tartalmát ki kell olvasni.
+            // return string.Join("\n", error?.Errors?.SelectMany(message => message.Value) ?? ["Nem sikerült eltárolni"]);
         }
         catch (Exception ex)
         {
-            return ex.Message; //Visszaadja az elkapott kivétel szövegét, ha már egyszer szöveggel térhet vissza.
+            return new ServiceResult<CustomerDto>
+            {
+                Success = false,
+                ServiceErrorCode = ServiceErrorCode.CommunicationError,
+                ErrorMessage = ex.Message //Visszaadja az elkapott kivétel szövegét.
+            };
         }
     }
 

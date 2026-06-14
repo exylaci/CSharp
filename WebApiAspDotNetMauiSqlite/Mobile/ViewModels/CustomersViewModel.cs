@@ -2,6 +2,7 @@
 using System.ComponentModel.DataAnnotations;
 using System.Windows.Input;
 using Mobile.Dtos;
+using Mobile.Dtos.Results;
 using Mobile.Models;
 using Mobile.Services.Interfaces;
 
@@ -76,13 +77,14 @@ public class CustomersViewModel : BaseViewModel
             return; //Nem teljesült valamelyik validációs annotácós feltétel. Pl: nem adott meg e-mail címet. 
         }
 
-        string? error = await _customerApiService.CreateCustomerAsync(new CustomerDto { Email = Email }); //Frontend Model konvertálása backendnek átadandó Dto-ba. És Backend Api meghívatása a DI-ben kapott CustomerApiService-zel.
-        if (error is not null) //Valamin elhasalt a backend elérése, vagy az ottani műveletek egyike
+        ServiceResult<CustomerDto> result = await _customerApiService.CreateCustomerAsync(new CustomerDto { Email = Email }); //Frontend Model konvertálása backendnek átadandó Dto-ba. És Backend Api meghívatása a DI-ben kapott CustomerApiService-zel.
+        if (!result.Success) //Valamin elhasalt a backend elérése, vagy az ottani műveletek egyike
         {
-            OnError?.Invoke(error); //Hibaüzeneteket kiíró ablak feldobatása a Page-dzsel, a Page event-jének aktiválásával, a hibaüzenet szövege vagy a frontend Servicétől, vagy a backendtől jön.
-
+            OnError?.Invoke(result.ErrorMessage ?? "Ismeretlen hiba történt."); //Hibaüzeneteket kiíró ablak feldobatása a Page-dzsel, a Page event-jének aktiválásával, a hibaüzenet szövege vagy a frontend Servicétől, vagy a backendtől jön.
             return; //Nem sikerült a megadott e-mail címmel létrehozni.
         }
+
+        Customers.Add(new CustomerModel { Email = result.Data!.Email }); //Itt konvertáljuk át a backendtől kapott DTO-t A frontendben használt MODEL-ünkre ahhoz, hogy a Mobilpn helyi Customers kollekciónkba / adatlistánkba is felvegyük. 
 
         Email = string.Empty; //Sikeres mentés után a CustomerModel attribútumainak kiürítése
         OnPropertyChanged(nameof(Email)); //Értesítés a MAUI Binding rendszernek, hogy a mezők mögötti (Model) attribútumok értéke megváltozott, ezért frisítse/rajzolja újra ennek a page-nek a megjelenítését.
